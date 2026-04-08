@@ -47,6 +47,10 @@ app.get('/api/v1/health', (req, res) => {
 
 // ========== IMPORT VÀ GẮN ERROR HANDLER (sẽ viết ở S1-07) ==========
 const AppError = require('./utils/AppError');
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/v1/auth', authRoutes);
+
 const { errorHandler } = require('./middlewares/errorHandler');
 
 // Bắt route không tồn tại (404)

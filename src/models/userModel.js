@@ -46,16 +46,15 @@ const userSchema = new mongoose.Schema({
 // ========== PRE-SAVE HOOK: TỰ ĐỘNG HASH PASSWORD ==========
 // Hook chạy TRƯỚC mỗi lần .save()
 // Keyword "function" bắt buộc (không dùng arrow =>), vì cần truy cập "this"
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
   // Kiểm tra: password có bị thay đổi không?
   // Nếu user chỉ đổi tên (không đổi pass), thì bỏ qua khỏi hash lại
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return;
   
   // Tạo salt (muối) với 10 rounds rồi hash password
   // Salt rounds càng cao càng an toàn nhưng càng chậm. 10 là mức cân bằng.
   this.password = await bcrypt.hash(this.password, 10);
   
-  next(); // Cho phép tiếp tục save xuống MongoDB
 });
 
 // ========== INSTANCE METHOD: SO SÁNH PASSWORD ==========
