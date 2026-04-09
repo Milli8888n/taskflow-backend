@@ -1,0 +1,56 @@
+<%- include('../partials/_header') %>
+<link rel="stylesheet" href="/css/board.css">
+
+<main class="board-page">
+  <header class="board-topbar">
+    <div>
+      <h1 class="board-title" id="board-title">Kanban Board</h1>
+      <p class="board-subtitle" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
+    </div>
+    <div class="board-actions">
+      <button class="btn-primary" id="btn-refresh-board" type="button">Tải lại</button>
+    </div>
+  </header>
+
+  <section class="board" id="board" aria-label="Kanban board">
+    <div class="board-column" data-status="To Do">
+      <div class="board-column__header">
+        <h2>To Do</h2>
+        <span class="board-column__count" data-count="To Do">0</span>
+      </div>
+      <div class="board-column__body" data-dropzone="To Do"></div>
+    </div>
+
+    <div class="board-column" data-status="In Progress">
+      <div class="board-column__header">
+        <h2>In Progress</h2>
+        <span class="board-column__count" data-count="In Progress">0</span>
+      </div>
+      <div class="board-column__body" data-dropzone="In Progress"></div>
+    </div>
+
+    <div class="board-column" data-status="Done">
+      <div class="board-column__header">
+        <h2>Done</h2>
+        <span class="board-column__count" data-count="Done">0</span>
+      </div>
+      <div class="board-column__body" data-dropzone="Done"></div>
+    </div>
+  </section>
+
+  <div class="board-hint">
+    Tip: URL dạng <code>?projectId=&lt;id&gt;</code>. Ví dụ: <code>/board?projectId=...</code>
+  </div>
+
+  <div class="error-text" id="board-error" style="display:none;"></div>
+</main>
+
+<script>
+  window.__TF__ = window.__TF__ || {};
+  window.__TF__.page = 'projects-board';
+</script>
+<script src="/js/dragdrop.js"></script>
+<script src="/js/board.js"></script>
+
+<%- include('../partials/_footer') %>
+
