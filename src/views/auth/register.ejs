@@ -1,0 +1,35 @@
+<%- include('../partials/_header') %>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 class="auth-title">Đăng Ký Tài Khoản</h1>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label for="name">Họ và tên</label>
+        <input type="text" id="name" name="name" placeholder="Nguyễn Văn A" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự" required minlength="6">
+      </div>
+
+      <div id="error-message" class="error-text" style="display: none;"></div>
+
+      <button type="submit" class="btn-primary">Đăng Ký</button>
+    </form>
+
+    <p class="auth-link">
+      Đã có tài khoản? <a href="/login">Đăng nhập</a>
+    </p>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<%- include('../partials/_footer') %>
