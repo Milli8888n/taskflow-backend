@@ -53,6 +53,9 @@ app.use('/api/v1/auth', authRoutes);
 
 const { errorHandler } = require('./middlewares/errorHandler');
 
+const projectRoutes = require('./routes/projectRoutes');
+app.use('/api/v1/projects', projectRoutes);
+
 // Bắt route không tồn tại (404)
 app.use((req, res, next) => {
   next(new AppError(`Không tìm thấy ${req.originalUrl} trên server`, 404));
