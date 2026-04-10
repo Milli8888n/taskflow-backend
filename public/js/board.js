@@ -21,6 +21,23 @@ async function apiGet(path) {
   return data;
 }
 
+async function apiPostForm(path, formData) {
+  const token = getAccessToken();
+  const headers = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}${path}`, { method: 'POST', headers, body: formData });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const message = data.message || `Request failed: ${res.status}`;
+    const err = new Error(message);
+    err.status = res.status;
+    err.data = data;
+    throw err;
+  }
+  return data;
+}
+
 function escapeHtml(str) {
   return String(str ?? '')
     .replaceAll('&', '&amp;')
@@ -40,6 +57,22 @@ function priorityClass(priority) {
 function getProjectIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get('projectId');
+}
+
+function isImagePath(path) {
+  const p = String(path || '').toLowerCase();
+  return p.endsWith('.png') || p.endsWith('.jpg') || p.endsWith('.jpeg') || p.endsWith('.gif') || p.endsWith('.webp');
+}
+
+function fileNameFromPath(path) {
+  try {
+    const p = String(path || '');
+    const cleaned = p.split('?')[0].split('#')[0];
+    const parts = cleaned.split('/');
+    return parts[parts.length - 1] || cleaned;
+  } catch {
+    return String(path || '');
+  }
 }
 
 async function loadProjectsIndex() {
@@ -113,6 +146,13 @@ function renderTaskCard(task) {
   card.dataset.taskId = task._id || '';
   card.dataset.status = task.status || 'To Do';
 
+  // Click để mở task detail modal
+  card.addEventListener('click', () => {
+    if (window.TaskflowTaskModal?.open) {
+      window.TaskflowTaskModal.open(task);
+    }
+  });
+
   const title = escapeHtml(task.title);
   const desc = escapeHtml(task.description || '');
   const priority = escapeHtml(task.priority || 'Medium');
@@ -145,6 +185,142 @@ function countByStatus(tasks) {
     counts[s] += 1;
   }
   return counts;
+}
+
+function initTaskModal({ getTaskById, uploadTaskFile }) {
+  const overlay = document.getElementById('task-modal-overlay');
+  const modal = document.getElementById('task-modal');
+  const btnClose = document.getElementById('task-modal-close');
+  const titleEl = document.getElementById('task-modal-title');
+  const subtitleEl = document.getElementById('task-modal-subtitle');
+  const descEl = document.getElementById('task-modal-desc');
+  const attachmentsEl = document.getElementById('task-attachments');
+  const attachmentsEmptyEl = document.getElementById('task-attachments-empty');
+  const uploadInput = document.getElementById('task-upload-input');
+  const uploadBtn = document.getElementById('task-upload-btn');
+  const uploadErrorEl = document.getElementById('task-upload-error');
+
+  let currentTask = null;
+
+  const setUploadError = (msg) => {
+    uploadErrorEl.textContent = msg;
+    uploadErrorEl.style.display = 'block';
+  };
+  const clearUploadError = () => {
+    uploadErrorEl.textContent = '';
+    uploadErrorEl.style.display = 'none';
+  };
+
+  const show = () => {
+    overlay.style.display = 'block';
+    modal.style.display = 'block';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const hide = () => {
+    overlay.style.display = 'none';
+    modal.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    currentTask = null;
+    clearUploadError();
+    if (uploadInput) uploadInput.value = '';
+  };
+
+  const renderAttachments = (attachments) => {
+    attachmentsEl.innerHTML = '';
+    const list = Array.isArray(attachments) ? attachments : [];
+
+    if (list.length === 0) {
+      attachmentsEmptyEl.style.display = 'block';
+      return;
+    }
+    attachmentsEmptyEl.style.display = 'none';
+
+    for (const a of list) {
+      const path = String(a || '');
+      const name = fileNameFromPath(path);
+      const isImg = isImagePath(path);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'attachment';
+      wrap.innerHTML = `
+        <div class="attachment__preview">
+          ${isImg ? `<img src="${escapeHtml(path)}" alt="${escapeHtml(name)}">` : `<span class="pill">FILE</span>`}
+        </div>
+        <div class="attachment__meta">
+          <div class="attachment__name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
+          <a class="attachment__link" href="${escapeHtml(path)}" target="_blank" rel="noreferrer">Mở</a>
+        </div>
+      `;
+      attachmentsEl.appendChild(wrap);
+    }
+  };
+
+  const fill = (task) => {
+    titleEl.textContent = task?.title || 'Task';
+    subtitleEl.textContent = task?.status ? `Trạng thái: ${task.status}` : '';
+    descEl.textContent = task?.description ? task.description : '—';
+    renderAttachments(task?.attachments);
+  };
+
+  const open = async (task) => {
+    currentTask = task;
+    clearUploadError();
+    fill(task);
+    show();
+
+    // Nếu backend có endpoint task detail thì load mới để lấy attachments chuẩn
+    if (task?._id && getTaskById) {
+      try {
+        const fresh = await getTaskById(task._id);
+        if (fresh) {
+          currentTask = fresh;
+          fill(fresh);
+        }
+      } catch {
+        // bỏ qua nếu API chưa có
+      }
+    }
+  };
+
+  overlay?.addEventListener('click', hide);
+  btnClose?.addEventListener('click', hide);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hide();
+  });
+
+  uploadBtn?.addEventListener('click', async () => {
+    clearUploadError();
+    if (!currentTask?._id) return setUploadError('Không xác định được taskId.');
+    const file = uploadInput?.files?.[0];
+    if (!file) return setUploadError('Vui lòng chọn file trước.');
+
+    uploadBtn.disabled = true;
+    const oldText = uploadBtn.textContent;
+    uploadBtn.textContent = 'Đang tải...';
+    try {
+      const updated = await uploadTaskFile(currentTask._id, file);
+      if (updated) {
+        currentTask = updated;
+        fill(updated);
+      } else {
+        // fallback: nếu API trả về chỉ 1 path
+        const existing = Array.isArray(currentTask.attachments) ? currentTask.attachments : [];
+        currentTask.attachments = existing;
+        fill(currentTask);
+      }
+      if (uploadInput) uploadInput.value = '';
+    } catch (e) {
+      setUploadError(e.status === 401 ? 'Bạn chưa đăng nhập (thiếu token).' : e.message);
+    } finally {
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = oldText;
+    }
+  });
+
+  window.TaskflowTaskModal = { open, hide };
 }
 
 async function loadBoardPage() {
@@ -188,6 +364,45 @@ async function loadBoardPage() {
       } catch (e) {
         if (e.status !== 404) throw e;
       }
+
+      const taskById = new Map(tasks.map((t) => [t._id, t]));
+
+      initTaskModal({
+        getTaskById: async (taskId) => {
+          const res = await apiGet(`/tasks/${encodeURIComponent(taskId)}`);
+          return res.data?.task || res.data?.data?.task || null;
+        },
+        uploadTaskFile: async (taskId, file) => {
+          const fd = new FormData();
+          // Theo checklist: upload 1 file
+          fd.append('file', file);
+
+          const res = await apiPostForm(`/tasks/${encodeURIComponent(taskId)}/upload`, fd);
+
+          // chấp nhận nhiều kiểu response khác nhau
+          const task =
+            res.data?.task ||
+            res.data?.data?.task ||
+            res.task ||
+            null;
+
+          if (task) return task;
+
+          const filePath =
+            res.data?.filePath ||
+            res.data?.path ||
+            res.filePath ||
+            res.path ||
+            null;
+
+          const current = taskById.get(taskId) || { _id: taskId, attachments: [] };
+          const attachments = Array.isArray(current.attachments) ? current.attachments : [];
+          if (filePath) attachments.push(filePath);
+          current.attachments = attachments;
+          taskById.set(taskId, current);
+          return current;
+        },
+      });
 
       const zones = {
         'To Do': document.querySelector('[data-dropzone="To Do"]'),
