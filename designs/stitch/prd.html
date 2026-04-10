@@ -1,0 +1,28 @@
+# ĐỀ TÀI ASSIGNMENT NodeJS
+#### Môn học: Node.js + Express + MongoDB
+#### Thời gian: 2 tuần (17/04/2026)
+#### Nhóm: 3–5 thành viên.
+#### Tổng điểm: 10 điểm
+
+## Đề tài
+**Hệ thống Quản lý Nhiệm vụ với Realtime Updates (TaskFlow – Mini Trello)**
+
+## Tổng quan
+Xây dựng ứng dụng quản lý nhiệm vụ cá nhân / nhóm theo phong cách Trello / Linear.
+Ứng dụng cho phép người dùng tạo dự án, phân công nhiệm vụ, thay đổi trạng thái và nhận cập nhật realtime khi thành viên khác thay đổi nhiệm vụ hoặc thêm comment.
+
+## Yêu cầu chức năng
+1. **Authentication & User**: Đăng ký, Đăng nhập (JWT + Refresh Token).
+2. **Project (Dự án)**: CRUD Project, danh sách thành viên.
+3. **Task (Nhiệm vụ)**: CRUD Task (title, description, status, priority, deadline, assignee).
+4. **Comment**: Thêm/xem comment trong task.
+5. **Realtime (Socket.io)**: Cập nhật status, comment, assignee realtime.
+6. **Dashboard cá nhân**: Danh sách task của tôi, overdue tasks.
+7. **Nâng cao**: Role Owner/Member, Filter/Search, Soft delete, Upload avatar.
+
+## Yêu cầu kỹ thuật
+- Framework: Express.js
+- Database: MongoDB + Mongoose
+- Auth: JWT + Refresh Token
+- Realtime: Socket.io
+- Deploy: Render/Railway/Vercel

@@ -59,6 +59,9 @@ app.use('/api/v1/projects', projectRoutes);
 
 app.use('/api/v1/users', userRoutes);
 
+const viewRoutes = require('./routes/viewRoutes');
+app.use('/', viewRoutes);
+
 // Bắt route không tồn tại (404)
 app.use((req, res, next) => {
   next(new AppError(`Không tìm thấy ${req.originalUrl} trên server`, 404));

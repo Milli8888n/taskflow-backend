@@ -14,7 +14,7 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/project', (req, res) => {
-  res.render('project/index', { title: 'Project - TaskFlow' });
+  res.render('projects/index', { title: 'Project - TaskFlow' });
 });
 
 module.exports = router;

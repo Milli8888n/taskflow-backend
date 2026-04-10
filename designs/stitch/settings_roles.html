@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TaskFlow - Project Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#003824",
+                        "on-secondary": "#213145",
+                        "primary": "#c3c0ff",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#292932",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-lowest": "#0d0e16",
+                        "secondary": "#b7c8e1",
+                        "tertiary-container": "#00734e",
+                        "secondary-fixed": "#d3e4fe",
+                        "tertiary": "#4edea3",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "inverse-primary": "#4d44e3",
+                        "on-error": "#690005",
+                        "surface-bright": "#383842",
+                        "outline-variant": "#444655",
+                        "on-primary": "#1d00a5",
+                        "surface-container-highest": "#34343e",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container": "#1e1f28",
+                        "inverse-surface": "#e3e1ee",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-background": "#e3e1ee",
+                        "surface-variant": "#34343e",
+                        "surface-dim": "#12131b",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-tint": "#c3c0ff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary-container": "#544bea",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#002113",
+                        "on-tertiary-container": "#6efbbd",
+                        "on-primary-fixed": "#0f0069",
+                        "background": "#12131b",
+                        "outline": "#8f8fa1",
+                        "on-surface": "#e3e1ee",
+                        "secondary-container": "#3a4a5f",
+                        "surface-container-low": "#1a1b24",
+                        "surface": "#12131b",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#c5c5d8",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-primary-container": "#e2dfff",
+                        "inverse-on-surface": "#2f3039"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-border {
+            border-right: 4px solid #3E52E8;
+        }
+        body {
+            background-color: #12131b;
+            color: #e3e1ee;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#1a1b24] dark:bg-[#1a1b24] py-6 px-4 shrink-0 transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-3 mb-10 px-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">layers</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-on-surface leading-tight">Workspace</h2>
+<p class="text-xs text-on-surface-variant opacity-80">Premium Plan</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-['Inter'] text-sm tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-['Inter'] text-sm tracking-wide">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-['Inter'] text-sm tracking-wide">Team</span>
+</a>
+<!-- SETTINGS ACTIVE -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#3E52E8]/10 text-[#c3c0ff] font-semibold border-r-4 border-[#3E52E8] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['Inter'] text-sm tracking-wide">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-['Inter'] text-sm tracking-wide">Archive</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 pt-6 border-t border-outline-variant/10">
+<button class="w-full mb-6 bg-primary-container text-on-primary-container py-2.5 rounded-xl font-semibold text-sm hover:brightness-110 transition-all">
+            New Project
+        </button>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-['Inter'] text-sm tracking-wide">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-[#292932] hover:text-[#e3e1ee] transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-['Inter'] text-sm tracking-wide">Sign Out</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar Component -->
+<header class="flex justify-between items-center w-full px-6 h-16 bg-[#12131b] dark:bg-[#12131b] shrink-0 border-b-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#e3e1ee] font-['Manrope']">TaskFlow</span>
+<div class="hidden lg:flex items-center bg-[#1a1b24] px-4 py-1.5 rounded-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant/50 w-48" placeholder="Quick search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg text-[#c5c5d8] hover:bg-[#292932] transition-colors scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-lg text-[#c5c5d8] hover:bg-[#292932] transition-colors scale-95 duration-150">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<button class="bg-[#3E52E8] text-white px-4 py-1.5 rounded-lg font-['Manrope'] font-bold text-sm hover:brightness-110 transition-all">
+                Create
+            </button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User profile avatar" data-alt="Close up portrait of a professional woman in tech wearing glasses, soft cinematic studio lighting, minimalist style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAG14EKIfSSa7GgEyNM4tPU8oFakoz9j40riW8E7qyiff1xdKQ-WqIZifb4Q9P6KrXgK_I4Oifrah9AoFUXufW8pRxYdYz3DK5U3qzBPRv_DJ2gm-7z1W6LDV6XrpbnoYVq7DfjeRsg0NcxTp4gCMt-4Us6BET0FqX4mtS-KupodQwjNOmdRBoPy1TENyyK2ofT9s2Xbahg36nxtjfU_-HU7DnTl1AwzxLu10KsZScoFZ8_-sUBisFdaKGQjdoY6kUfjSnQKPJfF89"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto bg-[#12131b] p-6 lg:p-10">
+<div class="max-w-4xl mx-auto space-y-12">
+<!-- Header -->
+<div class="space-y-1">
+<h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Project Settings</h1>
+<p class="text-on-surface-variant font-body">Manage workspace preferences, team members, and security configurations.</p>
+</div>
+<!-- General Settings Section -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold font-headline text-on-surface">General Settings</h3>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Project Name</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors placeholder:opacity-30" type="text" value="Kinetic Architecture Redesign"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Project ID</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant/20 text-on-surface-variant/60 px-0 py-2 cursor-not-allowed" readonly="" type="text" value="KARC-2024-089"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Description</label>
+<textarea class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors resize-none" rows="3">Conceptualizing the next generation of fluid UI components for the core TaskFlow ecosystem.</textarea>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
+<div>
+<h4 class="font-semibold text-on-surface">Public Visibility</h4>
+<p class="text-sm text-on-surface-variant">Allow anyone in the organization to view and join this project.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</div>
+</div>
+<div class="flex justify-end pt-2">
+<button class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-2 rounded-lg text-sm font-semibold transition-all">Save Changes</button>
+</div>
+</div>
+</section>
+<!-- Member Management Section -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold font-headline text-on-surface">Team Access</h3>
+<button class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-lg">person_add</span>
+                        Invite Member
+                    </button>
+</div>
+<!-- Roles Overview Card -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<h4 class="font-bold font-headline">Project Owner</h4>
+</div>
+<ul class="space-y-2 text-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Full administrative access to project settings.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Ability to edit project details or permanently delete the project.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Manage all team members and role assignments.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Full management of all tasks and milestones.</span>
+</li>
+</ul>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined">group</span>
+<h4 class="font-bold font-headline">Project Member</h4>
+</div>
+<ul class="space-y-2 text-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Create, edit, and delete their own and assigned tasks.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>Add comments and participate in task discussions.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
+<span>View project members and their profiles.</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest/50">
+<th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Member</th>
+<th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Role</th>
+<th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase font-label">Access Date</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Member Avatar" data-alt="Portrait of a young creative professional with short dark hair, wearing a grey hoodie, neutral grey background, professional photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqBhhxKzlUeBIQRnrvySvo_Bzn8NDC_BpTdMmI2GseZhTGA1xpm7Tfk36Dtv3VBV5cX3-uok_KCazsYkADtiwd5hOLZO6BVZq_6KrszsNBKrLX2OWMI-05sHGgYFX2Vk3JIWJFNBQcvebEyItCnB4j7EfHzUbEjv3zGKqFr6iB72XMok9f21rn4b6tpIBbCActaSC9DgyBbYPyPW0JGlQmMkOifNPal-sRcAQ-949xyh3gSo3ggL6VHaiS1TrjSC0KkGPuXWBd0ndu"/>
+</div>
+<div>
+<div class="font-semibold text-on-surface">Alex Morgan</div>
+<div class="text-xs text-on-surface-variant">alex.m@taskflow.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-tertiary-container/20 text-on-tertiary-container border border-tertiary-container/30">Owner</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Oct 12, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Member Avatar" data-alt="Creative male developer with trendy hairstyle, wearing a black shirt, modern urban office background, soft bokeh lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzb-WN_kRJ1CWMhEciXs71wUo8l6gVrZn7-c_hiUYhHrBa_j1Ry2xQHDWttP65c_o2bvhEulSNjdNcWKfgAoVEhmnMWmN2G4vu8ni_aUN8cCJDvoSeCS7Z6BhI2ZHARLorx2h9XjJCOtJMhW_7Ct4SSJKNp6sF79-rwpGwXZ80b3nh-01V9h7OL65W7CyiGR54pgi3xdRQ7a90QlihIUyym-8W5p3L39cS7oCN2TjhzUP_JwvIAZUi4-ToMrHRMCUtvRX6OoCAv6Qc"/>
+</div>
+<div>
+<div class="font-semibold text-on-surface">Sarah Chen</div>
+<div class="text-xs text-on-surface-variant">s.chen@taskflow.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<select class="bg-transparent border-none text-sm text-on-surface focus:ring-0 cursor-pointer p-0 font-medium">
+<option>Member</option>
+<option>Guest</option>
+<option>Admin</option>
+</select>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Nov 05, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error/60 hover:text-error text-xs font-semibold px-3 py-1 rounded hover:bg-error-container/10 transition-all">Remove</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Member Avatar" data-alt="Cheerful female designer in a bright yellow sweater, smiling at camera, bright natural light, professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXDBCEgXdjg1pn8jWXVWalaf_X8ewQivvf7HtxIxZYga2c1Bbhb2k8x4MOwmgGQKZgRvesK8SzNyyoHcLCY4CA9eTLIrYsArjO8zhsqtQ00GsUCR5SGZanfydCCchlS0ZErKJkaajXfKDIXKe87lGQz46uIHAweL7gDgcAioSIaMWoAHpamtLFvwU7aYWKDL_CdUSHEfb2h1p44mgH3L0hgV-P3AutMwOBN_1MsZqbZGiQgYLTXgtVRXY4YZJrO9G0hGV7BJwTHppc"/>
+</div>
+<div>
+<div class="font-semibold text-on-surface">Jordan Kim</div>
+<div class="text-xs text-on-surface-variant">jordan@taskflow.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<select class="bg-transparent border-none text-sm text-on-surface focus:ring-0 cursor-pointer p-0 font-medium">
+<option>Member</option>
+<option>Guest</option>
+<option>Admin</option>
+</select>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Dec 18, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error/60 hover:text-error text-xs font-semibold px-3 py-1 rounded hover:bg-error-container/10 transition-all">Remove</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Danger Zone Section -->
+<section class="space-y-6 pt-10">
+<div class="border-t border-error/20 pt-10">
+<div class="flex items-center gap-3 text-error mb-4">
+<span class="material-symbols-outlined">warning</span>
+<h3 class="text-xl font-bold font-headline">Danger Zone</h3>
+</div>
+<div class="bg-error-container/5 border border-error/10 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="space-y-1">
+<h4 class="font-bold text-on-surface">Delete this project</h4>
+<p class="text-sm text-on-surface-variant max-w-lg">Once you delete a project, there is no going back. All associated data, tasks, and history will be permanently erased. Please be certain.</p>
+</div>
+<button class="shrink-0 bg-error text-on-error px-6 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-error/10">
+                            Delete Project
+                        </button>
+</div>
+</div>
+</section>
+<!-- Bottom Spacer for better scroll experience -->
+<div class="h-20"></div>
+</div>
+</main>
+</div>
+</body></html>

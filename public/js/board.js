@@ -476,6 +476,90 @@ async function loadBoardPage() {
 
   btnRefresh?.addEventListener('click', fetchAndRender);
   await fetchAndRender();
+  
+  initUploadFile(); // Kích hoạt sự kiện nút Upload file
+}
+
+function initUploadFile() {
+  const uploadBtn = document.getElementById('task-upload-btn');
+  const uploadInput = document.getElementById('task-upload-input');
+  const errorEl = document.getElementById('task-upload-error');
+  const attachmentsList = document.getElementById('task-attachments');
+  const emptyText = document.getElementById('task-attachments-empty');
+
+  if (!uploadBtn || !uploadInput) return;
+
+  uploadBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const file = uploadInput.files[0];
+    
+    const modal = document.getElementById('task-modal');
+    const taskId = modal ? modal.dataset.taskId : null;
+
+    if (!taskId) {
+      if (errorEl) {
+        errorEl.textContent = 'Lỗi: Không xác định được ID công việc.';
+        errorEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (!file) {
+      if (errorEl) {
+        errorEl.textContent = 'Vui lòng chọn 1 file trước khi tải lên!';
+        errorEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (errorEl) errorEl.style.display = 'none';
+    uploadBtn.textContent = 'Đang tải...';
+    uploadBtn.disabled = true;
+
+    try {
+      const token = getAccessToken();
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch(`${API_BASE}/tasks/${taskId}/upload`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+
+      const data = await res.json();
+      
+      if (res.ok && data.status === 'success') {
+         alert('Tải file thành công!');
+         if (emptyText) emptyText.style.display = 'none';
+
+         const fileUrl = data.data?.filePath || '';
+         const fileName = file.name;
+         
+         if (attachmentsList) {
+           attachmentsList.innerHTML += `
+             <div class="attachment-item" style="margin-top: 5px;">
+               <a href="${escapeHtml(fileUrl)}" target="_blank" style="text-decoration: underline; color: #2563EB;">📄 ${escapeHtml(fileName)}</a>
+             </div>
+           `;
+         }
+         uploadInput.value = '';
+      } else {
+         if (errorEl) {
+           errorEl.textContent = data.message || 'Lỗi server khi upload file';
+           errorEl.style.display = 'block';
+         }
+      }
+    } catch (err) {
+      if (errorEl) {
+        errorEl.textContent = 'Lỗi kết nối mạng';
+        errorEl.style.display = 'block';
+      }
+    } finally {
+      uploadBtn.textContent = 'Tải Lên';
+      uploadBtn.disabled = false;
+    }
+  });
 }
 
 (function main() {
@@ -486,4 +570,3 @@ async function loadBoardPage() {
     loadBoardPage();
   }
 })();
-
