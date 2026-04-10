@@ -18,4 +18,7 @@ router.route('/:taskId')
 
 // Nested comment routes (gắn ở S2-13)
 
+const commentRoutes = require('./commentRoutes');
+router.use('/:taskId/comments', commentRoutes);
+
 module.exports = router;
