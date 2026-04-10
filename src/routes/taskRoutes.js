@@ -3,6 +3,12 @@ const router = express.Router({ mergeParams: true });
 const taskController = require('../controllers/taskController');
 const { protect } = require('../middlewares/authMiddleware');
 const checkProjectMembership = require('../middlewares/checkProjectMembership');
+const commentRoutes = require('./commentRoutes');
+const { uploadTaskFile } = require('../middlewares/uploadMiddleware');
+
+// Thêm Route mới (Có bảo vệ login, xác minh file, và controller)
+router.post('/:id/upload', protect, uploadTaskFile, taskController.uploadAttachment);
+
 
 router.use(protect);
 router.use(checkProjectMembership);
@@ -18,7 +24,7 @@ router.route('/:taskId')
 
 // Nested comment routes (gắn ở S2-13)
 
-const commentRoutes = require('./commentRoutes');
+
 router.use('/:taskId/comments', commentRoutes);
 
 module.exports = router;

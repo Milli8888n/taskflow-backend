@@ -320,6 +320,46 @@ function initTaskModal({ getTaskById, uploadTaskFile }) {
     }
   });
 
+  /* Thêm mới - Upload với fetch trực tiếp */
+  document.getElementById('task-upload-btn').addEventListener('click', async (e) => {
+    const fileInput = document.getElementById('task-upload-input');
+    const file = fileInput.files[0];
+    
+    // Lấy ID của task hiện tại trên Modal
+    const taskId = currentTask?._id;
+    
+    if (!file) return alert('Vui lòng chọn 1 file!');
+
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Thay nút Tải lên thành Uploading...
+        e.target.innerHTML = 'Đang Upload...';
+
+        const res = await fetch(`/api/v1/tasks/${taskId}/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await res.json();
+
+        if(result.status === 'success') {
+            alert('Upload thành công!');
+            // Cập nhật attachments
+            if(currentTask && result.data) {
+              currentTask.attachments = result.data.attachments || [];
+              fill(currentTask);
+            }
+        } else {
+             alert(result.message);
+        }
+    } catch(err) {
+        alert('Lỗi mạng hoặc server');
+    } finally {
+        e.target.innerHTML = 'Tải Lên';
+    }
+  });
+
   window.TaskflowTaskModal = { open, hide };
 }
 
