@@ -1,3 +1,4 @@
+const commentRoutes = require('./commentRoutes');
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const taskController = require('../controllers/taskController');
@@ -18,7 +19,6 @@ router.route('/:taskId')
 
 // Nested comment routes (gắn ở S2-13)
 
-const commentRoutes = require('./commentRoutes');
 router.use('/:taskId/comments', commentRoutes);
 
 module.exports = router;

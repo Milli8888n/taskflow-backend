@@ -1,3 +1,4 @@
+const { getIO } = require('../config/socket');
 const Task = require('../models/taskModel');
 const AppError = require('../utils/AppError');
 
@@ -6,6 +7,8 @@ exports.createTask = async (projectId, taskData, userId) => {
     ...taskData,
     projectId: projectId
   });
+  const io = getIO();
+io.to(`project:${projectId}`).emit('taskCreated', task);
   return task;
 };
 
@@ -49,6 +52,8 @@ exports.updateTask = async (taskId, updateData) => {
   ).populate('assignee', 'name avatar');
 
   if (!task) throw new AppError('Không tìm thấy công việc', 404);
+  const io = getIO();
+io.to(`project:${task.projectId}`).emit('taskUpdated', task);
   return task;
 };
 
