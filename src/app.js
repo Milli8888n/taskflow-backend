@@ -3,6 +3,7 @@ const express = require('express');  // Framework web
 const cors = require('cors');        // Cho phép gọi API từ domain khác
 const morgan = require('morgan');    // In log request ra terminal
 const path = require('path');        // Xử lý đường dẫn file (built-in NodeJS)
+const userRoutes = require('./routes/userRoutes');
 
 // ========== KHỞI TẠO APP ==========
 const app = express();
@@ -55,6 +56,8 @@ const { errorHandler } = require('./middlewares/errorHandler');
 
 const projectRoutes = require('./routes/projectRoutes');
 app.use('/api/v1/projects', projectRoutes);
+
+app.use('/api/v1/users', userRoutes);
 
 // Bắt route không tồn tại (404)
 app.use((req, res, next) => {
