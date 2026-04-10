@@ -1,12 +1,16 @@
-const commentRoutes = require('./commentRoutes');
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const taskController = require('../controllers/taskController');
 const { protect } = require('../middlewares/authMiddleware');
 const checkProjectMembership = require('../middlewares/checkProjectMembership');
+const commentRoutes = require('./commentRoutes');
+const { uploadTaskFile } = require('../middlewares/uploadMiddleware');
 
 router.use(protect);
 router.use(checkProjectMembership);
+
+// Route upload file cho task
+router.post('/:id/upload', uploadTaskFile, taskController.uploadAttachment);
 
 router.route('/')
   .get(taskController.getProjectTasks)
@@ -17,8 +21,7 @@ router.route('/:taskId')
   .put(taskController.updateTask)
   .delete(taskController.deleteTask);
 
-// Nested comment routes (gắn ở S2-13)
-
+// Nested comment routes
 router.use('/:taskId/comments', commentRoutes);
 
 module.exports = router;

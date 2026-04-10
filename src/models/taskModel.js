@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
+  // Bổ sung vào bên trong TaskSchema
+attachments: {
+    type: [String],
+    default: []
+},
+
   title: {
     type: String,
     required: [true, 'Vui lòng nhập tiêu đề công việc'],
