@@ -18,10 +18,6 @@ const server = http.createServer(app);
 
 initSocket(server);
 
-// Test Cloudinary
-const cloudinary = require('./config/cloudinary');
-cloudinary.api.ping().then(r => console.log('Cloudinary OK:', r)).catch(e => console.error('Cloudinary Error:', e));
-
 // Bật server lắng nghe trên cổng PORT
 server.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
