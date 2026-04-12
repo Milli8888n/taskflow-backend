@@ -126,5 +126,9 @@ exports.changePassword = async (userId, currentPassword, newPassword) => {
   user.password = newPassword;
   await user.save();
 
-  return true;
+  user.refreshToken = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  return { message: 'Đổi mật khẩu thành công' };
+
 };
