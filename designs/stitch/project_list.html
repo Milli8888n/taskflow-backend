@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dự án của tôi - TaskFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-low": "#1a1b24",
+                        "on-tertiary-fixed": "#002113",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary": "#1d00a5",
+                        "on-secondary-container": "#a9bad3",
+                        "surface-container-lowest": "#0d0e16",
+                        "background": "#12131b",
+                        "surface-bright": "#383842",
+                        "surface": "#12131b",
+                        "on-tertiary-container": "#6efbbd",
+                        "outline-variant": "#444655",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-fixed": "#e2dfff",
+                        "outline": "#8f8fa1",
+                        "on-secondary": "#213145",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "tertiary-container": "#00734e",
+                        "surface-container-highest": "#34343e",
+                        "surface-container": "#1e1f28",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-tint": "#c3c0ff",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#3a4a5f",
+                        "primary-container": "#544bea",
+                        "on-tertiary": "#003824",
+                        "surface-variant": "#34343e",
+                        "secondary": "#b7c8e1",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary": "#c3c0ff",
+                        "on-surface": "#e3e1ee",
+                        "on-surface-variant": "#c5c5d8",
+                        "tertiary": "#4edea3",
+                        "surface-dim": "#12131b",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-on-surface": "#2f3039",
+                        "on-primary-fixed": "#0f0069",
+                        "inverse-surface": "#e3e1ee",
+                        "surface-container-high": "#292932",
+                        "on-background": "#e3e1ee",
+                        "on-primary-container": "#e2dfff",
+                        "on-error": "#690005",
+                        "inverse-primary": "#4d44e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #12131b;
+            color: #e3e1ee;
+            font-family: 'Inter', sans-serif;
+        }
+        .text-headline { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#1a1b24] dark:bg-[#1a1b24] flex flex-col h-full py-8 z-50">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary" data-icon="account_tree">account_tree</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-[#c3c0ff] font-['Manrope'] tracking-wider">TaskFlow</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">Kiến trúc số</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 text-[#c5c5d8] opacity-70 py-3 px-6 hover:opacity-100 hover:bg-[#292932] transition-all duration-300 font-['Manrope'] font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Bảng điều khiển</span>
+</a>
+<a class="flex items-center gap-4 bg-[#12131b] text-[#c3c0ff] rounded-r-full font-bold py-3 px-6 font-['Manrope'] text-sm translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span>Dự án</span>
+</a>
+<a class="flex items-center gap-4 text-[#c5c5d8] opacity-70 py-3 px-6 hover:opacity-100 hover:bg-[#292932] transition-all duration-300 font-['Manrope'] font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Nhóm</span>
+</a>
+<a class="flex items-center gap-4 text-[#c5c5d8] opacity-70 py-3 px-6 hover:opacity-100 hover:bg-[#292932] transition-all duration-300 font-['Manrope'] font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Cài đặt</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-3 px-4 bg-gradient-to-br from-[#c3c0ff] to-[#544bea] text-[#1d00a5] font-bold rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span>Dự án mới</span>
+</button>
+<div class="mt-6 pt-6 border-t border-outline-variant/10">
+<a class="flex items-center gap-4 text-[#c5c5d8] opacity-70 py-3 hover:opacity-100 transition-all font-['Manrope'] font-medium text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span>Trợ giúp</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Wrapper -->
+<div class="ml-64 flex flex-col h-screen overflow-y-auto">
+<!-- TopNavBar -->
+<header class="bg-[#12131b] dark:bg-[#12131b] h-16 sticky top-0 flex items-center justify-between px-8 w-full z-40 bg-[#1a1b24]/80 backdrop-blur-md">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 w-full text-sm focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50" placeholder="Tìm kiếm dự án..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<button class="text-[#c5c5d8] hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#c5c5d8] hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Alex Nguyen</p>
+<p class="text-[10px] text-on-surface-variant">Admin</p>
+</div>
+<img alt="Ảnh đại diện người dùng" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30 group-hover:border-primary transition-colors" data-alt="Close-up portrait of a professional man in his 30s with a clean haircut, smiling warmly in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVwKsxol5nJjc22039jo-tk0BMo9OQNptDg5ssoGZkp5yZ0Fm3vQFMheXvAGLBo3SAiQz-PREp8vMSm3b6cSKVyFvi7iOFGLq3IRRpFHM5Ze0NR1BJ2BLiQ-HgDkeic3XPmlotN9w8vpK9GttxKeWmSMrjUuvZApB_djM_sK9hY1okXSPCTM6lizcRjbpDz73Gs3Tz6dyL_Y65an9u45L1rkccSyEOmHMWMSu1pSKaMtrKle06Ke56ni0RD93YDv4z7hVd3ViUlIUr"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-10">
+<h2 class="text-3xl font-extrabold text-primary font-headline tracking-tight mb-2">Dự án của tôi</h2>
+<p class="text-on-surface-variant font-body">Quản lý và theo dõi tiến độ các dự án đang tham gia.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="flex items-center gap-2 mb-8 border-b border-outline-variant/10 pb-4">
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary text-sm font-bold transition-all">Tất cả</button>
+<button class="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-sm font-medium transition-all">Đang hoạt động</button>
+<button class="px-6 py-2 rounded-full hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-sm font-medium transition-all">Đã lưu trữ</button>
+</div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Empty State / Add New Project -->
+<div class="group cursor-pointer bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 rounded-xl p-8 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/20 hover:border-primary/40 min-h-[280px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="add">add</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface mb-1">Bắt đầu dự án mới</h3>
+<p class="text-on-surface-variant text-sm text-center">Tạo không gian làm việc cho ý tưởng tiếp theo của bạn.</p>
+</div>
+<!-- Project Card 1: NodeJS/React -->
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold tracking-wider uppercase">Đang hoạt động</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Hệ thống Quản lý Nhiệm vụ</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Xây dựng backend NodeJS và frontend React cho hệ thống quản lý tập trung quy mô lớn.</p>
+</div>
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Close-up portrait of a woman smiling outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtwRqG_C_rhwrJgqsQ2ZhdRyia8xj_iF9vGOYTF2aevyo1Gxn9tJeFJQLhPMWwZs3ZKk82uvH7qumdkoD3tJ5vWp1X6UBy0sn6WK3EFBqwplQj02p7S8vCmdvAVe4PVrB69Asc4ogDS_o6043tgLtaa6Z61gktg4QPbpSbO8i7X4Ses9LtNKMQmhCtIIFowwBrg5PWRWCXDcpFhNeMrlHSPk7wbNr9NeiPM1HrYdv6a_lH47V19eyD1y_IKdiZdKuzUkacJ3TFApN7"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a young man with glasses smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByrDRc1EZcDdp67gNUuzxZcRh0_ZhBp-Mhf5LYqXQ3CaMQA6Nm6O8ELuGSxWG7d82Rx1VzzKQitUSyGY-Nu3bY9D0umamNuJWofFugxVHdY5h_lCGBzcNWbMhO_fze8OpdtvIdP2yNcO2FMnernPIT8gP699ATCx4FLEY_SC8ZPsZ12hbT1F8CPFkMsmQekyi3bSepnCAK6rCq4sQYMvGxPRKvzrf5qGTz2MqMcnnTyZ2dfInKHkzs7mgudqrAJbGvmNtYRciNrXxL"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a man with a beard in professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9uAsw9Zy6Ybhg3tQeIk1-_jj-9a51r4YMnsNPVVbJzaoPqINZ-qTpxDBcQBGopq33--RLhD4nx7HQNKyg3uTWPVe6WXXsVYL1tJQ-zFIghSxxSHcWIWS5FFrP9n8XWSTlsJBN7KjLjnRmHWbvuB82R1s3nEXtk6iGtudJnCwsI9KFgK81pbQdkPUtIc7n0NiMmw5qNxgszzfj8UCO0HBX_cV7ArMrPM40_vmwEKZ0WpcUFhs6JhehweRXXD6e1_uf3jVUCgEkWMfq"/>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold text-on-surface">+5</div>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-primary">65%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Project Card 2: Mobile App -->
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary text-[10px] font-bold tracking-wider uppercase">Đang hoạt động</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Ứng dụng Di động Alpha</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Phát triển phiên bản di động cho khách hàng doanh nghiệp, hỗ trợ đa nền tảng iOS &amp; Android.</p>
+</div>
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a woman with a confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1Fre1l22Epf9bGwWTwIaF1dFI7h5pvQt0-mJMg7ZFyN8A4Y7-MRz0QiGhY9iMaynHCBJywMewqY9gViMDerB-WY10E32PXOP40LaNwIsdPEoq3spyUct8lCVbkwW5beymkSkbLyR8Vn34tJTywJPHtuXlg7EmempBjhfnkT5ncEvLKcznY181SkdNpPBe_EF126fNFtiKEBZ3JNXOcA4zPrzcxPUFA09m6wyR91WfIHFTtk1VjFfJ9s11Hm4a-RNKYqnoy2KYwRCZ"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a smiling man in a blue shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5HFD9U2R9-l36b4f1TyekKbtoZharYzd5gsYRge6d3pt9zkCnJm2-XvrjYH7pq-Yez2oQOnBcsD3gf5wumEP4X13EOIIUynvQslP1l_z6fbkmlDorzYQlEQDtgpKmgolp_qByGDfF65I3AUndWxsUzBKMGf62ck3seHgrbDzQKraPyT935qsj_gwbShGftiV4Ub_yqbJ7XNMh7qox-fajtOwqzvb-coptANYEEdnpB6XH1A_I3hj-Se_L6DZvC7JcAQR4urMzG4cB"/>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold text-on-surface">+2</div>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-tertiary">40%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary to-tertiary-container w-[40%]"></div>
+</div>
+</div>
+</div>
+<!-- Project Card 3: Website Corporate -->
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest/50 text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">Đã lưu trữ</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Thiết kế Website Corporate</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Tái cấu trúc toàn bộ giao diện và trải nghiệm người dùng cho trang web chính thức của tập đoàn.</p>
+</div>
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a young woman with curly hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0C5aOm0JazNeSq305XtjhDMqVIcU0Kr8Rnzs1WzZnBawWE1OFlOMJQShV2iACkcQFeo-fVuk7QpDVDvTp20mzTd_BMoykS7mrynfDXonLWUtgT41Rr4AOvwgt4OuMLN_JYHSjIxX3R-LLJc3X73KSHqjfX-58_jOXBYVd8knpH6YFytq8M_3VtV1nL6rmIVn7NstPlgkdcxauFeN6PQY-AmWXR8lqp93GlCueG_oIKRn2eRTZ75Q2jq6rSM_zzGRo0xZu7uOTfN49"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a young man with a serious expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7b3EC7xmx_l5QRZR2wkxXQFKBfgiIcL57Qlq7TplV1Vs4uEVGPgjLuko468G_RLLMstnq5l5T3mK6PfQZEtjxLoYGyzTyYi94y5eGxB79yDgA2eS9358pDyE9UXnFfV0PnSq7h577Ze2vZTgBxegFHpqVKncdy3OoYESyWi152ngRlOC9OG_cUiFxVute_7yh606dWbbeCdtJ3ZSU_vZ8Q99emUggGmu6KVCuwzPSPiQ_7RyfPk4Dl-Yp3kl3tTsyHc17p1GPpXH-"/>
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Close-up of a woman's face looking directly at the camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhhf-Kb1PqK-rJyVL_LmZ6NgEKz9EtoXRfO_DOn0BVPgex6TPA9fHE3Pj7QlVcFd5Eo7IorPcBGHGE__npT9kSOKSHsXYIi6BLbrwNRi5bxMT4rpvANPnto-Wu5HFCKmjJfX4rRJNhc_y4V-h2S66EZRyXjMDOWbYCMeMJ9YsGttn8XnecPcKPgKYPSxSMwpKA-ox5Xbfsmv83CDiibp8x2eROwSlZF3RJd9DWTHP1RU7GvL7NkRPOOMxtU0tQkMAoxGou-4pE9JAw"/>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-on-surface-variant">88%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-on-surface-variant/40 w-[88%]"></div>
+</div>
+</div>
+</div>
+<!-- Extra card for grid rhythm -->
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold tracking-wider uppercase">Đang hoạt động</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Nghiên cứu Thị trường APAC</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Phân tích dữ liệu người dùng và đối thủ cạnh tranh tại khu vực Châu Á Thái Bình Dương.</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold">MT</div>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-primary">12%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[12%]"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest/50 text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">Đã lưu trữ</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Nền tảng E-learning v1</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Hệ thống học trực tuyến phiên bản cũ đã được thay thế bởi phiên bản mới.</p>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold text-on-surface-variant">JS</div>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-on-surface-variant">100%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-on-surface-variant/40 w-[100%]"></div>
+</div>
+</div>
+</div><div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold tracking-wider uppercase">Đang hoạt động</span>
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-snug">Tối ưu hóa UI/UX App</h3>
+<p class="text-on-surface-variant text-xs mt-2 line-clamp-2">Cải thiện các chỉ số giữ chân người dùng thông qua tái thiết kế luồng đăng ký.</p>
+</div>
+<div class="flex -space-x-2">
+<img alt="Team member" class="w-8 h-8 rounded-full border-2 border-surface-container-low object-cover" data-alt="Portrait of a professional woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhhf-Kb1PqK-rJyVL_LmZ6NgEKz9EtoXRfO_DOn0BVPgex6TPA9fHE3Pj7QlVcFd5Eo7IorPcBGHGE__npT9kSOKSHsXYIi6BLbrwNRi5bxMT4rpvANPnto-Wu5HFCKmjJfX4rRJNhc_y4V-h2S66EZRyXjMDOWbYCMeMJ9YsGttn8XnecPcKPgKYPSxSMwpKA-ox5Xbfsmv83CDiibp8x2eROwSlZF3RJd9DWTHP1RU7GvL7NkRPOOMxtU0tQkMAoxGou-4pE9JAw"/>
+</div>
+<div class="mt-auto pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+<span class="text-xs font-bold text-primary">25%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[25%]"></div>
+</div>
+</div>
+</div></div>
+</div>
+</main>
+</div>
+<!-- Floating Action Button for Mobile -->
+<div class="md:hidden fixed bottom-6 right-6">
+<button class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</div>
+</body></html>

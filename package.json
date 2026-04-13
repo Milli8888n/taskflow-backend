@@ -6,7 +6,12 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles",
+    "test:coverage": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000
   },
   "repository": {
     "type": "git",
@@ -22,6 +27,7 @@
   "homepage": "https://github.com/Milli8888n/taskflow-backend#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.6",
     "cross-env": "^10.1.0",
     "dotenv": "^17.4.1",

@@ -15,4 +15,10 @@ router.post('/refresh-token', authController.refreshToken);
 // GET /api/v1/auth/me
 router.get('/me', protect, authController.getMe);
 
+// POST /api/v1/auth/logout
+router.post('/logout', protect, authController.logout);
+
+// PUT /api/v1/auth/change-password
+router.put('/change-password', protect, authController.changePassword);
+
 module.exports = router;

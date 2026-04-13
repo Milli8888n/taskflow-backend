@@ -89,3 +89,42 @@ exports.refreshAccessToken = async (refreshToken) => {
 
   return { accessToken: newAccessToken };
 };
+
+// ========== ĐĂNG XUẤT ==========
+exports.logoutUser = async (userId) => {
+  // Xóa refresh token trong DB → token cũ không thể dùng lại
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError('Tài khoản không tồn tại', 404);
+  }
+
+  user.refreshToken = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  return true;
+};
+
+// ========== ĐỔI MẬT KHẨU ==========
+exports.changePassword = async (userId, currentPassword, newPassword) => {
+  if (!currentPassword || !newPassword) {
+    throw new AppError('Vui lòng cung cấp mật khẩu hiện tại và mật khẩu mới', 400);
+  }
+
+  // Bước 1: Tìm user kèm password
+  const user = await User.findById(userId).select('+password');
+  if (!user) {
+    throw new AppError('Tài khoản không tồn tại', 404);
+  }
+
+  // Bước 2: Xác minh mật khẩu hiện tại
+  const isMatch = await user.comparePassword(currentPassword);
+  if (!isMatch) {
+    throw new AppError('Mật khẩu hiện tại không đúng', 401);
+  }
+
+  // Bước 3: Cập nhật mật khẩu mới (pre-save hook sẽ tự hash)
+  user.password = newPassword;
+  await user.save();
+
+  return true;
+};

@@ -1,0 +1,35 @@
+<%- include('../partials/_header') %>
+
+<main class="page-container">
+  <section class="page-card">
+    <header class="projects-header">
+      <div>
+        <h1 class="page-title">Projects</h1>
+        <p class="page-subtitle">Danh sách dự án của bạn</p>
+      </div>
+      <div class="projects-actions">
+        <button class="btn-primary" id="btn-refresh-projects" type="button">Tải lại</button>
+      </div>
+    </header>
+
+    <div class="projects-list" id="projects-list">
+      <div class="projects-empty" id="projects-empty" style="display:none;">
+        Chưa có dự án nào. Hãy tạo project qua API trước.
+      </div>
+      <div class="projects-loading" id="projects-loading">
+        Đang tải danh sách dự án...
+      </div>
+    </div>
+
+    <div class="error-text" id="projects-error" style="display:none;"></div>
+  </section>
+</main>
+
+<script>
+  window.__TF__ = window.__TF__ || {};
+  window.__TF__.page = 'projects-index';
+</script>
+<script src="/js/board.js"></script>
+
+<%- include('../partials/_footer') %>
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Invite Member - TaskFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-container-highest": "#34343e",
+                    "surface-container": "#1e1f28",
+                    "on-background": "#e3e1ee",
+                    "inverse-surface": "#e3e1ee",
+                    "surface-container-low": "#1a1b24",
+                    "background": "#12131b",
+                    "on-primary-fixed": "#0f0069",
+                    "surface-dim": "#12131b",
+                    "tertiary": "#4edea3",
+                    "surface-bright": "#383842",
+                    "on-tertiary-container": "#6efbbd",
+                    "on-surface": "#e3e1ee",
+                    "surface-tint": "#c3c0ff",
+                    "on-secondary-container": "#a9bad3",
+                    "secondary": "#b7c8e1",
+                    "on-surface-variant": "#c5c5d8",
+                    "outline": "#8f8fa1",
+                    "inverse-primary": "#4d44e3",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#00734e",
+                    "on-tertiary": "#003824",
+                    "primary": "#c3c0ff",
+                    "inverse-on-surface": "#2f3039",
+                    "secondary-fixed": "#d3e4fe",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "primary-fixed": "#e2dfff",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "on-primary": "#1d00a5",
+                    "surface-container-lowest": "#0d0e16",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-error": "#690005",
+                    "surface": "#12131b",
+                    "on-secondary-fixed": "#0b1c30",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "on-secondary": "#213145",
+                    "outline-variant": "#444655",
+                    "surface-variant": "#34343e",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container-high": "#292932",
+                    "secondary-container": "#3a4a5f",
+                    "on-primary-container": "#e2dfff",
+                    "on-error-container": "#ffdad6",
+                    "error": "#ffb4ab",
+                    "primary-container": "#544bea",
+                    "on-secondary-fixed-variant": "#38485d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-4">
+<!-- Background Canvas (Underlying Dashboard UI Mockup) -->
+<div class="fixed inset-0 z-0 opacity-20 pointer-events-none overflow-hidden flex flex-col">
+<!-- TopAppBar Mockup -->
+<header class="bg-[#12131b] text-on-surface px-6 h-16 w-full flex justify-between items-center">
+<span class="text-xl font-bold tracking-tight text-[#e3e1ee] font-headline">TaskFlow</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined">notifications</span>
+<span class="material-symbols-outlined">settings</span>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar Mockup -->
+<aside class="w-64 bg-[#1a1b24] p-8 flex flex-col gap-6">
+<div class="h-4 w-32 bg-surface-container-high rounded-full"></div>
+<div class="space-y-4">
+<div class="h-10 w-full bg-[#34343e] rounded-lg"></div>
+<div class="h-10 w-full bg-transparent border border-outline-variant/10 rounded-lg"></div>
+<div class="h-10 w-full bg-transparent border border-outline-variant/10 rounded-lg"></div>
+</div>
+</aside>
+<!-- Main Content Mockup -->
+<main class="flex-1 p-12 space-y-12">
+<div class="grid grid-cols-3 gap-6">
+<div class="h-48 bg-surface-container-low rounded-xl border border-outline-variant/10"></div>
+<div class="h-48 bg-surface-container-low rounded-xl border border-outline-variant/10"></div>
+<div class="h-48 bg-surface-container-low rounded-xl border border-outline-variant/10"></div>
+</div>
+<div class="h-96 bg-surface-container-low rounded-xl border border-outline-variant/10"></div>
+</main>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-40 bg-background/80 backdrop-blur-md flex items-center justify-center p-6">
+<!-- Invite Member Modal -->
+<div class="w-full max-w-lg bg-surface-container-low rounded-xl overflow-hidden shadow-[0px_12_32px_rgba(0,0,0,0.4)] flex flex-col">
+<!-- Modal Header -->
+<div class="p-8 pb-0">
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-2xl font-extrabold tracking-tight text-on-surface font-headline leading-tight">Invite New Member</h2>
+<button class="text-on-surface-variant hover:bg-surface-container-high p-1 rounded-md transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="text-on-surface-variant text-sm tracking-wide">Enter the details of the team member you wish to add to the project alpha workspace.</p>
+</div>
+<!-- Modal Body -->
+<div class="p-8 space-y-8">
+<!-- Email Input -->
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant" for="email">Email Address</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all font-body" id="email" placeholder="colleague@company.com" type="email"/>
+<span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">mail</span>
+</div>
+</div>
+<!-- Role Selection -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Assign Role</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Role Option 1 -->
+<label class="relative flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer group has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high">
+<input class="sr-only peer" name="role" type="radio" value="owner"/>
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">verified_user</span>
+<div class="w-4 h-4 rounded-full border-2 border-outline-variant flex items-center justify-center group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary">
+<div class="w-1.5 h-1.5 bg-background rounded-full"></div>
+</div>
+</div>
+<span class="font-bold text-on-surface font-headline mb-1">Project Owner</span>
+<span class="text-xs text-on-surface-variant">Full administrative access to settings and billing.</span>
+</label>
+<!-- Role Option 2 -->
+<label class="relative flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer group has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high">
+<input checked="" class="sr-only peer" name="role" type="radio" value="member"/>
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-on-surface-variant peer-checked:text-primary">group</span>
+<div class="w-4 h-4 rounded-full border-2 border-outline-variant flex items-center justify-center group-hover:border-primary/50 peer-checked:border-primary peer-checked:bg-primary">
+<div class="w-1.5 h-1.5 bg-background rounded-full"></div>
+</div>
+</div>
+<span class="font-bold text-on-surface font-headline mb-1">Project Member</span>
+<span class="text-xs text-on-surface-variant">Can create tasks, edit projects, and manage files.</span>
+</label>
+</div>
+</div>
+<!-- Info Hint -->
+<div class="flex items-center gap-3 p-4 bg-primary-container/10 rounded-xl border border-primary/10">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<p class="text-sm text-on-surface-variant leading-tight">Members will receive an email invitation to join the project.</p>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-6 bg-surface-container flex flex-col md:flex-row-reverse gap-4">
+<button class="flex-1 py-3 px-6 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold tracking-tight text-center hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                    Send Invitation
+                </button>
+<button class="flex-1 py-3 px-6 rounded-xl bg-surface-container-high text-on-surface-variant font-bold tracking-tight text-center hover:text-on-surface hover:bg-surface-bright active:scale-95 transition-all">
+                    Cancel
+                </button>
+</div>
+</div>
+</div>
+</body></html>

@@ -13,4 +13,8 @@ router.get('/register', (req, res) => {
   res.render('auth/register', { title: 'Đăng Ký - TaskFlow' });
 });
 
+router.get('/project', (req, res) => {
+  res.render('projects/index', { title: 'Project - TaskFlow' });
+});
+
 module.exports = router;
