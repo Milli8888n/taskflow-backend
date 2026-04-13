@@ -36,6 +36,9 @@ const initSocket = (server) => {
 
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.user.name} (${socket.id})`);
+    
+    // Tham gia room cá nhân để nhận thông báo assign
+    socket.join(`user:${socket.user._id.toString()}`);
 
     socket.on('joinProject', (projectId) => {
       socket.join(`project:${projectId}`);
@@ -57,6 +60,7 @@ const initSocket = (server) => {
 
 const getIO = () => {
   if (!io) {
+    if (process.env.NODE_ENV === 'test') return null;
     throw new Error('Socket.io chưa được khởi tạo!');
   }
   return io;

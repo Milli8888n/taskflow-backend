@@ -59,6 +59,9 @@ app.use('/api/v1/projects', projectRoutes);
 
 app.use('/api/v1/users', userRoutes);
 
+const dashboardRoutes = require('./routes/dashboardRoutes');
+app.use('/api/v1/dashboard', dashboardRoutes);
+
 const viewRoutes = require('./routes/viewRoutes');
 app.use('/', viewRoutes);
 

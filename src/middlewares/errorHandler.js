@@ -38,6 +38,12 @@ const errorHandler = (err, req, res, next) => {
     message = 'Token đã hết hạn. Vui lòng đăng nhập lại';
   }
 
+  // Lỗi 6: Lỗi Multer (sai tên field, file quá lớn...)
+  if (err.name === 'MulterError') {
+    statusCode = 400;
+    message = `Lỗi file: ${err.message}`;
+  }
+
   // ===== TRẢ RESPONSE JSON CHUẨN =====
   res.status(statusCode).json({
     status: statusCode >= 500 ? 'error' : 'fail',

@@ -11,7 +11,9 @@ exports.addComment = async (taskId, content, userId) => {
   const comment = await Comment.create({ taskId, author: userId, content });
   const populatedComment = await Comment.findById(comment._id).populate('author', 'name avatar');
   const io = getIO();
-io.to(`project:${task.projectId}`).emit('commentCreated', populatedComment);
+  if (io) {
+    io.to(`project:${task.projectId}`).emit('commentCreated', populatedComment);
+  }
   return populatedComment;
 };
 
