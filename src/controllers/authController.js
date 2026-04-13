@@ -57,3 +57,30 @@ exports.getMe = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.logout = async (req, res, next) => {
+  try {
+    await authService.logoutUser(req.user._id);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Đăng xuất thành công'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    await authService.changePassword(req.user._id, currentPassword, newPassword);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Đổi mật khẩu thành công'
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -26,4 +26,7 @@ router.delete('/:projectId/members/:memberId', checkProjectMembership, restrictT
 
 // Nested route: Tasks thuộc project (sẽ gắn ở S2-10)
 
+const taskRoutes = require('./taskRoutes');
+router.use('/:projectId/tasks', taskRoutes);
+
 module.exports = router;

@@ -1,16 +1,260 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html class="dark" lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title : 'TaskFlow' %></title>
-  <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title != 'undefined' ? title : 'TaskFlow' %></title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Material Symbols Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS CDN + Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Stitch Design Tokens (BẮT BUỘC) -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c3c0ff",
+                        "primary-container": "#544bea",
+                        "on-primary": "#1d00a5",
+                        "on-primary-container": "#e2dfff",
+                        "secondary": "#b7c8e1",
+                        "secondary-container": "#3a4a5f",
+                        "on-secondary": "#213145",
+                        "on-secondary-container": "#a9bad3",
+                        "tertiary": "#4edea3",
+                        "tertiary-container": "#00734e",
+                        "on-tertiary": "#003824",
+                        "on-tertiary-container": "#6efbbd",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#12131b",
+                        "surface-dim": "#12131b",
+                        "surface-bright": "#383842",
+                        "surface-container-lowest": "#0d0e16",
+                        "surface-container-low": "#1a1b24",
+                        "surface-container": "#1e1f28",
+                        "surface-container-high": "#292932",
+                        "surface-container-highest": "#34343e",
+                        "on-surface": "#e3e1ee",
+                        "on-surface-variant": "#c5c5d8",
+                        "on-background": "#e3e1ee",
+                        "background": "#12131b",
+                        "outline": "#8f8fa1",
+                        "outline-variant": "#444655",
+                        "inverse-surface": "#e3e1ee",
+                        "inverse-on-surface": "#2f3039",
+                        "inverse-primary": "#4d44e3",
+                        "surface-tint": "#c3c0ff",
+                        "surface-variant": "#34343e",
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.125rem",
+                        lg: "0.25rem",
+                        xl: "0.5rem",
+                        full: "0.75rem",
+                    },
+                    fontFamily: {
+                        headline: ["Manrope", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                        label: ["Inter", "sans-serif"],
+                    },
+                    animation: {
+                        "gradient-shift": "gradientShift 6s ease infinite",
+                        "float": "float 3s ease-in-out infinite",
+                        "glow-pulse": "glowPulse 3s ease-in-out infinite",
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            "0%": { backgroundPosition: "0% 50%" },
+                            "50%": { backgroundPosition: "100% 50%" },
+                            "100%": { backgroundPosition: "0% 50%" },
+                        },
+                        float: {
+                            "0%, 100%": { transform: "translateY(0)" },
+                            "50%": { transform: "translateY(-10px)" },
+                        },
+                        glowPulse: {
+                            "0%, 100%": { boxShadow: "0 0 20px rgba(195, 192, 255, 0.3)" },
+                            "50%": { boxShadow: "0 0 30px rgba(195, 192, 255, 0.6)" },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+
+    <!-- Stitch Base Styles + Utility Classes -->
+    <style>
+        /* ==================== MATERIAL SYMBOLS CONFIGURATION ==================== */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* ==================== BASE TYPOGRAPHY & COLORS ==================== */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #12131b;
+            color: #e3e1ee;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+        }
+
+        /* ==================== CUSTOM SCROLLBAR (WEBKIT) ==================== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #12131b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #34343e;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444655;
+        }
+
+        /* ==================== KINETIC GRADIENT - ANIMATED BACKGROUNDS ==================== */
+        /* Animated gradient background for hero sections & elements */
+        .kinetic-gradient {
+            background: linear-gradient(135deg,
+                #c3c0ff 0%,
+                #544bea 25%,
+                #4edea3 50%,
+                #544bea 75%,
+                #c3c0ff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        /* Glow text effect with moving gradient */
+        .kinetic-glow {
+            background: linear-gradient(90deg,
+                #c3c0ff,
+                #4edea3,
+                #c3c0ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        /* ==================== GLASS PANEL EFFECTS - GLASS MORPHISM ==================== */
+        /* Glass Morphism Card Container */
+        .glass-panel {
+            background: rgba(26, 27, 36, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(197, 197, 216, 0.15);
+            transition: all 0.3s ease;
+        }
+        .glass-panel:hover {
+            background: rgba(26, 27, 36, 0.8);
+            border-color: rgba(197, 197, 216, 0.25);
+            box-shadow: 0 8px 32px rgba(195, 192, 255, 0.1);
+        }
+
+        /* Glass Blur - Strong frosted effect (default) */
+        .glass-blur {
+            background: rgba(18, 19, 27, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 197, 216, 0.1);
+        }
+
+        /* Glass Blur Light - Subtle blur for overlays */
+        .glass-blur-light {
+            background: rgba(26, 27, 36, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(197, 197, 216, 0.05);
+        }
+
+        /* Glass Blur Strong - Maximum blur effect for modal backdrops */
+        .glass-blur-strong {
+            background: rgba(18, 19, 27, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(195, 192, 255, 0.2);
+        }
+
+        /* ==================== GLOW & SHADOW EFFECTS ==================== */
+        /* Glow shadow for interactive elements */
+        .glow-sm {
+            box-shadow: 0 0 15px rgba(195, 192, 255, 0.15);
+        }
+        .glow-md {
+            box-shadow: 0 0 25px rgba(195, 192, 255, 0.25);
+        }
+        .glow-lg {
+            box-shadow: 0 0 40px rgba(195, 192, 255, 0.35);
+        }
+        .glow-xl {
+            box-shadow: 0 0 60px rgba(195, 192, 255, 0.45);
+        }
+
+        /* Primary color glow */
+        .glow-primary {
+            box-shadow: 0 0 20px rgba(195, 192, 255, 0.4);
+        }
+        .glow-primary-container {
+            box-shadow: 0 0 20px rgba(84, 75, 234, 0.4);
+        }
+        .glow-tertiary {
+            box-shadow: 0 0 20px rgba(78, 222, 163, 0.4);
+        }
+
+        /* ==================== FLOATING & ANIMATION EFFECTS ==================== */
+        /* Float animation for cards & elements */
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse glow animation */
+        .glow-pulse {
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        /* ==================== UTILITY CLASSES ==================== */
+        /* For selecting text with primary color */
+        ::selection {
+            background-color: rgba(195, 192, 255, 0.3);
+            color: #e3e1ee;
+        }
+
+        /* Smooth transitions for interactive elements */
+        button, a, input, select, textarea {
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive utility: Hide on mobile, show on md+ */
+        @media (max-width: 768px) {
+            .hide-mobile {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <!-- Custom CSS (nếu có) -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <a href="/">TaskFlow</a>
-    </div>
-    <div class="navbar-menu" id="navbar-menu">
-    </div>
-  </nav>
+<body class="bg-background text-on-background font-body antialiased selection:bg-primary/30">
