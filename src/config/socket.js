@@ -57,6 +57,10 @@ const initSocket = (server) => {
 
 const getIO = () => {
   if (!io) {
+    // Trong môi trường test, Socket.io không được khởi tạo
+    if (process.env.NODE_ENV === 'test') {
+      return null;
+    }
     throw new Error('Socket.io chưa được khởi tạo!');
   }
   return io;

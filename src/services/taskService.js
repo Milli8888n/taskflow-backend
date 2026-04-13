@@ -8,7 +8,7 @@ exports.createTask = async (projectId, taskData, userId) => {
     projectId: projectId
   });
   const io = getIO();
-io.to(`project:${projectId}`).emit('taskCreated', task);
+  if (io) io.to(`project:${projectId}`).emit('taskCreated', task);
   return task;
 };
 
@@ -53,7 +53,7 @@ exports.updateTask = async (taskId, updateData) => {
 
   if (!task) throw new AppError('Không tìm thấy công việc', 404);
   const io = getIO();
-io.to(`project:${task.projectId}`).emit('taskUpdated', task);
+  if (io) io.to(`project:${task.projectId}`).emit('taskUpdated', task);
   return task;
 };
 
