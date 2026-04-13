@@ -1,93 +1,183 @@
-<%- include('../partials/_header') %>
-<link rel="stylesheet" href="/css/board.css">
+<%- include('../partials/_header', { title: 'Board | TaskFlow' }) %>
+<%- include('../partials/_sidebar', { activePage: 'projects' }) %>
+<%- include('../partials/_topbar') %>
 
-<main class="board-page">
-  <header class="board-topbar">
-    <div>
-      <h1 class="board-title" id="board-title">Kanban Board</h1>
-      <p class="board-subtitle" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
+<main class="md:ml-64 pt-16 min-h-screen bg-background overflow-hidden">
+    <div class="p-6 lg:p-10 flex flex-col h-[calc(100vh-4rem)]">
+
+        <!-- Board Header -->
+        <header class="flex justify-between items-center mb-6 shrink-0">
+            <div>
+                <h2 class="text-3xl font-extrabold font-headline text-on-surface tracking-tight" id="board-title">Kanban Board</h2>
+                <p class="text-on-surface-variant text-sm mt-1" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary/20 transition-colors" id="btn-invite-member">
+                    <span class="material-symbols-outlined text-sm mr-1 align-middle">person_add</span> Mời
+                </button>
+                <button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-xl font-bold text-sm hover:brightness-110 transition-all" id="btn-refresh-board">
+                    <span class="material-symbols-outlined text-sm mr-1 align-middle">add</span> Thêm thẻ
+                </button>
+            </div>
+        </header>
+
+        <!-- Kanban Columns -->
+        <section class="flex gap-6 flex-1 overflow-x-auto pb-4 items-start" id="board" aria-label="Kanban board">
+
+            <!-- Column: To Do -->
+            <div class="min-w-[320px] w-[320px] flex flex-col" data-status="To Do">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Cần làm (<span data-count="To Do">0</span>)</h4>
+                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+                </div>
+                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="To Do">
+                    <!-- Task cards render vào đây -->
+                </div>
+            </div>
+
+            <!-- Column: In Progress -->
+            <div class="min-w-[320px] w-[320px] flex flex-col bg-surface-container-lowest/30 p-4 rounded-[2rem]" data-status="In Progress">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Đang làm (<span data-count="In Progress">0</span>)</h4>
+                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+                </div>
+                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="In Progress">
+                    <!-- Task cards render vào đây -->
+                </div>
+            </div>
+
+            <!-- Column: Done -->
+            <div class="min-w-[320px] w-[320px] flex flex-col" data-status="Done">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Hoàn thành (<span data-count="Done">0</span>)</h4>
+                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+                </div>
+                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="Done">
+                    <!-- Task cards render vào đây -->
+                </div>
+            </div>
+        </section>
+
+        <div class="text-error text-sm hidden" id="board-error"></div>
     </div>
-    <div class="board-actions">
-      <button class="btn-primary" id="btn-refresh-board" type="button">Tải lại</button>
-    </div>
-  </header>
-
-  <section class="board" id="board" aria-label="Kanban board">
-    <div class="board-column" data-status="To Do">
-      <div class="board-column__header">
-        <h2>To Do</h2>
-        <span class="board-column__count" data-count="To Do">0</span>
-      </div>
-      <div class="board-column__body" data-dropzone="To Do"></div>
-    </div>
-
-    <div class="board-column" data-status="In Progress">
-      <div class="board-column__header">
-        <h2>In Progress</h2>
-        <span class="board-column__count" data-count="In Progress">0</span>
-      </div>
-      <div class="board-column__body" data-dropzone="In Progress"></div>
-    </div>
-
-    <div class="board-column" data-status="Done">
-      <div class="board-column__header">
-        <h2>Done</h2>
-        <span class="board-column__count" data-count="Done">0</span>
-      </div>
-      <div class="board-column__body" data-dropzone="Done"></div>
-    </div>
-  </section>
-
-  <div class="board-hint">
-    Tip: URL dạng <code>?projectId=&lt;id&gt;</code>. Ví dụ: <code>/board?projectId=...</code>
-  </div>
-
-  <div class="error-text" id="board-error" style="display:none;"></div>
 </main>
 
-<!-- Task detail modal -->
-<div class="modal-overlay" id="task-modal-overlay" style="display:none;" aria-hidden="true"></div>
-<div class="modal" id="task-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
-  <div class="modal__header">
-    <div>
-      <h2 class="modal__title" id="task-modal-title">Task</h2>
-      <div class="modal__subtitle" id="task-modal-subtitle"></div>
-    </div>
-    <button class="modal__close" id="task-modal-close" type="button" aria-label="Đóng">×</button>
-  </div>
+<!-- ========== Task Detail Modal (3.4) ========== -->
+<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-md hidden items-center justify-center p-6" id="task-modal-overlay">
+    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-2xl shadow-black/60 overflow-hidden max-h-[90vh] overflow-y-auto p-8">
 
-  <div class="modal__body">
-    <div class="modal__section">
-      <div class="modal__section-title">Mô tả</div>
-      <div class="modal__section-content" id="task-modal-desc">—</div>
-    </div>
+        <!-- Cột 8: Nội dung chính -->
+        <div class="col-span-1 lg:col-span-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-on-surface-variant uppercase tracking-wider" id="task-modal-project">Dự án</span>
+                <button class="text-on-surface-variant hover:text-on-surface" id="task-modal-close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-on-surface leading-tight font-headline" id="task-modal-title">Tiêu đề task</h1>
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Mô tả</h3>
+                <p class="text-on-surface leading-relaxed font-light" id="task-modal-desc">—</p>
+            </div>
 
-    <div class="modal__section">
-      <div class="modal__section-title">Đính kèm</div>
-      <div class="attachments" id="task-attachments"></div>
-      <div class="attachments-empty" id="task-attachments-empty" style="display:none;">Chưa có file đính kèm.</div>
-    </div>
+            <!-- Attachments -->
+            <div class="space-y-4">
+                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Đính kèm</h3>
+                <div id="task-attachments"></div>
+                <div class="hidden text-on-surface-variant text-sm" id="task-attachments-empty">Chưa có file đính kèm.</div>
+                <div class="flex items-center gap-3">
+                    <input type="file" id="task-upload-input" class="text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-surface-container-high file:text-on-surface hover:file:bg-surface-bright">
+                    <button id="task-upload-btn" class="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">Tải lên</button>
+                </div>
+                <div class="text-error text-sm hidden" id="task-upload-error"></div>
+            </div>
+        </div>
 
-    <div class="modal__section">
-      <div class="modal__section-title">Tải file</div>
-      <div class="upload-row">
-        <input class="upload-input" type="file" id="task-upload-input">
-        <button class="btn-primary upload-btn" id="task-upload-btn" type="button">Tải lên</button>
-      </div>
-      <div class="upload-hint">
-        File sẽ được upload lên server và gắn vào task này.
-      </div>
-      <div class="error-text" id="task-upload-error" style="display:none;"></div>
+        <!-- Cột 4: Sidebar thông tin -->
+        <div class="col-span-1 lg:col-span-4 space-y-6">
+            <div class="bg-surface-container-low p-6 rounded-xl space-y-6">
+                <div>
+                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Trạng thái</label>
+                    <select id="task-modal-status" class="w-full bg-primary-container/20 text-primary px-4 py-3 rounded-lg font-bold text-sm border-none focus:ring-primary">
+                        <option value="To Do">To Do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Độ ưu tiên</label>
+                    <select id="task-modal-priority" class="w-full bg-surface-container text-on-surface px-4 py-3 rounded-lg font-medium text-sm border border-outline-variant/10 focus:ring-primary">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Hạn chót</label>
+                    <input type="date" id="task-modal-deadline" class="w-full bg-surface-container text-on-surface px-4 py-3 rounded-lg text-sm border border-outline-variant/10 focus:ring-primary">
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- ========== Invite Modal (3.5) ========== -->
+<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-md hidden items-center justify-center p-6" id="invite-modal-overlay">
+    <div class="w-full max-w-lg bg-surface-container-low rounded-xl overflow-hidden shadow-2xl shadow-black/60 flex flex-col">
+        <!-- Modal Header -->
+        <div class="p-8 pb-0">
+            <div class="flex justify-between items-start mb-2">
+                <h2 class="text-2xl font-extrabold tracking-tight text-on-surface font-headline">Mời thành viên</h2>
+                <button class="text-on-surface-variant hover:bg-surface-container-high p-1 rounded-md transition-colors" id="invite-modal-close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <p class="text-on-surface-variant text-sm">Nhập email người bạn muốn mời vào dự án.</p>
+        </div>
+        <!-- Modal Body -->
+        <div class="p-8 space-y-8">
+            <div class="space-y-2">
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email</label>
+                <div class="relative group">
+                    <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all" placeholder="colleague@company.com" type="email" id="invite-email"/>
+                    <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">mail</span>
+                </div>
+            </div>
+            <!-- Role -->
+            <div class="space-y-4">
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Vai trò</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high cursor-pointer has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high transition-all">
+                        <input class="sr-only" name="role" type="radio" value="owner"/>
+                        <span class="material-symbols-outlined text-on-surface-variant mb-3">verified_user</span>
+                        <span class="font-bold text-on-surface font-headline text-sm">Owner</span>
+                        <span class="text-xs text-on-surface-variant">Full admin access.</span>
+                    </label>
+                    <label class="flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high cursor-pointer has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high transition-all">
+                        <input class="sr-only" name="role" type="radio" value="member" checked/>
+                        <span class="material-symbols-outlined text-on-surface-variant mb-3">group</span>
+                        <span class="font-bold text-on-surface font-headline text-sm">Member</span>
+                        <span class="text-xs text-on-surface-variant">Create & edit tasks.</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="px-8 py-6 bg-surface-container flex flex-row-reverse gap-4">
+            <button class="flex-1 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20" id="invite-send-btn">
+                Gửi lời mời
+            </button>
+            <button class="flex-1 py-3 rounded-xl bg-surface-container-high text-on-surface-variant font-bold hover:text-on-surface transition-all" id="invite-cancel-btn">
+                Huỷ
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
-  window.__TF__ = window.__TF__ || {};
-  window.__TF__.page = 'projects-board';
+    window.__TF__ = window.__TF__ || {};
+    window.__TF__.page = 'projects-board';
 </script>
 <script src="/js/dragdrop.js"></script>
 <script src="/js/board.js"></script>
-
 <%- include('../partials/_footer') %>
-

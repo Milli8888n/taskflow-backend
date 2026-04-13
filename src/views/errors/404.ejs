@@ -1,0 +1,16 @@
+<%- include('../partials/_header', { title: '404 - Không tìm thấy' }) %>
+
+<main class="min-h-screen flex items-center justify-center p-6">
+    <div class="text-center space-y-6 max-w-md">
+        <div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center mx-auto">
+            <span class="material-symbols-outlined text-5xl text-on-surface-variant/40">explore_off</span>
+        </div>
+        <h1 class="text-6xl font-extrabold font-headline text-on-surface">404</h1>
+        <p class="text-on-surface-variant text-lg">Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
+        <a href="/projects" class="inline-flex items-center gap-2 kinetic-gradient text-on-primary font-bold py-3 px-8 rounded-xl hover:scale-[0.98] transition-transform">
+            <span class="material-symbols-outlined">arrow_back</span> Về trang chủ
+        </a>
+    </div>
+</main>
+
+<%- include('../partials/_footer') %>

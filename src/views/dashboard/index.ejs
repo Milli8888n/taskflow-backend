@@ -1,0 +1,80 @@
+<%- include('../partials/_header', { title: 'Dashboard | TaskFlow' }) %>
+<%- include('../partials/_sidebar', { activePage: 'dashboard' }) %>
+<%- include('../partials/_topbar') %>
+
+<!-- Main Content (lệch phải 256px do sidebar) -->
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+    <div class="p-6 lg:p-10 max-w-7xl mx-auto space-y-10">
+
+        <!-- Page Header -->
+        <header>
+            <h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Dashboard</h1>
+            <p class="text-on-surface-variant mt-2 text-lg font-light">Tổng quan hiệu suất làm việc của bạn.</p>
+        </header>
+
+        <!-- Stats Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <!-- Card lớn: Tiến độ -->
+            <div class="col-span-1 md:col-span-2 bg-surface-container-low p-6 rounded-xl flex flex-col justify-between hover:bg-surface-container transition-colors duration-300 border border-outline-variant/10">
+                <div class="flex justify-between items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">analytics</span>
+                    </div>
+                    <span class="text-tertiary font-bold text-sm bg-tertiary/10 px-2 py-1 rounded">+12%</span>
+                </div>
+                <div class="mt-8">
+                    <p class="text-on-surface-variant text-sm font-medium tracking-wider uppercase">Tiến độ Dự án</p>
+                    <h3 class="text-5xl font-extrabold font-headline mt-2 text-on-surface">84<span class="text-primary text-3xl">%</span></h3>
+                </div>
+            </div>
+
+            <!-- Card: Quá hạn -->
+            <div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between border-b-2 border-error/30">
+                <div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-error">priority_high</span>
+                </div>
+                <div class="mt-4">
+                    <p class="text-on-surface-variant text-sm font-medium">Quá hạn</p>
+                    <h3 class="text-4xl font-bold font-headline mt-1 text-error">03</h3>
+                </div>
+            </div>
+
+            <!-- Card: Hôm nay -->
+            <div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between border-b-2 border-primary/30">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary">schedule</span>
+                </div>
+                <div class="mt-4">
+                    <p class="text-on-surface-variant text-sm font-medium">Hôm nay</p>
+                    <h3 class="text-4xl font-bold font-headline mt-1 text-primary">07</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <section class="space-y-6">
+            <h3 class="text-xl font-bold font-headline text-on-surface">Hoạt động gần đây</h3>
+            <div class="bg-surface-container-low p-8 rounded-xl">
+                <div class="relative space-y-8">
+                    <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-outline-variant/20"></div>
+                    <!-- Timeline Entry mẫu -->
+                    <div class="relative flex gap-6">
+                        <div class="relative z-10 w-10 h-10 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-primary text-xl">task_alt</span>
+                        </div>
+                        <div class="flex-1 space-y-1">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-on-surface"><span class="font-bold text-primary">Bạn</span> đã hoàn thành task <span class="font-semibold">"Setup Database"</span></p>
+                                <span class="text-xs text-on-surface-variant">2 giờ trước</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<%- include('../partials/_footer') %>

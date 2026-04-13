@@ -1,0 +1,110 @@
+<%- include('../partials/_header', { title: 'Cài đặt | TaskFlow' }) %>
+<%- include('../partials/_sidebar', { activePage: 'settings' }) %>
+<%- include('../partials/_topbar') %>
+
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+    <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-12">
+
+        <!-- Header -->
+        <div class="space-y-1">
+            <h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Project Settings</h1>
+            <p class="text-on-surface-variant">Quản lý workspace, thành viên và bảo mật.</p>
+        </div>
+
+        <!-- ===== Tab Navigation (Activity / Roles) ===== -->
+        <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl w-fit">
+            <button class="px-5 py-2 rounded-lg text-sm font-bold bg-surface-container-highest text-on-surface transition-colors" data-tab="activity">Cài đặt chung</button>
+            <button class="px-5 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors" data-tab="roles">Vai trò & Quyền</button>
+        </div>
+
+        <!-- General Settings -->
+        <section class="space-y-6">
+            <h3 class="text-xl font-bold font-headline text-on-surface">General Settings</h3>
+            <div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Tên dự án</label>
+                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors" type="text" value="Dự án mẫu" />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Project ID</label>
+                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/20 text-on-surface-variant/60 px-0 py-2 cursor-not-allowed" readonly type="text" value="PROJ-001" />
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mô tả</label>
+                    <textarea class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors resize-none" rows="3">Mô tả dự án tại đây.</textarea>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-2 rounded-lg text-sm font-semibold transition-all">Lưu thay đổi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Access -->
+        <section class="space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 class="text-xl font-bold font-headline text-on-surface">Team Access</h3>
+                <button class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
+                    <span class="material-symbols-outlined text-lg">person_add</span> Mời thành viên
+                </button>
+            </div>
+            <div class="bg-surface-container-low rounded-xl overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-lowest/50">
+                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Thành viên</th>
+                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Vai trò</th>
+                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Ngày tham gia</th>
+                            <th class="px-6 py-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/10">
+                        <!-- Hàng mẫu -->
+                        <tr class="hover:bg-surface-container-high transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-on-primary-container">A</div>
+                                    <div>
+                                        <div class="font-semibold text-on-surface">Admin User</div>
+                                        <div class="text-xs text-on-surface-variant">admin@taskflow.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-tertiary-container/20 text-on-tertiary-container border border-tertiary-container/30">Owner</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-on-surface-variant">01/01/2026</td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">more_vert</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Danger Zone -->
+        <section class="space-y-6 pt-10">
+            <div class="border-t border-error/20 pt-10">
+                <div class="flex items-center gap-3 text-error mb-4">
+                    <span class="material-symbols-outlined">warning</span>
+                    <h3 class="text-xl font-bold font-headline">Danger Zone</h3>
+                </div>
+                <div class="bg-error-container/5 border border-error/10 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-on-surface">Xoá dự án này</h4>
+                        <p class="text-sm text-on-surface-variant max-w-lg">Thao tác này không thể hoàn tác. Toàn bộ dữ liệu sẽ bị xoá vĩnh viễn.</p>
+                    </div>
+                    <button class="shrink-0 bg-error text-on-error px-6 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-error/10">
+                        Xoá Dự Án
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-20"></div>
+    </div>
+</main>
+
+<%- include('../partials/_footer') %>

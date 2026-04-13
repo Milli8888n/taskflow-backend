@@ -1,0 +1,68 @@
+<%- include('../partials/_header', { title: 'Hồ sơ | TaskFlow' }) %>
+<%- include('../partials/_sidebar', { activePage: 'profile' }) %>
+<%- include('../partials/_topbar') %>
+
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+    <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-10">
+
+        <!-- Profile Header -->
+        <div class="flex flex-col items-center text-center space-y-4">
+            <div class="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-3xl font-bold font-headline">
+                <% if (typeof user !== 'undefined' && user && user.name) { %>
+                    <%= user.name.charAt(0).toUpperCase() %>
+                <% } else { %>
+                    U
+                <% } %>
+            </div>
+            <div>
+                <h1 class="text-3xl font-extrabold font-headline text-on-surface">
+                    <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %>
+                </h1>
+                <p class="text-on-surface-variant">
+                    <%= typeof user !== 'undefined' && user ? user.email : 'user@email.com' %>
+                </p>
+            </div>
+        </div>
+
+        <!-- Info Sections -->
+        <section class="space-y-6">
+            <h3 class="text-xl font-bold font-headline text-on-surface">Thông tin cá nhân</h3>
+            <div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Họ và tên</label>
+                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors" type="text" value="<%= typeof user !== 'undefined' && user ? user.name : '' %>" />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Email</label>
+                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/20 text-on-surface-variant/60 px-0 py-2 cursor-not-allowed" readonly type="email" value="<%= typeof user !== 'undefined' && user ? user.email : '' %>" />
+                    </div>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-2 rounded-lg text-sm font-semibold transition-all">Lưu thay đổi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="space-y-6">
+            <h3 class="text-xl font-bold font-headline text-on-surface">Thống kê hoạt động</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-surface-container-low p-6 rounded-xl text-center">
+                    <p class="text-on-surface-variant text-sm">Dự án tham gia</p>
+                    <h3 class="text-3xl font-extrabold font-headline text-primary mt-2">5</h3>
+                </div>
+                <div class="bg-surface-container-low p-6 rounded-xl text-center">
+                    <p class="text-on-surface-variant text-sm">Tasks hoàn thành</p>
+                    <h3 class="text-3xl font-extrabold font-headline text-tertiary mt-2">42</h3>
+                </div>
+                <div class="bg-surface-container-low p-6 rounded-xl text-center">
+                    <p class="text-on-surface-variant text-sm">Tasks đang làm</p>
+                    <h3 class="text-3xl font-extrabold font-headline text-secondary mt-2">7</h3>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<%- include('../partials/_footer') %>

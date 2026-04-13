@@ -1,0 +1,33 @@
+<%- include('../partials/_header', { title: 'Thông báo | TaskFlow' }) %>
+<%- include('../partials/_sidebar', { activePage: 'notifications' }) %>
+<%- include('../partials/_topbar') %>
+
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+    <div class="p-6 lg:p-10 max-w-3xl mx-auto space-y-8">
+        <h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Thông báo</h1>
+
+        <div class="space-y-4">
+            <!-- Notification Item mẫu -->
+            <div class="flex gap-4 p-4 bg-surface-container-low rounded-xl hover:bg-surface-container-high transition-colors border border-outline-variant/10 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-primary">task_alt</span>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm text-on-surface"><span class="font-bold">System</span> — Task "Setup Database" đã được cập nhật.</p>
+                    <span class="text-xs text-on-surface-variant">2 giờ trước</span>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-primary mt-2 shrink-0"></div>
+            </div>
+
+            <!-- Empty state -->
+            <!--
+            <div class="text-center py-20">
+                <span class="material-symbols-outlined text-6xl text-outline/30">notifications_off</span>
+                <p class="text-on-surface-variant mt-4">Không có thông báo mới.</p>
+            </div>
+            -->
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/_footer') %>
