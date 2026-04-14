@@ -71,7 +71,7 @@ if (loginForm) {
       localStorage.setItem('accessToken', data.data.accessToken);
       localStorage.setItem('refreshToken', data.data.refreshToken);
 
-      window.location.href = '/project';
+      window.location.href = '/projects';
     } catch (error) {
       showError(error.message);
     }

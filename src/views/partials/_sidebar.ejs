@@ -8,7 +8,7 @@
         </div>
         <div>
             <h2 class="text-sm font-semibold text-on-surface leading-tight">TaskFlow</h2>
-            <p class="text-xs text-on-surface-variant opacity-80">Workspace</p>
+            <p class="text-xs text-on-surface-variant opacity-80">Không gian làm việc</p>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
                 : 'text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface'
             %> transition-all duration-200">
             <span class="material-symbols-outlined">grid_view</span>
-            <span class="text-sm tracking-wide">Dashboard</span>
+            <span class="text-sm tracking-wide">Bảng điều khiển</span>
         </a>
 
         <a href="/projects" class="flex items-center gap-3 px-4 py-3 rounded-lg
@@ -29,40 +29,40 @@
                 : 'text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface'
             %> transition-all duration-200">
             <span class="material-symbols-outlined">assignment</span>
-            <span class="text-sm tracking-wide">Projects</span>
+            <span class="text-sm tracking-wide">Dự án</span>
         </a>
 
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg
+        <a href="javascript:alert('Tính năng Nhóm đang phát triển');" class="flex items-center gap-3 px-4 py-3 rounded-lg
             <%= typeof activePage !== 'undefined' && activePage === 'team'
                 ? 'bg-[#3E52E8]/10 text-primary font-semibold border-r-4 border-[#3E52E8]'
                 : 'text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface'
             %> transition-all duration-200">
             <span class="material-symbols-outlined">group</span>
-            <span class="text-sm tracking-wide">Team</span>
+            <span class="text-sm tracking-wide">Nhóm</span>
         </a>
 
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg
+        <a href="/settings" class="flex items-center gap-3 px-4 py-3 rounded-lg
             <%= typeof activePage !== 'undefined' && activePage === 'settings'
                 ? 'bg-[#3E52E8]/10 text-primary font-semibold border-r-4 border-[#3E52E8]'
                 : 'text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface'
             %> transition-all duration-200">
             <span class="material-symbols-outlined">settings</span>
-            <span class="text-sm tracking-wide">Settings</span>
+            <span class="text-sm tracking-wide">Cài đặt</span>
         </a>
     </nav>
 
     <!-- Footer Sidebar -->
     <div class="mt-auto space-y-1 pt-6 border-t border-outline-variant/10">
-        <button class="w-full mb-6 bg-primary-container text-on-primary-container py-2.5 rounded-xl font-semibold text-sm hover:brightness-110 transition-all">
-            New Project
+        <button onclick="window.location.href='/projects'" class="w-full mb-6 bg-primary-container text-on-primary-container py-2.5 rounded-xl font-semibold text-sm hover:brightness-110 transition-all">
+            Dự án mới
         </button>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface transition-all">
+        <a href="javascript:alert('Tính năng Hỗ trợ đang phát triển');" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface transition-all">
             <span class="material-symbols-outlined">contact_support</span>
-            <span class="text-sm tracking-wide">Support</span>
+            <span class="text-sm tracking-wide">Hỗ trợ</span>
         </a>
         <a href="/auth/logout" class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant opacity-80 hover:bg-surface-container-high hover:text-on-surface transition-all">
             <span class="material-symbols-outlined">logout</span>
-            <span class="text-sm tracking-wide">Sign Out</span>
+            <span class="text-sm tracking-wide">Đăng xuất</span>
         </a>
     </div>
 </aside>

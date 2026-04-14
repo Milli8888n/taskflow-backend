@@ -57,7 +57,12 @@ function priorityClass(priority) {
 
 function getProjectIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('projectId');
+  let id = params.get('projectId');
+  if (!id) {
+    const match = window.location.pathname.match(/\/projects\/([^\/]+)\/board/);
+    if (match) id = match[1];
+  }
+  return id;
 }
 
 function isImagePath(path) {
@@ -94,7 +99,7 @@ async function loadProjectsIndex() {
 
   const render = (projects) => {
     loadingEl.style.display = 'none';
-    listEl.querySelectorAll('.project-item').forEach((n) => n.remove());
+    listEl.querySelectorAll('.fetched-project').forEach((n) => n.remove());
 
     if (!projects || projects.length === 0) {
       emptyEl.style.display = 'block';
@@ -103,16 +108,39 @@ async function loadProjectsIndex() {
     emptyEl.style.display = 'none';
 
     for (const p of projects) {
-      const el = document.createElement('article');
-      el.className = 'project-item';
+      const el = document.createElement('div');
+      // Using Stitch design
+      el.className = 'fetched-project bg-surface-container-low rounded-xl p-6 flex flex-col gap-5 hover:translate-y-[-4px] transition-all duration-300 cursor-pointer border border-outline-variant/10';
+      el.onclick = () => {
+        window.location.href = `/projects/${encodeURIComponent(p._id)}/board`;
+      };
+      
+      const status = p.status || 'Đang hoạt động';
+      
       el.innerHTML = `
-        <div>
-          <div class="task-title">${escapeHtml(p.name)}</div>
-          <div class="task-desc">${escapeHtml(p.description || '')}</div>
+        <div class="flex justify-between items-start">
+            <span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary text-[10px] font-bold tracking-wider uppercase">${escapeHtml(status)}</span>
+            <button class="text-on-surface-variant hover:text-white transition-colors" onclick="event.stopPropagation();">
+                <span class="material-symbols-outlined text-xl">more_vert</span>
+            </button>
         </div>
-        <div class="task-meta">
-          <span>${escapeHtml(p.owner?.name || '')}</span>
-          <a class="pill" href="/projects/board?projectId=${encodeURIComponent(p._id)}">Open board</a>
+        <div>
+            <h3 class="font-headline font-bold text-lg text-on-surface leading-snug">${escapeHtml(p.name)}</h3>
+            <p class="text-on-surface-variant text-xs mt-2 line-clamp-2">${escapeHtml(p.description || 'Không có mô tả')}</p>
+        </div>
+        <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface-container-low flex items-center justify-center text-[10px] font-bold text-on-surface-variant" title="Owner: ${escapeHtml(p.owner?.name || '')}">
+                ${p.owner?.name ? escapeHtml(p.owner.name.charAt(0).toUpperCase()) : 'U'}
+            </div>
+        </div>
+        <div class="mt-auto pt-4">
+            <div class="flex justify-between items-end mb-2">
+                <span class="text-xs font-semibold text-on-surface-variant">Tiến độ</span>
+                <span class="text-xs font-bold text-primary">0%</span>
+            </div>
+            <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-primary to-primary-container w-[0%]"></div>
+            </div>
         </div>
       `;
       listEl.appendChild(el);
@@ -140,9 +168,38 @@ async function loadProjectsIndex() {
   await fetchAndRender();
 }
 
+window.createNewProject = async function() {
+    const token = localStorage.getItem('token');
+    if (!token) return alert('Vui lòng đăng nhập lại');
+    
+    // Quick prompt for UX, replace with a nice modal in the future if requested
+    const name = prompt('Nhập tên dự án mới:');
+    if (!name || name.trim() === '') return;
+    const description = prompt('Mô tả dự án (tùy chọn):') || '';
+    
+    try {
+        const res = await fetch('/api/v1/projects', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: name.trim(), description: description.trim() })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            window.location.reload(); // reload
+        } else {
+            alert('Lỗi: ' + (data.message || 'Không thể tạo dự án'));
+        }
+    } catch (err) {
+        alert('Lỗi kết nối máy chủ khi tạo dự án');
+    }
+};
+
 function renderTaskCard(task) {
   const card = document.createElement('div');
-  card.className = 'task-card';
+  card.className = 'group bg-surface-container-low p-5 rounded-xl border border-transparent hover:border-outline-variant/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/20 mb-4 cursor-pointer';
   card.draggable = true;
   card.dataset.taskId = task._id || '';
   card.dataset.status = task.status || 'To Do';
@@ -158,12 +215,54 @@ function renderTaskCard(task) {
   const desc = escapeHtml(task.description || '');
   const priority = escapeHtml(task.priority || 'Medium');
 
+  let priorityIcon = 'schedule';
+  let priorityColor = 'text-on-surface-variant';
+  let priorityTagBg = 'bg-secondary-container text-on-secondary-container';
+  
+  if (priority.toLowerCase() === 'high') {
+    priorityIcon = 'priority_high';
+    priorityColor = 'text-error';
+    priorityTagBg = 'bg-error-container/30 text-error';
+  } else if (priority.toLowerCase() === 'low') {
+    priorityTagBg = 'bg-primary-container text-on-primary-container';
+    priorityColor = 'text-primary';
+  }
+
+  let deadlineHtml = '';
+  if (task.deadline) {
+    const d = new Date(task.deadline);
+    const dateStr = !isNaN(d.getTime()) ? d.toLocaleDateString('vi-VN', { month: 'short', day: 'numeric' }) : '';
+    deadlineHtml = `
+      <div class="flex items-center gap-2 text-on-surface-variant mt-2">
+        <span class="material-symbols-outlined text-sm">schedule</span>
+        <span class="text-[10px] font-medium uppercase tracking-tight">${dateStr}</span>
+      </div>
+    `;
+  }
+
+  let assigneeAvatar = '';
+  if (task.assignee?.avatar) {
+    assigneeAvatar = `<img alt="Assignee" class="h-6 w-6 rounded-full border border-surface" src="${escapeHtml(task.assignee.avatar)}"/>`;
+  } else if (task.assignee?.name) {
+    assigneeAvatar = `<div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">${escapeHtml(task.assignee.name.charAt(0).toUpperCase())}</div>`;
+  }
+
   card.innerHTML = `
-    <div class="task-title">${title}</div>
-    ${desc ? `<div class="task-desc">${desc}</div>` : ''}
-    <div class="task-meta">
-      <span class="${priorityClass(task.priority)}">${priority}</span>
-      <span>${escapeHtml(task.assignee?.name || '')}</span>
+    <div class="flex justify-between items-start mb-3">
+      <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${priorityTagBg}">${priority}</span>
+      <span class="material-symbols-outlined text-on-surface-variant text-sm cursor-grab">drag_indicator</span>
+    </div>
+    <h3 class="text-on-surface font-semibold text-base mb-2 group-hover:text-primary transition-colors">${title}</h3>
+    ${desc ? `<p class="text-on-surface-variant text-xs mb-4 line-clamp-2 leading-relaxed">${desc}</p>` : ''}
+    <div class="flex items-end justify-between mt-auto">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 ${priorityColor}">
+          <span class="material-symbols-outlined text-sm">${priorityIcon}</span>
+          <span class="text-[10px] font-bold uppercase tracking-tight">${priority} Priority</span>
+        </div>
+        ${deadlineHtml}
+      </div>
+      ${assigneeAvatar}
     </div>
   `;
   return card;
@@ -338,7 +437,8 @@ function initTaskModal({ getTaskById, uploadTaskFile }) {
         // Thay nút Tải lên thành Uploading...
         e.target.innerHTML = 'Đang Upload...';
 
-        const res = await fetch(`/api/v1/tasks/${taskId}/upload`, {
+        const projectId = getProjectIdFromUrl();
+        const res = await fetch(`/api/v1/projects/${projectId}/tasks/${taskId}/upload`, {
             method: 'POST',
             body: formData
         });
@@ -400,7 +500,7 @@ async function loadBoardPage() {
       // Khi bạn thêm tasks routes (ví dụ: GET /api/v1/tasks?projectId=...), UI sẽ tự đổ dữ liệu.
       let tasks = [];
       try {
-        const tasksRes = await apiGet(`/tasks?projectId=${encodeURIComponent(projectId)}`);
+        const tasksRes = await apiGet(`/projects/${encodeURIComponent(projectId)}/tasks`);
         tasks = tasksRes.data?.tasks || [];
       } catch (e) {
         if (e.status !== 404) throw e;
@@ -410,7 +510,7 @@ async function loadBoardPage() {
 
       initTaskModal({
         getTaskById: async (taskId) => {
-          const res = await apiGet(`/tasks/${encodeURIComponent(taskId)}`);
+          const res = await apiGet(`/projects/${encodeURIComponent(projectId)}/tasks/${encodeURIComponent(taskId)}`);
           return res.data?.task || res.data?.data?.task || null;
         },
         uploadTaskFile: async (taskId, file) => {
@@ -418,7 +518,7 @@ async function loadBoardPage() {
           // Theo checklist: upload 1 file
           fd.append('file', file);
 
-          const res = await apiPostForm(`/tasks/${encodeURIComponent(taskId)}/upload`, fd);
+          const res = await apiPostForm(`/projects/${encodeURIComponent(projectId)}/tasks/${encodeURIComponent(taskId)}/upload`, fd);
 
           // chấp nhận nhiều kiểu response khác nhau
           const task =
@@ -570,3 +670,26 @@ function initUploadFile() {
     loadBoardPage();
   }
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnInvite = document.getElementById('btn-invite-member');
+    const inviteModalOverlay = document.getElementById('invite-modal-overlay');
+    const inviteModalClose = document.getElementById('invite-modal-close');
+    const inviteCancelBtn = document.getElementById('invite-cancel-btn');
+    const inviteSendBtn = document.getElementById('invite-send-btn');
+    
+    if (btnInvite && inviteModalOverlay) {
+        const toggleInviteModal = (show) => {
+            inviteModalOverlay.style.display = show ? 'flex' : 'none';
+        };
+
+        btnInvite.addEventListener('click', () => toggleInviteModal(true));
+        
+        if (inviteModalClose) inviteModalClose.addEventListener('click', () => toggleInviteModal(false));
+        if (inviteCancelBtn) inviteCancelBtn.addEventListener('click', () => toggleInviteModal(false));
+        if (inviteSendBtn) inviteSendBtn.addEventListener('click', () => {
+             alert('Đã gửi lời mời thành công!');
+             toggleInviteModal(false);
+        });
+    }
+});

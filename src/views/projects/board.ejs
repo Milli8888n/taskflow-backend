@@ -6,18 +6,34 @@
     <div class="p-6 lg:p-10 flex flex-col h-[calc(100vh-4rem)]">
 
         <!-- Board Header -->
-        <header class="flex justify-between items-center mb-6 shrink-0">
-            <div>
-                <h2 class="text-3xl font-extrabold font-headline text-on-surface tracking-tight" id="board-title">Kanban Board</h2>
-                <p class="text-on-surface-variant text-sm mt-1" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 shrink-0">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="px-2 py-1 bg-primary-container/20 text-primary text-[10px] font-bold uppercase tracking-widest rounded">Dự án</span>
+                    <span class="text-on-surface-variant/40 text-xs">•</span>
+                    <span class="text-on-surface-variant text-xs">Cập nhật lúc nãy</span>
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-on-surface font-headline" id="board-title">Kanban Board</h1>
+                <p class="text-on-surface-variant max-w-xl text-sm leading-relaxed" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
             </div>
-            <div class="flex gap-3">
-                <button class="bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary/20 transition-colors" id="btn-invite-member">
-                    <span class="material-symbols-outlined text-sm mr-1 align-middle">person_add</span> Mời
-                </button>
-                <button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-xl font-bold text-sm hover:brightness-110 transition-all" id="btn-refresh-board">
-                    <span class="material-symbols-outlined text-sm mr-1 align-middle">add</span> Thêm thẻ
-                </button>
+            <div class="flex flex-col items-end gap-4">
+                <div class="flex items-center">
+                    <div class="flex -space-x-3 overflow-hidden" id="board-avatars">
+                        <!-- Avatars will be rendered here if available -->
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-high ring-4 ring-surface text-xs font-bold text-primary">+</div>
+                    </div>
+                    <button class="ml-4 p-2 bg-surface-container-low text-primary rounded-xl hover:bg-surface-container-high transition-colors" id="btn-invite-member" title="Mời thành viên">
+                        <span class="material-symbols-outlined">person_add</span>
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low text-on-surface text-sm font-semibold rounded-lg hover:bg-surface-container-high transition-all" onclick="alert('Module Filter (Mô phỏng)')">
+                        <span class="material-symbols-outlined text-lg">filter_list</span> Bộ lọc
+                    </button>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low text-on-surface text-sm font-semibold rounded-lg hover:bg-surface-container-high transition-all" onclick="alert('Đã sao chép liên kết dự án (Mô phỏng)')">
+                        <span class="material-symbols-outlined text-lg">share</span> Chia sẻ
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -99,17 +115,17 @@
                 <div>
                     <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Trạng thái</label>
                     <select id="task-modal-status" class="w-full bg-primary-container/20 text-primary px-4 py-3 rounded-lg font-bold text-sm border-none focus:ring-primary">
-                        <option value="To Do">To Do</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Done">Done</option>
+                        <option value="To Do">Cần làm</option>
+                        <option value="In Progress">Đang làm</option>
+                        <option value="Done">Hoàn thành</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Độ ưu tiên</label>
                     <select id="task-modal-priority" class="w-full bg-surface-container text-on-surface px-4 py-3 rounded-lg font-medium text-sm border border-outline-variant/10 focus:ring-primary">
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
+                        <option value="Low">Thấp</option>
+                        <option value="Medium">Trung bình</option>
+                        <option value="High">Cao</option>
                     </select>
                 </div>
                 <div>
@@ -150,14 +166,14 @@
                     <label class="flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high cursor-pointer has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high transition-all">
                         <input class="sr-only" name="role" type="radio" value="owner"/>
                         <span class="material-symbols-outlined text-on-surface-variant mb-3">verified_user</span>
-                        <span class="font-bold text-on-surface font-headline text-sm">Owner</span>
-                        <span class="text-xs text-on-surface-variant">Full admin access.</span>
+                        <span class="font-bold text-on-surface font-headline text-sm">Chủ dự án</span>
+                        <span class="text-xs text-on-surface-variant">Quyền quản trị đầy đủ.</span>
                     </label>
                     <label class="flex flex-col p-4 rounded-xl border border-outline-variant/10 bg-surface-container hover:bg-surface-container-high cursor-pointer has-[:checked]:border-primary/50 has-[:checked]:bg-surface-container-high transition-all">
                         <input class="sr-only" name="role" type="radio" value="member" checked/>
                         <span class="material-symbols-outlined text-on-surface-variant mb-3">group</span>
-                        <span class="font-bold text-on-surface font-headline text-sm">Member</span>
-                        <span class="text-xs text-on-surface-variant">Create & edit tasks.</span>
+                        <span class="font-bold text-on-surface font-headline text-sm">Thành viên</span>
+                        <span class="text-xs text-on-surface-variant">Tạo & sửa công việc.</span>
                     </label>
                 </div>
             </div>
@@ -173,6 +189,11 @@
         </div>
     </div>
 </div>
+
+<!-- Floating Action Button -->
+<button id="btn-refresh-board" class="fixed md:bottom-10 md:right-10 bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl shadow-primary-container/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group z-50">
+    <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
+</button>
 
 <script>
     window.__TF__ = window.__TF__ || {};

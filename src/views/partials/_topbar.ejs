@@ -5,7 +5,7 @@
         <span class="hidden md:inline text-xl font-bold tracking-tighter text-on-surface font-headline">TaskFlow</span>
         <div class="hidden lg:flex items-center glass-panel px-4 py-1.5 rounded-lg">
             <span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
-            <input type="text" placeholder="Quick search..." class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant/50 w-48 outline-none">
+            <input type="text" placeholder="Tìm kiếm nhanh..." class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant/50 w-48 outline-none">
         </div>
     </div>
 
@@ -21,8 +21,8 @@
                 <!-- Notification Popover with Glass Effect -->
                 <div class="absolute right-0 mt-3 w-[400px] glass-blur-strong rounded-xl shadow-2xl shadow-primary-container/20 z-[60] overflow-hidden hidden group-focus-within:block group-hover:block transition-all duration-300 animate-in fade-in">
                     <div class="flex items-center justify-between px-5 py-4 border-b border-outline-variant/10">
-                        <h3 class="font-headline font-bold text-on-surface">Notifications</h3>
-                        <button class="text-xs font-bold text-primary hover:text-primary-container transition-colors uppercase tracking-wider">Mark all as read</button>
+                        <h3 class="font-headline font-bold text-on-surface">Thông báo</h3>
+                        <button class="text-xs font-bold text-primary hover:text-primary-container transition-colors uppercase tracking-wider">Đánh dấu đã đọc</button>
                     </div>
                     <div class="max-h-[480px] overflow-y-auto">
                         <!-- Notification Item 1 -->
@@ -32,9 +32,9 @@
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-on-surface leading-snug">
-                                    <span class="font-bold">Sarah Chen</span> added a comment on <span class="font-bold text-primary italic">"API Integration"</span>
+                                    <span class="font-bold">Sarah Chen</span> đã thêm bình luận vào <span class="font-bold text-primary italic">"API Integration"</span>
                                 </p>
-                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">2 mins ago</span>
+                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">2 phút trước</span>
                             </div>
                             <div class="w-2 h-2 rounded-full bg-primary mt-2"></div>
                         </div>
@@ -45,9 +45,9 @@
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-on-surface leading-snug">
-                                    <span class="font-bold">Marcus Thorne</span> moved <span class="font-bold text-primary italic">"Redesign Sprint"</span> to <span class="text-tertiary font-bold uppercase text-[10px] tracking-wide">Done</span>
+                                    <span class="font-bold">Marcus Thorne</span> đã chuyển <span class="font-bold text-primary italic">"Redesign Sprint"</span> sang <span class="text-tertiary font-bold uppercase text-[10px] tracking-wide">Hoàn thành</span>
                                 </p>
-                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">45 mins ago</span>
+                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">45 phút trước</span>
                             </div>
                             <div class="w-2 h-2 rounded-full bg-primary mt-2"></div>
                         </div>
@@ -58,14 +58,14 @@
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-on-surface-variant leading-snug">
-                                    System update completed for <span class="italic text-on-surface">V2.4 Architecture</span>
+                                    Hệ thống đã cập nhật xong cho <span class="italic text-on-surface">V2.4 Architecture</span>
                                 </p>
-                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">Yesterday</span>
+                                <span class="text-[11px] text-on-surface-variant font-medium mt-1 inline-block">Hôm qua</span>
                             </div>
                         </div>
                     </div>
                     <a class="block w-full py-4 text-center text-sm font-bold text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/30 transition-all border-t border-outline-variant/10" href="/notifications">
-                        View all notifications
+                        Xem tất cả thông báo
                     </a>
                 </div>
             </div>
@@ -75,14 +75,14 @@
             </button>
         </div>
         <button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-4 py-1.5 rounded-lg font-headline font-bold text-sm hover:opacity-90 active:scale-95 transition-all glow-sm">
-            Create
+            Tạo mới
         </button>
-        <div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30 bg-surface-container-highest flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors">
+        <a href="/profile" class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30 bg-surface-container-highest flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors">
             <% if (typeof user !== 'undefined' && user) { %>
                 <span class="text-xs font-bold text-primary"><%= user.name ? user.name.charAt(0).toUpperCase() : 'U' %></span>
             <% } else { %>
                 <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
             <% } %>
-        </div>
+        </a>
     </div>
 </header>

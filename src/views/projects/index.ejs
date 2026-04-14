@@ -11,7 +11,7 @@
                 <h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Trung tâm Dự án</h1>
                 <p class="text-on-surface-variant mt-2 max-w-xl leading-relaxed">Quản lý tất cả các dự án tại đây.</p>
             </div>
-            <button class="flex items-center gap-2 bg-primary-container text-on-primary-container px-5 py-2.5 rounded-xl font-bold text-sm hover:brightness-110 transition-all">
+            <button onclick="createNewProject()" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-5 py-2.5 rounded-xl font-bold text-sm hover:brightness-110 transition-all">
                 <span class="material-symbols-outlined text-xl">add</span> Tạo dự án mới
             </button>
         </div>
@@ -25,8 +25,17 @@
                 <p class="text-on-surface-variant mt-4">Đang tải danh sách dự án...</p>
             </div>
 
-            <!-- Empty state (ẩn mặc định) -->
-            <div class="col-span-full text-center py-20 hidden" id="projects-empty">
+            <!-- Bắt đầu dự án mới (Luôn hiển thị đầu tiên) -->
+            <div class="project-item group cursor-pointer bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 rounded-xl p-8 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/20 hover:border-primary/40 min-h-[280px]" onclick="createNewProject()">
+                <div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-primary text-3xl">add</span>
+                </div>
+                <h3 class="font-headline font-bold text-on-surface mb-1">Bắt đầu dự án mới</h3>
+                <p class="text-on-surface-variant text-sm text-center">Tạo không gian làm việc cho ý tưởng tiếp theo của bạn.</p>
+            </div>
+
+            <!-- Empty state (ẩn mặc định nếu có dự án) -->
+            <div class="project-item col-span-full text-center py-20 hidden" id="projects-empty">
                 <span class="material-symbols-outlined text-6xl text-outline/30">folder_off</span>
                 <p class="text-on-surface-variant mt-4">Chưa có dự án nào.</p>
             </div>
