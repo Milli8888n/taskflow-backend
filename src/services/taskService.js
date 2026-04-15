@@ -67,7 +67,6 @@ exports.updateTask = async (taskId, updateData) => {
       io.to(`user:${updateData.assignee.toString()}`).emit('taskAssigned', task);
     }
   }
-  
   return task;
 };
 
