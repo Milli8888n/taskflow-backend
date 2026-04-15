@@ -3,15 +3,28 @@
  * Xử lý tất cả API calls liên quan đến tasks
  */
 
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from '../api/apiClient.js';
+import { apiGet, apiPost, apiPut, apiDelete } from '../api/apiClient.js';
 
 /**
- * Lấy danh sách tasks của 1 project
+ * Lấy danh sách tasks của 1 project với hỗ trợ filter/search
  * @param {string} projectId - ID của project
+ * @param {object} filters - { status?, priority?, q? }
  * @returns {Promise<object>} { tasks: [...] }
  */
-export async function getTasksByProject(projectId) {
-  return await apiGet(`/projects/${projectId}/tasks`);
+export async function getTasksByProject(projectId, filters = {}) {
+  let url = `/projects/${projectId}/tasks`;
+  
+  // Build query string
+  const params = new URLSearchParams();
+  if (filters.status) params.append('status', filters.status);
+  if (filters.priority) params.append('priority', filters.priority);
+  if (filters.q) params.append('q', filters.q);
+  
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+  
+  return await apiGet(url);
 }
 
 /**
@@ -46,14 +59,14 @@ export async function updateTask(projectId, taskId, data) {
 }
 
 /**
- * PATCH task (cập nhật một phần)
+ * Cập nhật task (partial update)
  * @param {string} projectId - ID của project
  * @param {string} taskId - ID của task
  * @param {object} data - Dữ liệu cập nhật
  * @returns {Promise<object>}
  */
 export async function patchTask(projectId, taskId, data) {
-  return await apiPatch(`/projects/${projectId}/tasks/${taskId}`, data);
+  return await apiPut(`/projects/${projectId}/tasks/${taskId}`, data);
 }
 
 /**
@@ -70,11 +83,11 @@ export async function deleteTask(projectId, taskId) {
  * Thay đổi status task (kéo thả trên board)
  * @param {string} projectId - ID của project
  * @param {string} taskId - ID của task
- * @param {string} status - Status mới (todo, inprogress, done)
+ * @param {string} status - Status mới (To Do, In Progress, Done)
  * @returns {Promise<object>}
  */
 export async function updateTaskStatus(projectId, taskId, status) {
-  return await apiPatch(`/projects/${projectId}/tasks/${taskId}`, { status });
+  return await apiPut(`/projects/${projectId}/tasks/${taskId}`, { status });
 }
 
 /**
@@ -85,7 +98,7 @@ export async function updateTaskStatus(projectId, taskId, status) {
  * @returns {Promise<object>}
  */
 export async function updateTaskOrder(projectId, taskId, order) {
-  return await apiPatch(`/projects/${projectId}/tasks/${taskId}`, { order });
+  return await apiPut(`/projects/${projectId}/tasks/${taskId}`, { order });
 }
 
 /**
@@ -96,5 +109,5 @@ export async function updateTaskOrder(projectId, taskId, order) {
  * @returns {Promise<object>}
  */
 export async function assignTask(projectId, taskId, assigneeId) {
-  return await apiPatch(`/projects/${projectId}/tasks/${taskId}`, { assignee: assigneeId });
+  return await apiPut(`/projects/${projectId}/tasks/${taskId}`, { assignee: assigneeId });
 }

@@ -69,8 +69,19 @@
                         </div>
                     </div>
 
+                    <!-- Confirm Password -->
+                    <div class="space-y-2">
+                        <label for="confirm-password" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Xác nhận mật khẩu</label>
+                        <div class="relative group">
+                            <input type="password" id="confirm-password" name="confirm-password" required minlength="6"
+                                placeholder="Nhập lại mật khẩu"
+                                class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all">
+                            <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">check_circle</span>
+                        </div>
+                    </div>
+
                     <!-- Error -->
-                    <div id="error-message" class="text-error text-sm hidden"></div>
+                    <div class="text-error text-sm hidden"></div>
 
                     <!-- Submit -->
                     <button type="submit"
@@ -87,5 +98,5 @@
     </div>
 </main>
 
-<script src="/js/auth.js"></script>
+<script type="module" src="/js/pages/register.js"></script>
 <%- include('../partials/_footer') %>

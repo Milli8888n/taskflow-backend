@@ -10,7 +10,11 @@ import { apiGet, apiPost, apiPut, apiDelete, apiPatch } from '../api/apiClient.j
  * @returns {Promise<object>} { projects: [...] }
  */
 export async function getProjects() {
-  return await apiGet('/projects');
+  const response = await apiGet('/projects');
+  // Backend trả về: { status, results, data: { projects } }
+  return {
+    projects: response.data?.projects || []
+  };
 }
 
 /**
@@ -19,7 +23,8 @@ export async function getProjects() {
  * @returns {Promise<object>} Project object
  */
 export async function getProjectById(projectId) {
-  return await apiGet(`/projects/${projectId}`);
+  const response = await apiGet(`/projects/${projectId}`);
+  return response.data?.project || null;
 }
 
 /**
@@ -28,7 +33,10 @@ export async function getProjectById(projectId) {
  * @returns {Promise<object>} { project: {...} }
  */
 export async function createProject(data) {
-  return await apiPost('/projects', data);
+  const response = await apiPost('/projects', data);
+  return {
+    project: response.data?.project || null
+  };
 }
 
 /**
@@ -38,7 +46,10 @@ export async function createProject(data) {
  * @returns {Promise<object>}
  */
 export async function updateProject(projectId, data) {
-  return await apiPut(`/projects/${projectId}`, data);
+  const response = await apiPut(`/projects/${projectId}`, data);
+  return {
+    project: response.data?.project || null
+  };
 }
 
 /**

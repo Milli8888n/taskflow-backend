@@ -14,9 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     <!-- Tailwind CSS CDN + Plugins -->
+    <!-- ⚠️ NOTE: CDN should only be used for development/prototyping -->
+    <!-- For production, install Tailwind CSS and use PostCSS: -->
+    <!-- npm install -D tailwindcss postcss autoprefixer -->
+    <!-- npx tailwindcss init -p -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <!-- Stitch Design Tokens (BẮT BUỘC) -->
+    <!-- Stitch Design Tokens (REQUIRED) -->
     <script>
         tailwind.config = {
             darkMode: "class",

@@ -34,6 +34,7 @@ class ProjectsPage {
       
       const response = await getProjects();
       this.projects = response.projects || [];
+      console.log('✓ Projects loaded:', this.projects);
       
       this.render();
     } catch (error) {
@@ -46,9 +47,9 @@ class ProjectsPage {
    * Render danh sách projects
    */
   render() {
-    // Clear existing project items (except the "add new" button)
-    const projectItems = this.projectsList.querySelectorAll('.project-item:not(:first-child)');
-    projectItems.forEach(item => item.remove());
+    // Xóa các project items cũ (giữ lại "add new" button)
+    const existingProjects = this.projectsList.querySelectorAll('div.group:not(:first-child)');
+    existingProjects.forEach(item => item.remove());
 
     this.hideLoading();
 
@@ -59,7 +60,7 @@ class ProjectsPage {
 
     this.emptyDiv?.classList.add('hidden');
 
-    // Render each project
+    // Render mỗi project
     this.projects.forEach(project => {
       const projectEl = this.createProjectElement(project);
       this.projectsList.appendChild(projectEl);
@@ -94,11 +95,16 @@ class ProjectsPage {
       
       <div class="flex items-center justify-between">
         <div class="flex -space-x-2">
-          ${displayMembers.map(member => `
-            <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold border-2 border-surface-container-low" title="${member.name}">
-              ${member.name.charAt(0).toUpperCase()}
-            </div>
-          `).join('')}
+          ${displayMembers.map(member => {
+            const memberName = member?.name || (typeof member === 'string' ? member : 'U');
+            const initials = (memberName || 'U').charAt(0).toUpperCase();
+            const title = memberName || 'Unknown';
+            return `
+              <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold border-2 border-surface-container-low" title="${title}">
+                ${initials}
+              </div>
+            `;
+          }).join('')}
           ${extraCount > 0 ? `
             <div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface-variant border-2 border-surface-container-low">
               +${extraCount}
@@ -117,10 +123,10 @@ class ProjectsPage {
       </div>
     `;
 
-    // Click vào project để vào trang chi tiết
+    // Click vào project để vào trang Kanban board
     div.addEventListener('click', (e) => {
       if (!e.target.closest('[data-project-menu]')) {
-        window.location.href = `/projects/${project._id}`;
+        window.location.href = `/projects/${project._id}/board`;
       }
     });
 

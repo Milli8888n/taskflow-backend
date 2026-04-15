@@ -18,6 +18,7 @@ exports.getMyProjects = async (userId) => {
       isDeleted: false
     })
       .populate('owner', 'name email avatar')
+      .populate('members', 'name email avatar')
       .sort({ updatedAt: -1 });
     return projects;
   };

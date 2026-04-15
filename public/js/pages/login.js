@@ -50,15 +50,15 @@ if (loginForm) {
     try {
       const result = await login({ email, password });
       
-      if (result.accessToken) {
-        // Chuyển hướng sau 500ms để người dùng thấy thông báo
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 500);
+      if (result?.accessToken) {
+        console.log('✓ Đăng nhập thành công, token:', result.accessToken);
+        // Chuyển hướng ngay (không cần delay)
+        window.location.href = '/dashboard';
       } else {
-        showError(result.message || 'Đăng nhập thất bại');
+        showError('Lỗi: Không nhận được token từ server');
       }
     } catch (error) {
+      console.error('Login error:', error);
       showError(error.message || 'Lỗi đăng nhập. Vui lòng thử lại.');
     } finally {
       if (submitBtn) submitBtn.disabled = false;

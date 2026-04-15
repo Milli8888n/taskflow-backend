@@ -35,10 +35,23 @@ if (registerForm) {
     e.preventDefault();
     hideError();
 
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
+    // Lấy các element form
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+
+    // Kiểm tra các element tồn tại
+    if (!nameInput || !emailInput || !passwordInput || !confirmPasswordInput) {
+      showError('Lỗi: Không tìm thấy các trường form. Vui lòng tải lại trang.');
+      console.error('Missing form elements', { nameInput, emailInput, passwordInput, confirmPasswordInput });
+      return;
+    }
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
 
     // Validation
     if (!name || !email || !password) {

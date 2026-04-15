@@ -24,6 +24,8 @@ export class KanbanBoard {
     this.tasks = tasks || [];
     this.clearAllTasks();
     this.renderTasks();
+    // Remove old listeners before adding new ones
+    this.removeDragDropListeners();
     this.setupDragDrop();
     this.updateColumnCounts();
   }
@@ -35,6 +37,20 @@ export class KanbanBoard {
     const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
     dropzones.forEach(zone => {
       zone.innerHTML = '';
+    });
+  }
+
+  /**
+   * Remove drag/drop event listeners to prevent duplicates
+   */
+  removeDragDropListeners() {
+    const tasks = this.boardEl.querySelectorAll('[data-task-id]');
+    const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
+
+    // Clone and replace to remove all listeners
+    tasks.forEach(taskEl => {
+      const newEl = taskEl.cloneNode(true);
+      taskEl.replaceWith(newEl);
     });
   }
 
@@ -124,26 +140,30 @@ export class KanbanBoard {
 
   /**
    * Setup HTML5 Drag & Drop
+   * Using event delegation and e.currentTarget for robustness
    */
   setupDragDrop() {
     const tasks = this.boardEl.querySelectorAll('[data-task-id]');
     const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
 
-    // Setup drag für task cards
+    // Setup drag for task cards
     tasks.forEach(taskEl => {
-      taskEl.addEventListener('dragstart', (e) => this.handleDragStart(e, taskEl));
+      taskEl.addEventListener('dragstart', (e) => this.handleDragStart(e));
       taskEl.addEventListener('dragend', (e) => this.handleDragEnd(e));
     });
 
-    // Setup drop zones
+    // Setup drop zones using e.currentTarget for reliability
     dropzones.forEach(zone => {
       zone.addEventListener('dragover', (e) => this.handleDragOver(e));
-      zone.addEventListener('drop', (e) => this.handleDrop(e, zone));
+      zone.addEventListener('drop', (e) => this.handleDrop(e));
       zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
     });
   }
 
-  handleDragStart(e, taskEl) {
+  handleDragStart(e) {
+    const taskEl = e.currentTarget;
+    if (!taskEl) return;
+    
     this.draggedTask = taskEl;
     taskEl.classList.add('opacity-50');
     e.dataTransfer.effectAllowed = 'move';
@@ -159,42 +179,79 @@ export class KanbanBoard {
   handleDragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    if (this.draggedTask) {
+    if (this.draggedTask && e.currentTarget) {
       e.currentTarget.classList.add('bg-primary/5');
     }
   }
 
   handleDragLeave(e) {
-    e.currentTarget.classList.remove('bg-primary/5');
+    if (e.currentTarget) {
+      e.currentTarget.classList.remove('bg-primary/5');
+    }
   }
 
-  async handleDrop(e, dropzone) {
-    e.preventDefault();
-    dropzone.classList.remove('bg-primary/5');
-
-    if (!this.draggedTask) return;
-
-    const taskId = this.draggedTask.dataset.taskId;
-    const oldStatus = this.draggedTask.dataset.status;
-    const newStatus = dropzone.dataset.dropzone;
-
-    // Không làm gì nếu drop vào cột cũ
-    if (oldStatus === newStatus) {
-      return;
-    }
-
-    // Update task status thông qua API
+  async handleDrop(e) {
     try {
+      e.preventDefault();
+      
+      const dropzone = e.currentTarget;
+      if (!dropzone) {
+        console.warn('🔴 Drop handler: dropzone is null/undefined');
+        return;
+      }
+
+      if (!this.draggedTask) {
+        console.warn('🔴 Drop handler: draggedTask is null/undefined');
+        return;
+      }
+
+      // Clean up visual feedback
+      if (dropzone.classList) {
+        dropzone.classList.remove('bg-primary/5');
+      }
+
+      // Get task and status info - with defensive checks
+      const draggedElement = this.draggedTask;
+      if (!draggedElement || !draggedElement.dataset) {
+        console.error('🔴 Drop handler: draggedTask has no dataset property');
+        return;
+      }
+
+      const taskId = draggedElement.getAttribute('data-task-id');
+      const oldStatus = draggedElement.getAttribute('data-status');
+      const newStatus = dropzone.getAttribute('data-dropzone');
+
+      console.log('📍 Drop detected:', { taskId, oldStatus, newStatus });
+
+      // Validate data
+      if (!taskId || !oldStatus || !newStatus) {
+        console.warn('🟡 Drop handler: missing task data', { taskId, oldStatus, newStatus });
+        return;
+      }
+
+      // Don't update if dropping in same column
+      if (oldStatus === newStatus) {
+        console.log('ℹ️ Drop handler: same column, ignoring');
+        return;
+      }
+
+      // Update task status via API
+      console.log('🚀 Updating task status:', { taskId, oldStatus, newStatus });
       await updateTaskStatus(this.projectId, taskId, newStatus);
       
       // Update local DOM
-      this.draggedTask.dataset.status = newStatus;
-      dropzone.appendChild(this.draggedTask);
+      draggedElement.setAttribute('data-status', newStatus);
+      dropzone.appendChild(draggedElement);
       this.updateColumnCounts();
       
+      console.log('✓ Task updated successfully');
+      
     } catch (error) {
+      console.error('❌ Drop error:', error);
       this.showError('Không thể cập nhật task: ' + error.message);
-      console.error('Drop error:', error);
+    } finally {
+      // Always clear draggedTask after drop
+      this.draggedTask = null;
     }
   }
 

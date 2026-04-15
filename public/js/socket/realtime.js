@@ -18,11 +18,25 @@ export class RealtimeManager {
    */
   connect() {
     if (typeof io === 'undefined') {
-      console.warn('Socket.io not loaded');
+      console.warn('⚠ Socket.io not loaded. Real-time updates will be disabled.');
+      console.warn('  Make sure socket.io script is included before app initialization.');
       return;
     }
 
-    this.socket = io();
+    // Lấy token xác thực từ localStorage
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      console.warn('⚠ No authentication token found. Socket.io will not connect.');
+      return;
+    }
+
+    // Kết nối với token xác thực
+    this.socket = io({
+      auth: {
+        token: token
+      }
+    });
 
     this.socket.on('connect', () => {
       this.isConnected = true;
@@ -35,8 +49,12 @@ export class RealtimeManager {
       console.log('✗ Socket.io disconnected');
     });
 
+    this.socket.on('connect_error', (error) => {
+      console.error('✗ Socket.io connection error:', error.message);
+    });
+
     this.socket.on('error', (error) => {
-      console.error('Socket.io error:', error);
+      console.error('✗ Socket.io error:', error);
     });
   }
 

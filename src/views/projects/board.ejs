@@ -37,6 +37,11 @@
             </div>
         </header>
 
+        <!-- Filter Section -->
+        <div id="filter-container" class="mb-6 shrink-0">
+            <!-- Filters will be rendered here by TaskFilter component -->
+        </div>
+
         <!-- Kanban Columns -->
         <section class="flex gap-6 flex-1 overflow-x-auto pb-4 items-start" id="board" aria-label="Kanban board">
 
@@ -199,6 +204,7 @@
     window.__TF__ = window.__TF__ || {};
     window.__TF__.page = 'projects-board';
 </script>
-<script src="/js/dragdrop.js"></script>
-<script src="/js/board.js"></script>
+<!-- Socket.io client for real-time features -->
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/pages/board.js"></script>
 <%- include('../partials/_footer') %>

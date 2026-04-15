@@ -4,11 +4,13 @@
  * - Tải tasks từ API
  * - Khởi tạo KanbanBoard component
  * - Lắng nghe realtime socket events
+ * - Quản lý search & filters
  */
 
 import { getTasksByProject, deleteTask } from '../services/task.js';
 import { KanbanBoard } from '../components/kanbanBoard.js';
 import { TaskModal } from  '../components/taskModal.js';
+import { TaskFilter } from '../components/taskFilter.js';
 import '../socket/realtime.js';
 
 class BoardPage {
@@ -20,11 +22,17 @@ class BoardPage {
     
     this.kanban = new KanbanBoard(projectId);
     this.taskModal = new TaskModal(projectId);
+    this.taskFilter = new TaskFilter();
+    
+    this.currentFilters = {};
     this.init();
   }
 
   async init() {
     try {
+      this.taskFilter.render();
+      this.taskFilter.onFilterChanged((filters) => this.handleFilterChange(filters));
+      
       await this.loadTasks();
       this.setupGlobalFunctions();
       console.log('✓ Board page initialized');
@@ -34,12 +42,20 @@ class BoardPage {
   }
 
   /**
-   * Tải tasks từ API
+   * Handle filter changes
+   */
+  async handleFilterChange(filters) {
+    this.currentFilters = filters;
+    await this.loadTasks();
+  }
+
+  /**
+   * Tải tasks từ API với filters
    */
   async loadTasks() {
     try {
-      const response = await getTasksByProject(this.projectId);
-      const tasks = response.tasks || [];
+      const response = await getTasksByProject(this.projectId, this.currentFilters);
+      const tasks = response.data?.tasks || response.tasks || [];
       
       // Render kanban board
       this.kanban.render(tasks);

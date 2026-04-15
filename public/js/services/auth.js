@@ -8,19 +8,20 @@ import { apiPost, apiGet } from '../api/apiClient.js';
 /**
  * Đăng ký tài khoản mới
  * @param {object} credentials - { name, email, password }
- * @returns {Promise<object>} { accessToken, user }
+ * @returns {Promise<object>} { user }
  */
 export async function register(credentials) {
   const response = await apiPost('/auth/register', credentials);
   
-  if (response.accessToken) {
-    localStorage.setItem('token', response.accessToken);
-    if (response.user) {
-      localStorage.setItem('user', JSON.stringify(response.user));
-    }
+  // Backend trả về: { status, data: { user }, message }
+  if (response.data?.user) {
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    return {
+      user: response.data.user
+    };
   }
   
-  return response;
+  throw new Error(response.message || 'Đăng ký thất bại');
 }
 
 /**
@@ -31,14 +32,22 @@ export async function register(credentials) {
 export async function login(credentials) {
   const response = await apiPost('/auth/login', credentials);
   
-  if (response.accessToken) {
-    localStorage.setItem('token', response.accessToken);
-    if (response.user) {
-      localStorage.setItem('user', JSON.stringify(response.user));
+  // Backend trả về: { status, data: { user, accessToken, refreshToken }, message }
+  if (response.data?.accessToken) {
+    localStorage.setItem('token', response.data.accessToken);
+    if (response.data.refreshToken) {
+      localStorage.setItem('refreshToken', response.data.refreshToken);
     }
+    if (response.data.user) {
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    }
+    return {
+      accessToken: response.data.accessToken,
+      user: response.data.user
+    };
   }
   
-  return response;
+  throw new Error(response.message || 'Đăng nhập thất bại');
 }
 
 /**
