@@ -51,12 +51,23 @@ export async function login(credentials) {
 }
 
 /**
- * Đăng xuất & xoá token/user từ localStorage
+ * Đăng xuất:
+ * 1) Gọi API logout để xoá refresh token ở server
+ * 2) Clear localStorage
+ * 3) Redirect /login
  */
-export function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  window.location.href = '/login';
+export async function logout() {
+  try {
+    await apiPost('/auth/logout', {});
+  } catch (error) {
+    // Vẫn cho logout local ngay cả khi API lỗi/hết hạn token
+    console.warn('Logout API failed:', error.message);
+  } finally {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
 }
 
 /**
