@@ -134,6 +134,27 @@ export class TaskModal {
       alert('Không thể cập nhật task: ' + error.message);
     }
   }
+
+  /**
+   * Realtime handlers cho comments
+   */
+  addComment(comment) {
+    if (this.currentTaskId === comment.taskId) {
+      this.commentBox.onExternalCommentCreated(comment);
+    }
+  }
+
+  updateComment(comment) {
+    if (this.currentTaskId === comment.taskId) {
+      this.commentBox.onExternalCommentUpdated(comment);
+    }
+  }
+
+  removeComment(commentId, taskId) {
+    if (this.currentTaskId === taskId) {
+      this.commentBox.onExternalCommentDeleted(commentId);
+    }
+  }
 }
 
 export default TaskModal;

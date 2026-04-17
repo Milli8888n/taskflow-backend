@@ -164,6 +164,33 @@ export class CommentBox {
     return newComment;
   }
 
+  /**
+   * Thêm bình luận từ nguồn bên ngoài (Socket.io)
+   */
+  onExternalCommentCreated(comment) {
+    // Tránh trùng lặp nếu chính mình vừa thêm
+    if (this.comments.some(c => c._id === comment._id)) return;
+    
+    this.comments.unshift(comment);
+    this.render(this.comments);
+  }
+
+  /**
+   * Cập nhật bình luận từ nguồn bên ngoài (Socket.io)
+   */
+  onExternalCommentUpdated(comment) {
+    this.comments = this.comments.map(c => c._id === comment._id ? comment : c);
+    this.render(this.comments);
+  }
+
+  /**
+   * Xoá bình luận từ nguồn bên ngoài (Socket.io)
+   */
+  onExternalCommentDeleted(commentId) {
+    this.comments = this.comments.filter(c => c._id !== commentId);
+    this.render(this.comments);
+  }
+
   async updateComment(commentId, content) {
     if (!this.projectId || !this.taskId) {
       throw new Error('Task chưa được xác định');

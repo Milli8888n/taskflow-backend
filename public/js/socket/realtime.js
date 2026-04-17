@@ -114,14 +114,25 @@ export class RealtimeManager {
      */
     this.socket.on('commentCreated', (data) => {
       console.log('[Socket] Comment created:', data);
-      // TODO: Add comment to task modal if open
-      // window.__TF__.taskModal.addComment(data.comment);
+      const comment = data.comment || data;
+      if (window.__TF__.taskModal) {
+        window.__TF__.taskModal.addComment(comment);
+      }
+    });
+
+    this.socket.on('commentUpdated', (data) => {
+      console.log('[Socket] Comment updated:', data);
+      const comment = data.comment || data;
+      if (window.__TF__.taskModal) {
+        window.__TF__.taskModal.updateComment(comment);
+      }
     });
 
     this.socket.on('commentDeleted', (data) => {
       console.log('[Socket] Comment deleted:', data);
-      // TODO: Remove comment from task modal if open
-      // window.__TF__.taskModal.removeComment(data.commentId);
+      if (window.__TF__.taskModal) {
+        window.__TF__.taskModal.removeComment(data.commentId, data.taskId);
+      }
     });
 
     /**
