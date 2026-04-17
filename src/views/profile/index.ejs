@@ -3,66 +3,69 @@
 <%- include('../partials/_topbar') %>
 
 <main class="md:ml-64 pt-16 min-h-screen bg-background">
-    <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-10">
+  <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-8">
+    <div class="flex flex-col items-center text-center space-y-3">
+      <img id="avatar-preview" src="" alt="avatar" class="w-24 h-24 rounded-full object-cover bg-surface-container-high border border-outline-variant/20" />
+      <div>
+        <h1 id="profile-display-name" class="text-3xl font-extrabold font-headline text-on-surface">
+          <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %>
+        </h1>
+        <p id="profile-display-email" class="text-on-surface-variant">
+          <%= typeof user !== 'undefined' && user ? user.email : 'user@email.com' %>
+        </p>
+      </div>
+    </div>
 
-        <!-- Profile Header -->
-        <div class="flex flex-col items-center text-center space-y-4">
-            <div class="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-3xl font-bold font-headline">
-                <% if (typeof user !== 'undefined' && user && user.name) { %>
-                    <%= user.name.charAt(0).toUpperCase() %>
-                <% } else { %>
-                    U
-                <% } %>
-            </div>
-            <div>
-                <h1 class="text-3xl font-extrabold font-headline text-on-surface">
-                    <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %>
-                </h1>
-                <p class="text-on-surface-variant">
-                    <%= typeof user !== 'undefined' && user ? user.email : 'user@email.com' %>
-                </p>
-            </div>
+    <section class="bg-surface-container-low rounded-xl border border-outline-variant/10 p-6">
+      <h2 class="text-xl font-bold mb-4">Thông tin cá nhân</h2>
+      <form id="profile-form" class="space-y-4">
+        <div>
+          <label for="profile-name" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Họ và tên</label>
+          <input id="profile-name" name="name" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" type="text" />
         </div>
 
-        <!-- Info Sections -->
-        <section class="space-y-6">
-            <h3 class="text-xl font-bold font-headline text-on-surface">Thông tin cá nhân</h3>
-            <div class="bg-surface-container-low p-8 rounded-xl space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Họ và tên</label>
-                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors" type="text" value="<%= typeof user !== 'undefined' && user ? user.name : '' %>" />
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Email</label>
-                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/20 text-on-surface-variant/60 px-0 py-2 cursor-not-allowed" readonly type="email" value="<%= typeof user !== 'undefined' && user ? user.email : '' %>" />
-                    </div>
-                </div>
-                <div class="flex justify-end pt-2">
-                    <button class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-2 rounded-lg text-sm font-semibold transition-all">Lưu thay đổi</button>
-                </div>
-            </div>
-        </section>
+        <div>
+          <label for="profile-email" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Email</label>
+          <input id="profile-email" name="email" class="mt-2 w-full bg-surface-container-high border border-outline-variant/20 rounded-lg px-3 py-2 text-on-surface-variant cursor-not-allowed" type="email" readonly />
+        </div>
 
-        <!-- Stats -->
-        <section class="space-y-6">
-            <h3 class="text-xl font-bold font-headline text-on-surface">Thống kê hoạt động</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-surface-container-low p-6 rounded-xl text-center">
-                    <p class="text-on-surface-variant text-sm">Dự án tham gia</p>
-                    <h3 class="text-3xl font-extrabold font-headline text-primary mt-2">5</h3>
-                </div>
-                <div class="bg-surface-container-low p-6 rounded-xl text-center">
-                    <p class="text-on-surface-variant text-sm">Công việc hoàn thành</p>
-                    <h3 class="text-3xl font-extrabold font-headline text-tertiary mt-2">42</h3>
-                </div>
-                <div class="bg-surface-container-low p-6 rounded-xl text-center">
-                    <p class="text-on-surface-variant text-sm">Công việc đang làm</p>
-                    <h3 class="text-3xl font-extrabold font-headline text-secondary mt-2">7</h3>
-                </div>
-            </div>
-        </section>
-    </div>
+        <div>
+          <label for="avatar-input" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Avatar</label>
+          <input id="avatar-input" name="avatar" type="file" accept="image/*" class="mt-2 block w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-container file:text-on-primary-container file:font-semibold hover:file:brightness-110" />
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button type="submit" class="bg-primary-container text-on-primary-container px-5 py-2 rounded-lg font-semibold hover:brightness-110 transition-all">
+            Lưu thay đổi
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="bg-surface-container-low rounded-xl border border-outline-variant/10 p-6">
+      <h2 class="text-xl font-bold mb-4">Đổi mật khẩu</h2>
+      <form id="password-form" class="space-y-4">
+        <div>
+          <label for="current-password" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mật khẩu hiện tại</label>
+          <input id="current-password" type="password" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" required />
+        </div>
+        <div>
+          <label for="new-password" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mật khẩu mới</label>
+          <input id="new-password" type="password" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" required />
+        </div>
+        <div class="pt-2 flex justify-end">
+          <button type="submit" class="bg-primary text-on-primary px-5 py-2 rounded-lg font-semibold hover:brightness-110 transition-all">
+            Cập nhật mật khẩu
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
 </main>
 
+<script>
+  window.__TF__ = window.__TF__ || {};
+  window.__TF__.page = 'profile';
+</script>
+<script type="module" src="/js/pages/profile.js"></script>
 <%- include('../partials/_footer') %>

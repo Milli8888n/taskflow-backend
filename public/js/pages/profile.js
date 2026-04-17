@@ -1,166 +1,114 @@
-/**
- * Profile Page Controller
- * Upload hình Multer thông qua formData
- * Quản lý thông tin cá nhân user
- */
-
-import { apiPostFormData, apiPut } from '../api/apiClient.js';
-import { getCurrentUser } from '../services/auth.js';
-import Toast from '../components/toastUI.js';
+import { apiGet, apiPost, apiPostFormData, apiPut } from '../api/apiClient.js';
 
 class ProfilePage {
   constructor() {
-    this.user = getCurrentUser();
     this.profileForm = document.getElementById('profile-form');
+    this.passwordForm = document.getElementById('password-form');
     this.avatarInput = document.getElementById('avatar-input');
     this.avatarPreview = document.getElementById('avatar-preview');
-    
-    this.init();
+    this.nameInput = document.getElementById('profile-name');
+    this.emailInput = document.getElementById('profile-email');
+    this.displayName = document.getElementById('profile-display-name');
+    this.displayEmail = document.getElementById('profile-display-email');
+    this.user = null;
   }
 
-  init() {
-    this.renderUserInfo();
-    this.setupEventListeners();
-    console.log('✓ Profile page initialized');
+  async init() {
+    await this.loadProfile();
+    this.bindEvents();
   }
 
-  /**
-   * Render thông tin user
-   */
-  renderUserInfo() {
-    if (!this.user) {
-      window.location.href = '/login';
-      return;
-    }
+  bindEvents() {
+    this.profileForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await this.updateProfile();
+    });
 
-    const nameInput = document.getElementById('profile-name');
-    const emailInput = document.getElementById('profile-email');
-    const bioInput = document.getElementById('profile-bio');
-
-    if (nameInput) nameInput.value = this.user.name || '';
-    if (emailInput) emailInput.value = this.user.email || '';
-    if (bioInput) bioInput.value = this.user.bio || '';
-
-    // Load avatar
-    if (this.user.avatar && this.avatarPreview) {
-      this.avatarPreview.src = this.user.avatar;
-    }
-  }
-
-  /**
-   * Setup event listeners
-   */
-  setupEventListeners() {
-    // Avatar upload
-    if (this.avatarInput) {
-      this.avatarInput.addEventListener('change', (e) => this.handleAvatarChange(e));
-    }
-
-    // Profile form submit
-    if (this.profileForm) {
-      this.profileForm.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-  }
-
-  /**
-   * Xử lý thay đổi avatar
-   */
-  handleAvatarChange(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Preview
-    if (this.avatarPreview) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        this.avatarPreview.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Store file for upload
-    this.selectedFile = file;
-  }
-
-  /**
-   * Xử lý form submit
-   */
-  async handleSubmit(e) {
-    e.preventDefault();
-
-    const name = document.getElementById('profile-name')?.value.trim();
-    const bio = document.getElementById('profile-bio')?.value.trim();
-
-    if (!name) {
-      Toast.error('Vui lòng nhập họ tên');
-      return;
-    }
-
-    const submitBtn = this.profileForm.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.disabled = true;
-
-    try {
-      // If user selected a new avatar, upload it first
-      if (this.selectedFile) {
+    this.avatarInput?.addEventListener('change', async () => {
+      if (this.avatarInput.files?.[0]) {
         await this.uploadAvatar();
       }
+    });
 
-      // Update profile info
-      await this.updateProfile({ name, bio });
+    this.passwordForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await this.changePassword();
+    });
+  }
 
-      Toast.success('Cập nhật hồ sơ thành công!');
-      
-      // Redirect back
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1500);
+  async loadProfile() {
+    const res = await apiGet('/users/profile');
+    const user = res?.data?.user;
+    if (!user) return;
 
-    } catch (error) {
-      Toast.error('Lỗi: ' + error.message);
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
+    this.user = user;
+    if (this.nameInput) this.nameInput.value = user.name || '';
+    if (this.emailInput) this.emailInput.value = user.email || '';
+    if (this.displayName) this.displayName.textContent = user.name || 'Người dùng';
+    if (this.displayEmail) this.displayEmail.textContent = user.email || '';
+    if (this.avatarPreview) {
+      this.avatarPreview.src = user.avatar || '/images/default-avatar.png';
     }
   }
 
-  /**
-   * Upload avatar
-   */
+  async updateProfile() {
+    const name = this.nameInput?.value?.trim();
+    if (!name) {
+      alert('Vui lòng nhập họ tên');
+      return;
+    }
+
+    const res = await apiPut('/users/profile', { name });
+    this.user = res?.data?.user || this.user;
+    if (this.user) {
+      localStorage.setItem('user', JSON.stringify(this.user));
+      if (this.displayName) this.displayName.textContent = this.user.name || 'Người dùng';
+    }
+    alert('Cập nhật hồ sơ thành công');
+  }
+
   async uploadAvatar() {
-    const formData = new FormData();
-    formData.append('avatar', this.selectedFile);
+    const file = this.avatarInput?.files?.[0];
+    if (!file) return;
 
-    try {
-      const response = await apiPostFormData('/users/me/avatar', formData);
-      this.user.avatar = response.avatar;
-      localStorage.setItem('user', JSON.stringify(this.user));
-      this.selectedFile = null;
-    } catch (error) {
-      throw new Error('Lỗi upload avatar: ' + error.message);
+    // Preview trước khi upload
+    if (this.avatarPreview) {
+      this.avatarPreview.src = URL.createObjectURL(file);
     }
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const res = await apiPostFormData('/users/avatar', formData);
+    const user = res?.data?.user;
+    if (user) {
+      this.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
+      if (this.avatarPreview) this.avatarPreview.src = user.avatar || this.avatarPreview.src;
+    }
+    alert('Cập nhật avatar thành công');
   }
 
-  /**
-   * Update profile info
-   */
-  async updateProfile(data) {
-    try {
-      const response = await apiPut('/users/me', data);
-      const updatedUser = response.user || response;
-      
-      // Update localStorage
-      this.user = { ...this.user, ...updatedUser };
-      localStorage.setItem('user', JSON.stringify(this.user));
-    } catch (error) {
-      throw error;
+  async changePassword() {
+    const currentPassword = document.getElementById('current-password')?.value?.trim();
+    const newPassword = document.getElementById('new-password')?.value?.trim();
+
+    if (!currentPassword || !newPassword) {
+      alert('Vui lòng nhập đủ mật khẩu hiện tại và mật khẩu mới');
+      return;
     }
+
+    await apiPut('/auth/change-password', { currentPassword, newPassword });
+    alert('Đổi mật khẩu thành công. Vui lòng đăng nhập lại.');
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
   }
 }
 
-// Auto-initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const profile = new ProfilePage();
-  window.__TF__ = window.__TF__ || {};
-  window.__TF__.profile = profile;
+  await profile.init();
 });
-
-console.log('✓ Profile page controller loaded');

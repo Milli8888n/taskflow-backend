@@ -16,6 +16,7 @@ export class NavbarComponent {
   init() {
     // Gắn sự kiện logout cho avatar button
     this.setupLogoutButton();
+    this.setupSidebarLogout();
     
     // Update user avatar nếu có user
     this.updateUserAvatar();
@@ -76,8 +77,8 @@ export class NavbarComponent {
       const logoutOption = document.createElement('button');
       logoutOption.className = 'w-full text-left px-4 py-2.5 text-sm text-error hover:bg-error/10 transition-colors font-medium';
       logoutOption.innerHTML = '<span class="material-symbols-outlined text-sm mr-2 inline-block">logout</span>Đăng xuất';
-      logoutOption.addEventListener('click', () => {
-        logout();
+      logoutOption.addEventListener('click', async () => {
+        await logout();
       });
 
       menu.appendChild(profileOption);
@@ -92,6 +93,15 @@ export class NavbarComponent {
       setTimeout(() => {
         document.addEventListener('click', removeMenu);
       }, 0);
+    });
+  }
+
+  setupSidebarLogout() {
+    const sidebarLogout = document.getElementById('sidebar-logout-link');
+    if (!sidebarLogout) return;
+    sidebarLogout.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await logout();
     });
   }
 }
