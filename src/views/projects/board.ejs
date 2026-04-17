@@ -112,6 +112,25 @@
                 </div>
                 <div class="text-error text-sm hidden" id="task-upload-error"></div>
             </div>
+
+            <div class="space-y-4" id="task-comments-section">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Bình luận</h3>
+                        <p class="text-sm text-on-surface-variant">Thảo luận, cập nhật tiến độ ngay trong task.</p>
+                    </div>
+                    <span class="text-xs text-on-surface-variant" id="task-comments-count">0 bình luận</span>
+                </div>
+                <form id="task-comments-form" class="space-y-3">
+                    <label class="sr-only" for="task-comments-input">Nội dung bình luận</label>
+                    <textarea id="task-comments-input" rows="3" class="w-full rounded-3xl border border-outline-variant/20 bg-surface-container-low p-4 text-sm text-on-surface placeholder:text-on-surface-variant resize-none" placeholder="Viết bình luận..."></textarea>
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-primary-container px-5 py-2 text-sm font-bold text-on-primary-container hover:brightness-110 transition-colors">Gửi bình luận</button>
+                    </div>
+                </form>
+                <div id="task-comments-container" class="space-y-4"></div>
+                <div class="text-error text-sm hidden" id="task-comments-error"></div>
+            </div>
         </div>
 
         <!-- Cột 4: Sidebar thông tin -->

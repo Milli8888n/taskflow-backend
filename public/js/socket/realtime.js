@@ -41,6 +41,13 @@ export class RealtimeManager {
     this.socket.on('connect', () => {
       this.isConnected = true;
       console.log('✓ Socket.io connected');
+      
+      // Join project room if we have projectId from board page
+      if (window.__TF__ && window.__TF__.board && window.__TF__.board.projectId) {
+        this.socket.emit('joinProject', window.__TF__.board.projectId);
+        console.log('✓ Joined project room:', window.__TF__.board.projectId);
+      }
+      
       this.setupEventListeners();
     });
 

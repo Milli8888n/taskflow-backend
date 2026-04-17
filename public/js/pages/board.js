@@ -11,7 +11,7 @@ import { getTasksByProject, deleteTask } from '../services/task.js';
 import { KanbanBoard } from '../components/kanbanBoard.js';
 import { TaskModal } from  '../components/taskModal.js';
 import { TaskFilter } from '../components/taskFilter.js';
-import '../socket/realtime.js';
+import { RealtimeManager } from '../socket/realtime.js';
 
 class BoardPage {
   constructor(projectId) {
@@ -23,6 +23,7 @@ class BoardPage {
     this.kanban = new KanbanBoard(projectId);
     this.taskModal = new TaskModal(projectId);
     this.taskFilter = new TaskFilter();
+    this.realtime = new RealtimeManager();
     
     this.currentFilters = {};
     this.init();
@@ -35,6 +36,10 @@ class BoardPage {
       
       await this.loadTasks();
       this.setupGlobalFunctions();
+      
+      // Initialize socket connection
+      this.realtime.connect();
+      
       console.log('✓ Board page initialized');
     } catch (error) {
       this.showError('Lỗi tải board: ' + error.message);

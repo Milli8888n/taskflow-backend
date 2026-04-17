@@ -51,6 +51,10 @@ exports.updateTask = async (taskId, updateData) => {
     if (updateData[field] !== undefined) filtered[field] = updateData[field];
   });
 
+  // Lấy task cũ để so sánh status
+  const oldTask = await Task.findOne({ _id: taskId, isDeleted: false });
+  if (!oldTask) throw new AppError('Không tìm thấy công việc', 404);
+
   const task = await Task.findOneAndUpdate(
     { _id: taskId, isDeleted: false },
     filtered,
@@ -65,6 +69,15 @@ exports.updateTask = async (taskId, updateData) => {
     // Nếu có sự thay đổi về người được Assign (updateData.assignee có và mới) thì báo cho họ
     if (updateData.assignee) {
       io.to(`user:${updateData.assignee.toString()}`).emit('taskAssigned', task);
+    }
+    
+    // Nếu status thay đổi, emit event riêng cho taskStatusChanged
+    if (updateData.status && oldTask.status !== updateData.status) {
+      io.to(`project:${task.projectId}`).emit('taskStatusChanged', {
+        task: task,
+        newStatus: updateData.status,
+        oldStatus: oldTask.status
+      });
     }
   }
   return task;

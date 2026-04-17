@@ -6,6 +6,7 @@
  */
 
 import { getTaskById, updateTask } from '../services/task.js';
+import CommentBox from './commentBox.js';
 
 export class TaskModal {
   constructor(projectId) {
@@ -14,6 +15,7 @@ export class TaskModal {
     this.closeBtn = document.getElementById('task-modal-close');
     this.currentTaskId = null;
     this.currentTask = null;
+    this.commentBox = new CommentBox(projectId, null);
 
     this.setupEventListeners();
   }
@@ -46,6 +48,7 @@ export class TaskModal {
     try {
       this.projectId = projectId;
       this.currentTaskId = taskId;
+      this.commentBox.setTask(projectId, taskId);
 
       // Load task data
       const response = await getTaskById(projectId, taskId);
@@ -53,6 +56,7 @@ export class TaskModal {
 
       // Render task data vào modal
       this.renderTask(this.currentTask);
+      await this.commentBox.loadComments();
 
       // Show modal
       if (this.overlay) {
