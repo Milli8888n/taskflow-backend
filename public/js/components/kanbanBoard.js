@@ -10,23 +10,52 @@ import { updateTaskStatus } from '../services/task.js';
 export class KanbanBoard {
   constructor(projectId) {
     this.projectId = projectId;
-    this.boardEl = document.getElementById('board');
+    this.boardEl = document.getElementById('kanban-board');
     this.errorDiv = document.getElementById('board-error');
     this.tasks = [];
     this.draggedTask = null;
+    
+    // Setup drop zones ONCE
+    this.initDropzones();
+    this.initInlineAddButtons();
+  }
+
+  /**
+   * Listen to inline add buttons (+ Thêm thẻ)
+   */
+  initInlineAddButtons() {
+    this.boardEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-add-task-inline');
+      if (btn) {
+        const status = btn.dataset.status;
+        // Trigger global TF function to open create task modal with prefilled status
+        if (window.__TF__ && window.__TF__.openCreateTaskModal) {
+          window.__TF__.openCreateTaskModal(this.projectId, status);
+        }
+      }
+    });
+  }
+
+  /**
+   * Setup HTML5 Dropzones once in constructor
+   */
+  initDropzones() {
+    if (!this.boardEl) return;
+    const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
+    dropzones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => this.handleDragOver(e));
+      zone.addEventListener('drop', (e) => this.handleDrop(e));
+      zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+    });
   }
 
   /**
    * Render toàn bộ board với tasks
-   * @param {array} tasks - Mảng các task
    */
   render(tasks) {
     this.tasks = tasks || [];
     this.clearAllTasks();
     this.renderTasks();
-    // Remove old listeners before adding new ones
-    this.removeDragDropListeners();
-    this.setupDragDrop();
     this.updateColumnCounts();
   }
 
@@ -34,6 +63,7 @@ export class KanbanBoard {
    * Xoá tất cả task cards khỏi board
    */
   clearAllTasks() {
+    if (!this.boardEl) return;
     const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
     dropzones.forEach(zone => {
       zone.innerHTML = '';
@@ -41,23 +71,10 @@ export class KanbanBoard {
   }
 
   /**
-   * Remove drag/drop event listeners to prevent duplicates
-   */
-  removeDragDropListeners() {
-    const tasks = this.boardEl.querySelectorAll('[data-task-id]');
-    const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
-
-    // Clone and replace to remove all listeners
-    tasks.forEach(taskEl => {
-      const newEl = taskEl.cloneNode(true);
-      taskEl.replaceWith(newEl);
-    });
-  }
-
-  /**
    * Render tất cả tasks vào các cột tương ứng
    */
   renderTasks() {
+    if (!this.boardEl) return;
     this.tasks.forEach(task => {
       const taskEl = this.createTaskElement(task);
       const dropzone = this.boardEl.querySelector(`[data-dropzone="${task.status}"]`);
@@ -73,92 +90,107 @@ export class KanbanBoard {
    */
   createTaskElement(task) {
     const div = document.createElement('div');
-    div.className = 'bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 cursor-move hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 transition-all group';
+    div.className = 'group relative z-0 hover:z-10 glass-panel rounded-2xl p-4 hover:scale-[1.02] hover:shadow-[0_12px_32px_rgba(0,0,0,0.5)] transition-all duration-300 border border-outline-variant/10 cursor-pointer active:cursor-grabbing mb-3 transform-gpu';
     div.draggable = true;
     div.dataset.taskId = task._id;
     div.dataset.status = task.status;
 
-    const priority = task.priority || 'normal';
-    const priorityColor = {
-      'urgent': 'text-error bg-error/10',
-      'high': 'text-primary bg-primary/10',
-      'normal': 'text-on-surface-variant/50 bg-surface-container-highest',
-      'low': 'text-on-surface-variant/40 bg-surface-container-highest'
-    }[priority] || 'text-on-surface-variant/50 bg-surface-container-highest';
+    const priority = task.priority || 'Medium';
+    const priorityConfig = {
+      'High': { dot: 'bg-error', text: 'text-error', border: 'border-error/30' },
+      'Medium': { dot: 'bg-primary', text: 'text-primary', border: 'border-primary/30' },
+      'Low': { dot: 'bg-on-surface-variant/40', text: 'text-on-surface-variant', border: 'border-outline-variant/30' }
+    };
+    const config = priorityConfig[priority];
+
+    // Deadline formatting
+    const deadline = task.deadline ? new Date(task.deadline) : null;
+    let deadlineBadge = '';
+    
+    if (deadline) {
+      const now = new Date();
+      const diff = deadline - now;
+      const isOverdue = diff < 0 && task.status !== 'Done';
+      const isSoon = diff > 0 && diff < (3 * 24 * 60 * 60 * 1000);
+      
+      const text = deadline.toLocaleDateString('vi-VN', { day: '2-digit', month: 'short' });
+      const colorClass = isOverdue ? 'text-error bg-error/10' : (isSoon ? 'text-warning bg-warning/10' : 'text-on-surface-variant bg-surface-container-highest/50');
+      
+      deadlineBadge = `
+        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg ${colorClass} text-[10px] font-black uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[14px]">${isOverdue ? 'event_busy' : 'calendar_today'}</span>
+          ${text}
+        </div>
+      `;
+    }
+
+    // Subtasks progress
+    const subtasks = task.checklist || [];
+    const completedSubtasks = subtasks.filter(i => i.isCompleted).length;
+    const subtaskBadge = subtasks.length > 0 ? `
+      <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-container-highest/50 text-on-surface-variant text-[10px] font-black uppercase tracking-wider">
+        <span class="material-symbols-outlined text-[14px]">check_circle</span>
+        ${completedSubtasks}/${subtasks.length}
+      </div>
+    ` : '';
 
     const assignee = task.assignee || null;
 
     div.innerHTML = `
-      <div class="flex items-start justify-between mb-3">
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-on-surface leading-snug line-clamp-2">${task.title}</p>
+      <!-- Left Priority Accent -->
+      <div class="absolute left-0 top-3 bottom-3 w-1 ${config.dot} rounded-r-lg opacity-80 group-hover:opacity-100 transition-opacity"></div>
+      
+      <div class="space-y-4">
+        <div class="flex items-start justify-between">
+          <h3 class="text-sm font-black text-on-surface font-headline leading-relaxed group-hover:text-primary transition-colors line-clamp-2">
+            ${task.title}
+          </h3>
         </div>
-        <button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded transition-all opacity-0 group-hover:opacity-100"
-                onclick="event.stopPropagation(); window.__TF__.deleteTask('${this.projectId}', '${task._id}')">
-          <span class="material-symbols-outlined text-sm">close</span>
-        </button>
-      </div>
 
-      <p class="text-xs text-on-surface-variant line-clamp-2 mb-4">${task.description || '—'}</p>
+        <!-- Metadata Row -->
+        <div class="flex flex-wrap gap-2">
+          ${deadlineBadge}
+          ${subtaskBadge}
+        </div>
 
-      <div class="flex items-center justify-between">
-        <span class="inline-block px-2 py-1 rounded text-xs font-bold ${priorityColor}">
-          ${this.getPriorityLabel(priority)}
-        </span>
-        
-        ${assignee ? `
-          <div class="w-6 h-6 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold" 
-               title="${assignee.name}">
-            ${assignee.name.charAt(0).toUpperCase()}
+        <div class="pt-3 border-t border-outline-variant/5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full ${config.dot} shadow-[0_0_5px_rgba(var(--primary-rgb),0.5)]"></div>
+            <span class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">${priority}</span>
           </div>
-        ` : '<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant/40"><span class="material-symbols-outlined text-xs">person_outline</span></div>'}
+          
+          <div class="assignee-avatar">
+            ${assignee ? `
+              <div class="w-7 h-7 rounded-lg bg-primary-container flex items-center justify-center text-[10px] font-black text-on-primary-container border border-surface shadow-sm" title="${assignee.name}">
+                ${assignee.name.charAt(0).toUpperCase()}
+              </div>
+            ` : `
+              <div class="w-7 h-7 rounded-lg bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center text-on-surface-variant/30">
+                <span class="material-symbols-outlined text-sm">person</span>
+              </div>
+            `}
+          </div>
+        </div>
       </div>
+
+      <!-- Subtle background glow on hover -->
+      <div class="absolute -inset-2 bg-primary/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
     `;
 
-    // Click để mở task detail modal
+    // Click to open modal
     div.addEventListener('click', (e) => {
       if (!e.target.closest('button')) {
         window.__TF__.openTaskModal(this.projectId, task._id);
       }
     });
 
+    // Drag listeners for the card
+    div.addEventListener('dragstart', (e) => this.handleDragStart(e));
+    div.addEventListener('dragend', (e) => this.handleDragEnd(e));
+
     return div;
   }
 
-  /**
-   * Lấy label cho priority
-   */
-  getPriorityLabel(priority) {
-    const labels = {
-      'urgent': '🔴 Khẩn cấp',
-      'high': '🟠 Cao',
-      'normal': '🟡 Thường',
-      'low': '⚪ Thấp'
-    };
-    return labels[priority] || priority;
-  }
-
-  /**
-   * Setup HTML5 Drag & Drop
-   * Using event delegation and e.currentTarget for robustness
-   */
-  setupDragDrop() {
-    const tasks = this.boardEl.querySelectorAll('[data-task-id]');
-    const dropzones = this.boardEl.querySelectorAll('[data-dropzone]');
-
-    // Setup drag for task cards
-    tasks.forEach(taskEl => {
-      taskEl.addEventListener('dragstart', (e) => this.handleDragStart(e));
-      taskEl.addEventListener('dragend', (e) => this.handleDragEnd(e));
-    });
-
-    // Setup drop zones using e.currentTarget for reliability
-    dropzones.forEach(zone => {
-      zone.addEventListener('dragover', (e) => this.handleDragOver(e));
-      zone.addEventListener('drop', (e) => this.handleDrop(e));
-      zone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-    });
-  }
 
   handleDragStart(e) {
     const taskEl = e.currentTarget;
@@ -195,62 +227,57 @@ export class KanbanBoard {
       e.preventDefault();
       
       const dropzone = e.currentTarget;
-      if (!dropzone) {
-        console.warn('🔴 Drop handler: dropzone is null/undefined');
-        return;
-      }
-
-      if (!this.draggedTask) {
-        console.warn('🔴 Drop handler: draggedTask is null/undefined');
-        return;
-      }
+      if (!dropzone || !this.draggedTask) return;
 
       // Clean up visual feedback
-      if (dropzone.classList) {
-        dropzone.classList.remove('bg-primary/5');
-      }
+      dropzone.classList.remove('bg-primary/5');
 
-      // Get task and status info - with defensive checks
       const draggedElement = this.draggedTask;
-      if (!draggedElement || !draggedElement.dataset) {
-        console.error('🔴 Drop handler: draggedTask has no dataset property');
-        return;
-      }
-
       const taskId = draggedElement.getAttribute('data-task-id');
       const oldStatus = draggedElement.getAttribute('data-status');
       const newStatus = dropzone.getAttribute('data-dropzone');
 
-      console.log('📍 Drop detected:', { taskId, oldStatus, newStatus });
+      // Validate and check if same column
+      if (!taskId || !oldStatus || !newStatus || oldStatus === newStatus) return;
 
-      // Validate data
-      if (!taskId || !oldStatus || !newStatus) {
-        console.warn('🟡 Drop handler: missing task data', { taskId, oldStatus, newStatus });
-        return;
-      }
-
-      // Don't update if dropping in same column
-      if (oldStatus === newStatus) {
-        console.log('ℹ️ Drop handler: same column, ignoring');
-        return;
-      }
-
-      // Update task status via API
-      console.log('🚀 Updating task status:', { taskId, oldStatus, newStatus });
-      await updateTaskStatus(this.projectId, taskId, newStatus);
-      
-      // Update local DOM
+      // --- Optimistic UI Update ---
+      // 1. Update DOM
       draggedElement.setAttribute('data-status', newStatus);
       dropzone.appendChild(draggedElement);
       this.updateColumnCounts();
-      
-      console.log('✓ Task updated successfully');
+
+      // 2. Update local state
+      const taskIndex = this.tasks.findIndex(t => t._id === taskId);
+      if (taskIndex !== -1) {
+        this.tasks[taskIndex].status = newStatus;
+      }
+
+      // 3. API Call
+      try {
+        await updateTaskStatus(this.projectId, taskId, newStatus);
+        console.log('✓ Task status updated on server');
+      } catch (error) {
+        console.error('❌ Server update failed, reverting...', error);
+        
+        // Revert DOM
+        draggedElement.setAttribute('data-status', oldStatus);
+        const oldDropzone = this.boardEl.querySelector(`[data-dropzone="${oldStatus}"]`);
+        if (oldDropzone) {
+          oldDropzone.appendChild(draggedElement);
+        }
+        
+        // Revert state
+        if (taskIndex !== -1) {
+          this.tasks[taskIndex].status = oldStatus;
+        }
+
+        this.updateColumnCounts();
+        this.showError('Không thể cập nhật task: ' + error.message);
+      }
       
     } catch (error) {
       console.error('❌ Drop error:', error);
-      this.showError('Không thể cập nhật task: ' + error.message);
     } finally {
-      // Always clear draggedTask after drop
       this.draggedTask = null;
     }
   }
@@ -280,7 +307,6 @@ export class KanbanBoard {
     
     if (dropzone) {
       dropzone.appendChild(taskEl);
-      this.setupDragDrop();
       this.updateColumnCounts();
     }
   }
@@ -299,7 +325,6 @@ export class KanbanBoard {
     if (oldEl) {
       const newEl = this.createTaskElement(updatedTask);
       oldEl.replaceWith(newEl);
-      this.setupDragDrop();
       this.updateColumnCounts();
     }
   }
@@ -320,6 +345,9 @@ export class KanbanBoard {
     if (this.errorDiv) {
       this.errorDiv.textContent = '❌ ' + message;
       this.errorDiv.classList.remove('hidden');
+    }
+    if (window.__TF__ && window.__TF__.Toast) {
+      window.__TF__.Toast.error(message);
     }
   }
 

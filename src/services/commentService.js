@@ -3,12 +3,43 @@ const Comment = require('../models/commentModel');
 const Task = require('../models/taskModel');
 const AppError = require('../utils/AppError');
 
+const Notification = require('../models/notificationModel');
+const Project = require('../models/projectModel');
+
 exports.addComment = async (taskId, content, userId) => {
   const task = await Task.findOne({ _id: taskId, isDeleted: false });
   if (!task) throw new AppError('Không tìm thấy công việc', 404);
 
   const comment = await Comment.create({ taskId, author: userId, content });
   const populatedComment = await Comment.findById(comment._id).populate('author', 'name avatar');
+  
+  // Notification logic
+  let targetUserId = task.assignee;
+  if (!targetUserId) {
+    const project = await Project.findById(task.projectId);
+    if (project) {
+        targetUserId = project.owner;
+    }
+  }
+
+  // Nếu người comment khác người được thông báo
+  if (targetUserId && targetUserId.toString() !== userId.toString()) {
+    const notif = await Notification.create({
+      user: targetUserId,
+      sender: userId,
+      type: 'COMMENT',
+      content: `đã bình luận vào công việc "${task.title}"`,
+      link: `/projects/${task.projectId}`
+    });
+    
+    // Emit qua Socket Notification cho người đó (sẽ tích hợp thêm nếu cần)
+    const io = getIO();
+    if (io) {
+      const populatedNotif = await Notification.findById(notif._id).populate('sender', 'name avatar');
+      io.to(`user:${targetUserId}`).emit('newNotification', populatedNotif);
+    }
+  }
+
   const io = getIO();
   if (io) {
     io.to(`project:${task.projectId}`).emit('commentCreated', populatedComment);

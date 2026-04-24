@@ -2,168 +2,289 @@
 <%- include('../partials/_sidebar', { activePage: 'projects' }) %>
 <%- include('../partials/_topbar') %>
 
-<main class="md:ml-64 pt-16 min-h-screen bg-background overflow-hidden">
-    <div class="p-6 lg:p-10 flex flex-col h-[calc(100vh-4rem)]">
+<main class="main-content-wrapper pt-16 h-screen bg-background overflow-hidden flex flex-col transition-all duration-300">
+    <div class="px-4 py-4 lg:px-8 flex flex-col flex-1 overflow-hidden">
 
-        <!-- Board Header -->
-        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 shrink-0">
-            <div class="space-y-2">
-                <div class="flex items-center gap-3 mb-1">
-                    <span class="px-2 py-1 bg-primary-container/20 text-primary text-[10px] font-bold uppercase tracking-widest rounded">Dự án</span>
-                    <span class="text-on-surface-variant/40 text-xs">•</span>
-                    <span class="text-on-surface-variant text-xs">Cập nhật lúc nãy</span>
-                </div>
-                <h1 class="text-3xl font-extrabold tracking-tight text-on-surface font-headline" id="board-title">Kanban Board</h1>
-                <p class="text-on-surface-variant max-w-xl text-sm leading-relaxed" id="board-subtitle">Theo dõi tasks theo trạng thái</p>
-            </div>
-            <div class="flex flex-col items-end gap-4">
-                <div class="flex items-center">
-                    <div class="flex -space-x-3 overflow-hidden" id="board-avatars">
-                        <!-- Avatars will be rendered here if available -->
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-high ring-4 ring-surface text-xs font-bold text-primary">+</div>
+        <!-- Board Header (Premium Toolbar) -->
+        <header class="flex items-center justify-between gap-4 mb-6 px-6 py-4 glass-panel rounded-[2rem] border border-outline-variant/10 shadow-lg shrink-0">
+            <!-- Left: Title & Info -->
+            <div class="flex items-center gap-6 overflow-hidden">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                        <span class="material-symbols-outlined text-2xl">grid_view</span>
                     </div>
-                    <button class="ml-4 p-2 bg-surface-container-low text-primary rounded-xl hover:bg-surface-container-high transition-colors" id="btn-invite-member" title="Mời thành viên">
-                        <span class="material-symbols-outlined">person_add</span>
+                    <div class="flex flex-col">
+                        <h1 class="text-xl font-black tracking-tight text-on-surface font-headline truncate" id="board-title">Bảng công việc</h1>
+                        <div class="flex items-center gap-2">
+                             <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                             <span class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest opacity-60" id="project-tag">Public Project</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Collaborative Tools & Actions -->
+            <div class="flex items-center gap-6 shrink-0">
+                <!-- Avatars -->
+                <div class="flex items-center">
+                    <div class="flex -space-x-3 overflow-hidden hover:space-x-1 transition-all duration-500 mr-4" id="board-avatars">
+                        <!-- Avatars will be rendered here -->
+                    </div>
+                    <button class="w-8 h-8 rounded-full border-2 border-dashed border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all group" id="btn-invite-member-small">
+                        <span class="material-symbols-outlined text-sm group-hover:scale-125 transition-transform">add</span>
                     </button>
                 </div>
-                <div class="flex gap-2">
-                    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low text-on-surface text-sm font-semibold rounded-lg hover:bg-surface-container-high transition-all" onclick="alert('Module Filter (Mô phỏng)')">
-                        <span class="material-symbols-outlined text-lg">filter_list</span> Bộ lọc
+
+                <div class="h-8 w-px bg-outline-variant/10"></div>
+
+                <!-- Tools -->
+                <div class="flex items-center gap-2">
+                    <button id="btn-toggle-filter" class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container-high text-on-surface-variant rounded-xl transition-all group" title="Bộ lọc">
+                        <span class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">filter_list</span>
+                        <span class="text-[11px] font-black uppercase tracking-widest hidden sm:inline">Lọc</span>
                     </button>
-                    <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low text-on-surface text-sm font-semibold rounded-lg hover:bg-surface-container-high transition-all" onclick="alert('Đã sao chép liên kết dự án (Mô phỏng)')">
-                        <span class="material-symbols-outlined text-lg">share</span> Chia sẻ
+                    <button class="p-2.5 hover:bg-surface-container-high text-on-surface-variant rounded-xl transition-all" title="Tự động hóa">
+                        <span class="material-symbols-outlined text-lg">bolt</span>
+                    </button>
+                    
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary text-xs font-black rounded-xl hover:shadow-[0_8px_20px_rgba(var(--primary-rgb),0.3)] hover:-translate-y-0.5 transition-all active:scale-95" id="btn-invite-member">
+                        <span class="material-symbols-outlined text-sm">person_add</span>
+                        <span class="hidden sm:inline uppercase tracking-widest">Chia sẻ</span>
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Filter Section -->
-        <div id="filter-container" class="mb-6 shrink-0">
-            <!-- Filters will be rendered here by TaskFilter component -->
-        </div>
+        <!-- Board Canvas -->
+        <div class="flex flex-col flex-1 min-h-0">
+            <!-- Filter Section (Hidden by default) -->
+            <div id="filter-container" class="mb-4 shrink-0 hidden">
+                <!-- Filters will be rendered here by TaskFilter component -->
+            </div>
 
-        <!-- Kanban Columns -->
-        <section class="flex gap-6 flex-1 overflow-x-auto pb-4 items-start" id="board" aria-label="Kanban board">
-
-            <!-- Column: To Do -->
-            <div class="min-w-[320px] w-[320px] flex flex-col" data-status="To Do">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Cần làm (<span data-count="To Do">0</span>)</h4>
-                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+            <!-- Board Content (Scrollable Area) -->
+            <section class="flex gap-6 flex-1 overflow-x-auto p-4 pb-12 no-scrollbar items-start" id="kanban-board">
+                <!-- Columns: To Do, In Progress, Done -->
+                <!-- To Do -->
+            <div class="flex-shrink-0 w-[320px] flex flex-col max-h-full glass-panel rounded-[2rem] border border-outline-variant/10 shadow-xl" data-status="To Do">
+                <div class="flex items-center justify-between p-5 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-on-surface-variant/30"></div>
+                        <h2 class="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-70">Cần làm</h2>
+                        <span class="px-2 py-0.5 rounded-lg bg-surface-container-highest text-[10px] font-black text-on-surface-variant" data-count="To Do">0</span>
+                    </div>
                 </div>
-                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="To Do">
-                    <!-- Task cards render vào đây -->
+                <!-- Dropzone specifically for To Do -->
+                <div class="px-6 py-4 space-y-4 overflow-y-auto no-scrollbar flex-1 min-h-[150px] transition-colors duration-300" data-dropzone="To Do">
+                    <!-- Task cards -->
+                </div>
+                <div class="p-3 pt-0">
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-on-surface-variant hover:bg-primary/10 hover:text-primary rounded-2xl transition-all btn-add-task-inline group" data-status="To Do">
+                        <span class="material-symbols-outlined text-lg group-hover:scale-125 transition-transform">add</span>
+                        Thêm thẻ mới
+                    </button>
                 </div>
             </div>
 
-            <!-- Column: In Progress -->
-            <div class="min-w-[320px] w-[320px] flex flex-col bg-surface-container-lowest/30 p-4 rounded-[2rem]" data-status="In Progress">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Đang làm (<span data-count="In Progress">0</span>)</h4>
-                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+            <!-- In Progress -->
+            <div class="flex-shrink-0 w-[320px] flex flex-col max-h-full glass-panel rounded-[2rem] border border-outline-variant/10 shadow-xl" data-status="In Progress">
+                <div class="flex items-center justify-between p-5 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                        <h2 class="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Đang làm</h2>
+                        <span class="px-2 py-0.5 rounded-lg bg-primary/10 text-[10px] font-black text-primary" data-count="In Progress">0</span>
+                    </div>
                 </div>
-                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="In Progress">
-                    <!-- Task cards render vào đây -->
+                <div class="px-6 py-4 space-y-4 overflow-y-auto no-scrollbar flex-1 min-h-[150px] transition-colors duration-300" data-dropzone="In Progress">
+                    <!-- Task cards -->
+                </div>
+                <div class="p-3 pt-0">
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-on-surface-variant hover:bg-primary/10 hover:text-primary rounded-2xl transition-all btn-add-task-inline group" data-status="In Progress">
+                        <span class="material-symbols-outlined text-lg group-hover:scale-125 transition-transform">add</span>
+                        Thêm thẻ mới
+                    </button>
                 </div>
             </div>
 
-            <!-- Column: Done -->
-            <div class="min-w-[320px] w-[320px] flex flex-col" data-status="Done">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h4 class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Hoàn thành (<span data-count="Done">0</span>)</h4>
-                    <span class="material-symbols-outlined text-sm text-on-surface-variant/40">more_horiz</span>
+            <!-- Done -->
+            <div class="flex-shrink-0 w-[320px] flex flex-col max-h-full glass-panel rounded-[2rem] border border-outline-variant/10 shadow-xl" data-status="Done">
+                <div class="flex items-center justify-between p-5 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-tertiary"></div>
+                        <h2 class="text-[11px] font-black uppercase tracking-[0.2em] text-tertiary">Hoàn thành</h2>
+                        <span class="px-2 py-0.5 rounded-lg bg-tertiary/10 text-[10px] font-black text-tertiary" data-count="Done">0</span>
+                    </div>
                 </div>
-                <div class="space-y-4 flex-1 overflow-y-auto" data-dropzone="Done">
-                    <!-- Task cards render vào đây -->
+                <div class="px-6 py-4 space-y-4 overflow-y-auto no-scrollbar flex-1 min-h-[150px] transition-colors duration-300" data-dropzone="Done">
+                    <!-- Task cards -->
                 </div>
+                <div class="p-3 pt-0">
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-on-surface-variant hover:bg-tertiary/10 hover:text-tertiary rounded-2xl transition-all btn-add-task-inline group" data-status="Done">
+                        <span class="material-symbols-outlined text-lg group-hover:scale-125 transition-transform">add</span>
+                        Thêm thẻ mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Column Placeholder -->
+            <div class="flex-shrink-0 w-[300px] h-[150px] rounded-[2rem] border-2 border-dashed border-outline-variant/20 flex flex-col items-center justify-center gap-4 group cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-500">
+                <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-all duration-500">
+                    <span class="material-symbols-outlined text-2xl">add</span>
+                </div>
+                <span class="text-[11px] font-black uppercase tracking-widest text-on-surface-variant group-hover:text-primary transition-colors">Thêm cột mới</span>
             </div>
         </section>
 
-        <div class="text-error text-sm hidden" id="board-error"></div>
+            <div class="text-error text-sm hidden" id="board-error"></div>
+        </div>
     </div>
 </main>
 
-<!-- ========== Task Detail Modal (3.4) ========== -->
-<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-md hidden items-center justify-center p-6" id="task-modal-overlay">
-    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-2xl shadow-black/60 overflow-hidden max-h-[90vh] overflow-y-auto p-8">
-
-        <!-- Cột 8: Nội dung chính -->
-        <div class="col-span-1 lg:col-span-8 space-y-6">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-on-surface-variant uppercase tracking-wider" id="task-modal-project">Dự án</span>
-                <button class="text-on-surface-variant hover:text-on-surface" id="task-modal-close">
-                    <span class="material-symbols-outlined">close</span>
+<!-- ========== Task Detail Modal (Premium Glassmorphism) ========== -->
+<div class="fixed inset-0 z-[100] bg-background/60 backdrop-blur-2xl hidden items-center justify-center p-4 md:p-6" id="task-modal-overlay">
+    <div class="w-full max-w-6xl bg-surface-container-low/90 backdrop-blur-3xl rounded-[2.5rem] border border-outline-variant/10 shadow-[0_50px_150px_-30px_rgba(0,0,0,0.8)] overflow-hidden max-h-[95vh] flex flex-col slide-up">
+        
+        <!-- Sticky Modal Header -->
+        <div class="px-10 py-6 border-b border-outline-variant/5 flex items-center justify-between bg-surface-container-low/40 shrink-0">
+            <div class="flex items-center gap-2 text-on-surface-variant text-[10px] font-bold tracking-widest uppercase">
+                <span class="material-symbols-outlined text-sm text-primary">folder</span>
+                <span id="task-modal-project">Project: —</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors">
+                    <span class="material-symbols-outlined text-lg">share</span>
                 </button>
-            </div>
-            <h1 class="text-3xl font-extrabold tracking-tight text-on-surface leading-tight font-headline" id="task-modal-title">Tiêu đề task</h1>
-            <div class="space-y-4">
-                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Mô tả</h3>
-                <p class="text-on-surface leading-relaxed font-light" id="task-modal-desc">—</p>
-            </div>
-
-            <!-- Attachments -->
-            <div class="space-y-4">
-                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Đính kèm</h3>
-                <div id="task-attachments"></div>
-                <div class="hidden text-on-surface-variant text-sm" id="task-attachments-empty">Chưa có file đính kèm.</div>
-                <div class="flex items-center gap-3">
-                    <input type="file" id="task-upload-input" class="text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-surface-container-high file:text-on-surface hover:file:bg-surface-bright">
-                    <button id="task-upload-btn" class="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">Tải lên</button>
-                </div>
-                <div class="text-error text-sm hidden" id="task-upload-error"></div>
-            </div>
-
-            <div class="space-y-4" id="task-comments-section">
-                <div class="flex items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Bình luận</h3>
-                        <p class="text-sm text-on-surface-variant">Thảo luận, cập nhật tiến độ ngay trong task.</p>
-                    </div>
-                    <span class="text-xs text-on-surface-variant" id="task-comments-count">0 bình luận</span>
-                </div>
-                <form id="task-comments-form" class="space-y-3">
-                    <label class="sr-only" for="task-comments-input">Nội dung bình luận</label>
-                    <textarea id="task-comments-input" rows="3" class="w-full rounded-3xl border border-outline-variant/20 bg-surface-container-low p-4 text-sm text-on-surface placeholder:text-on-surface-variant resize-none" placeholder="Viết bình luận..."></textarea>
-                    <div class="flex justify-end">
-                        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-primary-container px-5 py-2 text-sm font-bold text-on-primary-container hover:brightness-110 transition-colors">Gửi bình luận</button>
-                    </div>
-                </form>
-                <div id="task-comments-container" class="space-y-4"></div>
-                <div class="text-error text-sm hidden" id="task-comments-error"></div>
+                <button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors" id="task-modal-close">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
             </div>
         </div>
 
-        <!-- Cột 4: Sidebar thông tin -->
-        <div class="col-span-1 lg:col-span-4 space-y-6">
-            <div class="bg-surface-container-low p-6 rounded-xl space-y-6">
-                <div>
-                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Trạng thái</label>
-                    <select id="task-modal-status" class="w-full bg-primary-container/20 text-primary px-4 py-3 rounded-lg font-bold text-sm border-none focus:ring-primary">
-                        <option value="To Do">Cần làm</option>
-                        <option value="In Progress">Đang làm</option>
-                        <option value="Done">Hoàn thành</option>
-                    </select>
+        <!-- Modal Body (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column (8/12) -->
+                <div class="lg:col-span-8 space-y-8">
+                    <!-- Title & Description -->
+                    <section class="space-y-6">
+                        <h1 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface leading-tight" id="task-modal-title">
+                            Task Title
+                        </h1>
+                        <div class="space-y-3">
+                            <h3 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em]">Mô tả công việc</h3>
+                            <p class="text-on-surface/80 leading-relaxed font-normal text-sm" id="task-modal-desc">—</p>
+                        </div>
+                        <!-- Dynamic Tags (Example) -->
+                        <div class="flex flex-wrap gap-2" id="task-modal-tags">
+                            <span class="bg-primary-container/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">UI/UX Design</span>
+                            <span class="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Sprint Project</span>
+                        </div>
+                    </section>
+
+                    <!-- Discussion Section -->
+                    <section class="bg-surface-container-low rounded-[1.5rem] flex flex-col border border-outline-variant/5 overflow-hidden">
+                        <div class="p-6 border-b border-outline-variant/10 flex items-center justify-between">
+                            <h3 class="font-headline font-bold text-on-surface flex items-center gap-2 text-sm uppercase tracking-wider">
+                                <span class="material-symbols-outlined text-primary text-lg">chat_bubble</span>
+                                Thảo luận
+                            </h3>
+                            <span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full" id="task-comments-count">0 Bình luận</span>
+                        </div>
+
+                        <!-- Comments Container -->
+                        <div class="h-[350px] overflow-y-auto p-6 space-y-6 custom-scrollbar" id="task-comments-container">
+                            <!-- Comments render here -->
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="p-4 bg-surface-container/50 border-t border-outline-variant/10">
+                            <form id="task-comments-form" class="space-y-3">
+                                <div class="relative">
+                                    <textarea id="task-comments-input" class="w-full bg-surface-container-high border-none rounded-2xl py-3 pl-4 pr-12 text-sm text-on-surface focus:ring-2 focus:ring-primary/50 resize-none transition-all placeholder:text-on-surface-variant/40" placeholder="Viết phản hồi của bạn..." rows="1"></textarea>
+                                    <button type="submit" class="absolute right-2 top-1.5 p-1.5 bg-primary text-on-primary rounded-lg active:scale-95 transition-transform">
+                                        <span class="material-symbols-outlined text-sm">send</span>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-4 px-1">
+                                    <button type="button" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-lg">attach_file</span>
+                                    </button>
+                                    <button type="button" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-lg">mood</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Độ ưu tiên</label>
-                    <select id="task-modal-priority" class="w-full bg-surface-container text-on-surface px-4 py-3 rounded-lg font-medium text-sm border border-outline-variant/10 focus:ring-primary">
-                        <option value="Low">Thấp</option>
-                        <option value="Medium">Trung bình</option>
-                        <option value="High">Cao</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Hạn chót</label>
-                    <input type="date" id="task-modal-deadline" class="w-full bg-surface-container text-on-surface px-4 py-3 rounded-lg text-sm border border-outline-variant/10 focus:ring-primary">
+
+                <!-- Right Column (4/12) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <!-- Status & Priority -->
+                    <div class="bg-surface-container-low p-6 rounded-[1.5rem] space-y-6 border border-outline-variant/5">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block px-1">Trạng thái</label>
+                            <div class="relative">
+                                <select id="task-modal-status" class="w-full bg-primary-container/20 text-primary px-4 py-3 rounded-xl font-bold text-sm border-none focus:ring-2 focus:ring-primary cursor-pointer">
+                                    <option value="To Do" class="bg-surface-container text-on-surface">Cần làm</option>
+                                    <option value="In Progress" class="bg-surface-container text-on-surface">Đang làm</option>
+                                    <option value="Done" class="bg-surface-container text-on-surface">Hoàn thành</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block px-1">Độ ưu tiên</label>
+                            <div class="relative">
+                                <select id="task-modal-priority" class="w-full bg-surface-container-high text-on-surface px-4 py-3 rounded-xl font-bold text-sm border-none focus:ring-2 focus:ring-primary cursor-pointer">
+                                    <option value="Low" class="bg-surface-container text-on-surface">Thấp</option>
+                                    <option value="Medium" class="bg-surface-container text-on-surface">Trung bình</option>
+                                    <option value="High" class="bg-surface-container text-on-surface">Cao</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignee & Deadline -->
+                    <div class="bg-surface-container-low p-6 rounded-[1.5rem] space-y-6 border border-outline-variant/5">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block px-1">Người thực hiện</label>
+                            <div class="relative group">
+                                <select id="task-modal-assignee" class="w-full bg-surface-container-high text-on-surface px-4 py-3 rounded-xl font-bold text-sm border-none focus:ring-2 focus:ring-primary cursor-pointer transition-all">
+                                    <option value="">Chưa gán</option>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block px-1">Hạn chót</label>
+                            <div class="flex items-center gap-3 bg-surface-container-high/50 p-4 rounded-xl text-on-surface border border-outline-variant/5">
+                                <span class="material-symbols-outlined text-primary">calendar_today</span>
+                                <input type="date" id="task-modal-deadline" class="bg-transparent border-none p-0 text-sm font-bold focus:ring-0 w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="space-y-3">
+                        <button class="w-full py-4 bg-tertiary-container text-on-tertiary-container rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-tertiary/10">
+                            <span class="material-symbols-outlined text-lg">check_circle</span>
+                            Hoàn thành task
+                        </button>
+                        <button class="w-full py-4 bg-error-container/10 text-error rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-error-container/20 active:scale-[0.98] transition-all" onclick="window.__TF__.deleteTaskFromModal()">
+                            <span class="material-symbols-outlined text-lg">delete</span>
+                            Lưu trữ / Xoá
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ========== Invite Modal (3.5) ========== -->
-<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-md hidden items-center justify-center p-6" id="invite-modal-overlay">
-    <div class="w-full max-w-lg bg-surface-container-low rounded-xl overflow-hidden shadow-2xl shadow-black/60 flex flex-col">
+<!-- ========== Invite Modal (Premium) ========== -->
+<div class="fixed inset-0 z-[110] bg-background/60 backdrop-blur-2xl hidden items-center justify-center p-6" id="invite-modal-overlay">
+    <div class="w-full max-w-lg bg-surface-container-low/90 backdrop-blur-3xl rounded-[2.5rem] overflow-hidden shadow-[0_50px_150px_-30px_rgba(0,0,0,0.8)] flex flex-col border border-outline-variant/10">
         <!-- Modal Header -->
         <div class="p-8 pb-0">
             <div class="flex justify-between items-start mb-2">
@@ -214,8 +335,79 @@
     </div>
 </div>
 
+<!-- ========== Create Task Modal (Premium) ========== -->
+<div class="fixed inset-0 z-[120] bg-background/60 backdrop-blur-2xl hidden items-center justify-center p-6" id="create-task-modal-overlay">
+    <div class="w-full max-w-lg bg-surface-container-low/90 backdrop-blur-3xl rounded-[2.5rem] overflow-hidden shadow-[0_50px_150px_-30px_rgba(0,0,0,0.8)] flex flex-col border border-outline-variant/10">
+        <!-- Modal Header -->
+        <div class="p-8 pb-0">
+            <div class="flex justify-between items-start mb-2">
+                <h2 class="text-2xl font-extrabold tracking-tight text-on-surface font-headline">Tạo công việc mới</h2>
+                <button class="text-on-surface-variant hover:bg-surface-container-high p-1 rounded-md transition-colors" id="create-task-modal-close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <p class="text-on-surface-variant text-sm">Thêm một thẻ công việc mới vào bảng.</p>
+        </div>
+        <!-- Modal Body -->
+        <div class="p-8 space-y-6">
+            <div class="space-y-2">
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Tiêu đề</label>
+                <div class="relative group">
+                    <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all font-bold" placeholder="Nhập tiêu đề công việc" type="text" id="create-task-title"/>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Mô tả</label>
+                <div class="relative group">
+                    <textarea class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all resize-none" placeholder="Nhập mô tả chi tiết" rows="3" id="create-task-desc"></textarea>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Trạng thái</label>
+                    <div class="relative">
+                        <select id="create-task-status" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-sm font-bold text-on-surface cursor-pointer focus:ring-2 focus:ring-primary/50">
+                            <option value="To Do" class="bg-surface-container text-on-surface">Cần làm</option>
+                            <option value="In Progress" class="bg-surface-container text-on-surface">Đang làm</option>
+                            <option value="Done" class="bg-surface-container text-on-surface">Hoàn thành</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Độ ưu tiên</label>
+                    <div class="relative">
+                        <select id="create-task-priority" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-sm font-bold text-on-surface cursor-pointer focus:ring-2 focus:ring-primary/50">
+                            <option value="Low" class="bg-surface-container text-on-surface">Thấp</option>
+                            <option value="Medium" class="bg-surface-container text-on-surface" selected>Trung bình</option>
+                            <option value="High" class="bg-surface-container text-on-surface">Cao</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-2 mt-4">
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant px-1">Người thực hiện</label>
+                <div class="relative group">
+                    <select id="create-task-assignee" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-sm font-bold text-on-surface cursor-pointer focus:ring-2 focus:ring-primary/50 transition-all">
+                        <option value="">Chưa gán</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="px-8 py-6 bg-surface-container flex flex-row-reverse gap-4">
+            <button class="flex-1 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20" id="create-task-save-btn">
+                Tạo thẻ
+            </button>
+            <button class="flex-1 py-3 rounded-xl bg-surface-container-high text-on-surface-variant font-bold hover:text-on-surface transition-all" id="create-task-cancel-btn">
+                Huỷ
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Floating Action Button -->
-<button id="btn-refresh-board" class="fixed md:bottom-10 md:right-10 bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl shadow-primary-container/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group z-50">
+<button id="btn-fab-add-task" class="fixed md:bottom-10 md:right-10 bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl shadow-primary-container/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group z-50">
     <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
 </button>
 

@@ -1,6 +1,7 @@
 const Project = require('../models/projectModel');
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
+const { getIO } = require('../config/socket');
 
 exports.createProject = async (name, description, userId) => {
   const project = await Project.create({
@@ -42,6 +43,12 @@ exports.getMyProjects = async (userId) => {
       new: true,
       runValidators: true
     });
+
+    const io = getIO();
+    if (io) {
+      io.to(`project:${projectId}`).emit('projectUpdated', { project });
+    }
+
     return project;
   };
   
@@ -60,6 +67,17 @@ exports.getMyProjects = async (userId) => {
   
     project.members.push(user._id);
     await project.save();
+
+    const io = getIO();
+    if (io) {
+      io.to(`project:${projectId}`).emit('memberJoined', { 
+        userId: user._id, 
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar
+      });
+    }
+
     return project;
   };
   
@@ -78,6 +96,12 @@ exports.getMyProjects = async (userId) => {
   
     project.members.splice(index, 1);
     await project.save();
+
+    const io = getIO();
+    if (io) {
+      io.to(`project:${projectId}`).emit('memberLeft', { memberId });
+    }
+
     return project;
   };
   

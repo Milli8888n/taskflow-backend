@@ -59,8 +59,14 @@ app.use('/api/v1/projects', projectRoutes);
 
 app.use('/api/v1/users', userRoutes);
 
+const invitationRoutes = require('./routes/invitationRoutes');
+app.use('/api/v1/invitations', invitationRoutes);
+
 const dashboardRoutes = require('./routes/dashboardRoutes');
 app.use('/api/v1/dashboard', dashboardRoutes);
+
+const notificationRoutes = require('./routes/notificationRoutes');
+app.use('/api/v1/notifications', notificationRoutes);
 
 const viewRoutes = require('./routes/viewRoutes');
 app.use('/', viewRoutes);

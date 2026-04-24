@@ -74,20 +74,43 @@ export class RealtimeManager {
      */
     this.socket.on('taskCreated', (data) => {
       console.log('[Socket] Task created:', data);
+      const task = data.task || data;
       if (window.__TF__.board) {
-        window.__TF__.board.kanban.addTask(data.task);
+        window.__TF__.board.kanban.addTask(task);
+      }
+
+      // Show toast if not by me
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (data.performerId && currentUser._id && data.performerId !== currentUser._id) {
+        this.showNotification({
+          title: 'Công việc mới',
+          message: `Một công việc mới vừa được tạo: ${task.title}`,
+          type: 'success'
+        });
       }
     });
 
     this.socket.on('taskUpdated', (data) => {
       console.log('[Socket] Task updated:', data);
+      const task = data.task || data;
       if (window.__TF__.board) {
-        window.__TF__.board.kanban.updateTask(data.task);
+        window.__TF__.board.kanban.updateTask(task);
       }
       // Update modal if it's open
-      if (window.__TF__.taskModal && window.__TF__.taskModal.currentTaskId === data.task._id) {
-        window.__TF__.taskModal.currentTask = data.task;
-        window.__TF__.taskModal.renderTask(data.task);
+      if (window.__TF__.taskModal && window.__TF__.taskModal.currentTaskId === task._id) {
+        window.__TF__.taskModal.currentTask = task;
+        window.__TF__.taskModal.renderTask(task);
+      }
+
+      // Show toast if status changed and not by me
+      // Note: we might want more complex logic here, but for now simple info toast
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (data.performerId && currentUser._id && data.performerId !== currentUser._id) {
+        this.showNotification({
+          title: 'Cập nhật công việc',
+          message: `Công việc "${task.title}" vừa được cập nhật`,
+          type: 'info'
+        });
       }
     });
 
@@ -96,16 +119,35 @@ export class RealtimeManager {
       if (window.__TF__.board) {
         window.__TF__.board.kanban.removeTask(data.taskId);
       }
+
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (data.performerId && currentUser._id && data.performerId !== currentUser._id) {
+        this.showNotification({
+          title: 'Xóa công việc',
+          message: 'Một công việc vừa được xóa khỏi dự án',
+          type: 'warning'
+        });
+      }
     });
 
     this.socket.on('taskStatusChanged', (data) => {
       console.log('[Socket] Task status changed:', data);
+      const task = data.task || data;
       if (window.__TF__.board) {
-        const task = {
-          ...data.task,
+        const updatedTask = {
+          ...task,
           status: data.newStatus
         };
-        window.__TF__.board.kanban.updateTask(task);
+        window.__TF__.board.kanban.updateTask(updatedTask);
+      }
+
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (data.performerId && currentUser._id && data.performerId !== currentUser._id) {
+        this.showNotification({
+          title: 'Trạng thái thay đổi',
+          message: `Công việc "${task.title}" đã chuyển sang "${data.newStatus}"`,
+          type: 'info'
+        });
       }
     });
 
@@ -115,8 +157,29 @@ export class RealtimeManager {
     this.socket.on('commentCreated', (data) => {
       console.log('[Socket] Comment created:', data);
       const comment = data.comment || data;
+      
+      // Skip if this comment was created by the current user
+      // (already added locally by commentBox.addComment)
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const authorId = comment.author?._id || comment.author;
+      if (currentUser._id && authorId && currentUser._id.toString() === authorId.toString()) {
+        console.log('[Socket] Skipping own comment');
+        return;
+      }
+      
       if (window.__TF__.taskModal) {
         window.__TF__.taskModal.addComment(comment);
+        
+        // Show toast if not by me
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const authorId = comment.author?._id || comment.author;
+        if (currentUser._id && authorId && currentUser._id.toString() !== authorId.toString()) {
+          this.showNotification({
+            title: 'Bình luận mới',
+            message: `${comment.author?.name || 'Ai đó'} vừa bình luận trong một công việc`,
+            type: 'info'
+          });
+        }
       }
     });
 
@@ -143,6 +206,21 @@ export class RealtimeManager {
       this.showNotification(data);
     });
 
+    this.socket.on('newNotification', (data) => {
+      console.log('[Socket] newNotification received:', data);
+      
+      // Notify components like notificationBox
+      window.dispatchEvent(new CustomEvent('new-notification-app', { detail: data }));
+      
+      // Show toast
+      const senderName = data.sender ? data.sender.name : 'Hệ thống';
+      this.showNotification({
+        title: 'Thông báo',
+        message: `${senderName} ${data.content}`,
+        type: 'info'
+      });
+    });
+
     this.socket.on('userStatusChanged', (data) => {
       console.log('[Socket] User status changed:', data);
       // User came online/offline - update member list
@@ -163,11 +241,29 @@ export class RealtimeManager {
     this.socket.on('memberJoined', (data) => {
       console.log('[Socket] Member joined:', data);
       // Update member list
+      if (window.__TF__.board) {
+        window.__TF__.board.loadProjectDetails();
+      }
+      
+      this.showNotification({
+        title: 'Thành viên mới',
+        message: `${data.name} vừa tham gia vào dự án`,
+        type: 'success'
+      });
     });
 
     this.socket.on('memberLeft', (data) => {
       console.log('[Socket] Member left:', data);
       // Update member list
+      if (window.__TF__.board) {
+        window.__TF__.board.loadProjectDetails();
+      }
+
+      this.showNotification({
+        title: 'Thành viên rời đi',
+        message: 'Một thành viên vừa rời khỏi dự án',
+        type: 'info'
+      });
     });
   }
 
@@ -198,41 +294,22 @@ export class RealtimeManager {
   }
 
   /**
-   * Hiển thị toast notification
+   * Hiển thị toast notification (dùng Toast component có sẵn)
    */
   showNotification(notification) {
-    // Toast notification ở góc màn hình
-    const toast = document.createElement('div');
-    toast.className = 'fixed top-6 right-6 glass-blur-strong rounded-xl p-4 flex items-center gap-3 z-[200] animate-in fade-in';
-    toast.style.minWidth = '300px';
+    const Toast = window.__TF__?.Toast;
+    const message = notification.title
+      ? `${notification.title}: ${notification.message}`
+      : notification.message;
 
-    const typeClass = notification.type === 'error' ? 'border-error' : 
-                     notification.type === 'success' ? 'border-tertiary' : 
-                     'border-primary';
-
-    toast.classList.add('border', typeClass);
-
-    const icon = notification.type === 'error' ? '❌' : 
-                notification.type === 'success' ? '✅' : 
-                'ℹ️';
-
-    toast.innerHTML = `
-      <span class="text-xl">${icon}</span>
-      <div class="flex-1 text-sm text-on-surface">
-        <p class="font-semibold">${notification.title || 'Thông báo'}</p>
-        <p class="text-on-surface-variant text-xs">${notification.message}</p>
-      </div>
-      <button class="text-on-surface-variant hover:text-on-surface" onclick="this.parentElement.remove()">
-        <span class="material-symbols-outlined text-sm">close</span>
-      </button>
-    `;
-
-    document.body.appendChild(toast);
-
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-      toast.remove();
-    }, 5000);
+    if (Toast) {
+      // Dùng Toast component chính thức của dự án
+      const type = notification.type || 'info';
+      Toast.create(message, { type, duration: 5000 });
+    } else {
+      // Fallback nếu Toast chưa load
+      console.log(`[Notification] ${message}`);
+    }
   }
 }
 

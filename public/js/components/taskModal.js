@@ -25,20 +25,19 @@ export class TaskModal {
       this.closeBtn.addEventListener('click', () => this.close());
     }
 
-    // Close modal when clicking overlay (outside main content)
-    if (this.overlay) {
-      this.overlay.addEventListener('click', (e) => {
-        if (e.target === this.overlay) {
-          this.close();
-        }
-      });
-
-      // Prevent closing when clicking inside modal content
-      const modal = this.overlay.querySelector('[role="dialog"]') || this.overlay.querySelector('div > div');
-      if (modal) {
-        modal.addEventListener('click', (e) => e.stopPropagation());
+    // Auto-save on change
+    ['status', 'priority', 'deadline', 'assignee'].forEach(field => {
+      const el = document.getElementById(`task-modal-${field}`);
+      if (el) {
+        el.addEventListener('change', () => {
+          let value = el.value;
+          if (field === 'assignee' && !value) {
+            value = null;
+          }
+          this.updateTask({ [field]: value });
+        });
       }
-    }
+    });
   }
 
   /**
@@ -48,26 +47,37 @@ export class TaskModal {
     try {
       this.projectId = projectId;
       this.currentTaskId = taskId;
+
+      // Show modal first for faster feedback
+      if (this.overlay) {
+        this.overlay.classList.remove('hidden');
+        this.overlay.classList.add('flex');
+        // Reset contents while loading
+        this.resetModal();
+      }
+
       this.commentBox.setTask(projectId, taskId);
 
-      // Load task data
+      // Load task data — API returns { status, data: { task } }
       const response = await getTaskById(projectId, taskId);
-      this.currentTask = response.task || response;
+      this.currentTask = response.data?.task || response.task || response;
 
       // Render task data vào modal
       this.renderTask(this.currentTask);
       await this.commentBox.loadComments();
 
-      // Show modal
-      if (this.overlay) {
-        this.overlay.classList.remove('hidden');
-        this.overlay.classList.add('flex');
-      }
-
     } catch (error) {
       console.error('Error opening task modal:', error);
       alert('Không thể tải task details: ' + error.message);
+      this.close();
     }
+  }
+
+  resetModal() {
+    const titleEl = document.getElementById('task-modal-title');
+    if (titleEl) titleEl.textContent = 'Đang tải...';
+    const descEl = document.getElementById('task-modal-desc');
+    if (descEl) descEl.textContent = '—';
   }
 
   /**
@@ -76,15 +86,15 @@ export class TaskModal {
   renderTask(task) {
     // Title
     const titleEl = document.getElementById('task-modal-title');
-    if (titleEl) titleEl.textContent = task.title;
+    if (titleEl) titleEl.textContent = task.title || 'Không có tiêu đề';
 
     // Description
     const descEl = document.getElementById('task-modal-desc');
-    if (descEl) descEl.textContent = task.description || '—';
+    if (descEl) descEl.textContent = task.description || 'Chưa có mô tả chi tiết cho công việc này.';
 
-    // Project
+    // Project — field name in model is "projectId", not "project"
     const projectEl = document.getElementById('task-modal-project');
-    if (projectEl) projectEl.textContent = task.project?.name || 'Dự án';
+    if (projectEl) projectEl.textContent = `Project: ${task.projectId?.name || '—'}`;
 
     // Status
     const statusSelect = document.getElementById('task-modal-status');
@@ -98,10 +108,42 @@ export class TaskModal {
     const deadlineInput = document.getElementById('task-modal-deadline');
     if (deadlineInput && task.deadline) {
       const date = new Date(task.deadline);
-      deadlineInput.valueAsDate = date;
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      deadlineInput.value = `${year}-${month}-${day}`;
+    } else if (deadlineInput) {
+      deadlineInput.value = '';
     }
 
-    // TODO: Render comments, attachments, team members
+    // Dynamic tags
+    const tagsEl = document.getElementById('task-modal-tags');
+    if (tagsEl) {
+      const priorityColors = {
+        'High': 'bg-error/10 text-error',
+        'Medium': 'bg-primary-container/20 text-primary',
+        'Low': 'bg-surface-container-highest text-on-surface-variant'
+      };
+      const statusColors = {
+        'To Do': 'bg-secondary-container/20 text-on-secondary-container',
+        'In Progress': 'bg-primary-container/20 text-primary',
+        'Done': 'bg-tertiary-container/20 text-tertiary'
+      };
+      tagsEl.innerHTML = `
+        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${priorityColors[task.priority] || priorityColors['Medium']}">${task.priority || 'Medium'}</span>
+        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusColors[task.status] || statusColors['To Do']}">${task.status || 'To Do'}</span>
+      `;
+    }
+
+    // Assignee
+    const assigneeSelect = document.getElementById('task-modal-assignee');
+    if (assigneeSelect) {
+      if (task.assignee && (task.assignee._id || task.assignee.id || task.assignee)) {
+        assigneeSelect.value = task.assignee._id || task.assignee.id || task.assignee;
+      } else {
+        assigneeSelect.value = '';
+      }
+    }
   }
 
   /**
@@ -122,7 +164,7 @@ export class TaskModal {
   async updateTask(updates) {
     try {
       const response = await updateTask(this.projectId, this.currentTaskId, updates);
-      this.currentTask = response.task || response;
+      this.currentTask = response.data?.task || response.task || response;
       this.renderTask(this.currentTask);
       
       // Notify parent page about update

@@ -23,14 +23,14 @@ exports.getTask = async (req, res, next) => {
 
 exports.updateTask = async (req, res, next) => {
   try {
-    const task = await taskService.updateTask(req.params.taskId, req.body);
+    const task = await taskService.updateTask(req.params.taskId, req.body, req.user._id);
     res.status(200).json({ status: 'success', data: { task } });
   } catch (error) { next(error); }
 };
 
 exports.deleteTask = async (req, res, next) => {
   try {
-    const result = await taskService.deleteTask(req.params.taskId);
+    const result = await taskService.deleteTask(req.params.taskId, req.user._id);
     res.status(200).json({ status: 'success', message: result.message });
   } catch (error) { next(error); }
 };

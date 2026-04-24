@@ -34,6 +34,10 @@ router.get('/projects', (req, res) => {
   });
 });
 
+router.get('/projects/:id', (req, res) => {
+  res.redirect(`/projects/${req.params.id}/board`);
+});
+
 router.get('/projects/:id/board', (req, res) => {
   res.render('projects/board', {
     title: 'Board - TaskFlow',
@@ -51,12 +55,19 @@ router.get('/profile', (req, res) => {
   });
 });
 
-router.get('/settings', (req, res) => {
-  res.render('settings/index', {
-    title: 'Cài đặt - TaskFlow',
-    activePage: 'settings',
-    user: req.user || null
-  });
+router.get('/projects/:id/settings', async (req, res) => {
+  try {
+    const projectService = require('../services/projectService');
+    const project = await projectService.getProjectById(req.params.id);
+    res.render('settings/index', {
+      title: 'Cài đặt Dự án - TaskFlow',
+      activePage: 'projects',
+      user: req.user || null,
+      project
+    });
+  } catch (err) {
+    res.redirect('/404');
+  }
 });
 
 router.get('/notifications', (req, res) => {

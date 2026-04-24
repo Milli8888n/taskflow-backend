@@ -1,14 +1,19 @@
 <%- include('../partials/_header', { title: '404 - Không tìm thấy' }) %>
 
-<main class="min-h-screen flex items-center justify-center p-6">
-    <div class="text-center space-y-6 max-w-md">
-        <div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center mx-auto">
-            <span class="material-symbols-outlined text-5xl text-on-surface-variant/40">explore_off</span>
+<main class="min-h-screen flex items-center justify-center p-6 bg-background">
+    <div class="text-center space-y-8 max-w-md">
+        <div class="relative inline-block">
+            <div class="absolute inset-0 bg-primary/10 rounded-full blur-3xl"></div>
+            <div class="relative w-28 h-28 rounded-3xl glass-panel flex items-center justify-center mx-auto">
+                <span class="material-symbols-outlined text-6xl text-primary/40">explore_off</span>
+            </div>
         </div>
-        <h1 class="text-6xl font-extrabold font-headline text-on-surface">404</h1>
-        <p class="text-on-surface-variant text-lg">Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
-        <a href="/projects" class="inline-flex items-center gap-2 kinetic-gradient text-on-primary font-bold py-3 px-8 rounded-xl hover:scale-[0.98] transition-transform">
-            <span class="material-symbols-outlined">arrow_back</span> Về trang chủ
+        <div>
+            <h1 class="text-8xl font-black font-headline text-on-surface tracking-tighter italic">404</h1>
+            <p class="text-on-surface-variant text-sm font-bold mt-3 opacity-60 max-w-xs mx-auto">Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
+        </div>
+        <a href="/projects" class="inline-flex items-center gap-2 bg-primary text-on-primary font-black py-3.5 px-10 rounded-2xl text-xs uppercase tracking-widest hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.4)] active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-lg">arrow_back</span> Về trang chủ
         </a>
     </div>
 </main>

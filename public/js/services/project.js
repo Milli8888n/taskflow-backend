@@ -62,13 +62,13 @@ export async function deleteProject(projectId) {
 }
 
 /**
- * Thêm member vào project
+ * Thêm member vào project bằng email
  * @param {string} projectId - ID của project
- * @param {string} userId - ID của user cần thêm
+ * @param {string} email - Email của user cần thêm
  * @returns {Promise<object>}
  */
-export async function addProjectMember(projectId, userId) {
-  return await apiPost(`/projects/${projectId}/members`, { userId });
+export async function addProjectMember(projectId, email) {
+  return await apiPost(`/projects/${projectId}/members`, { email });
 }
 
 /**

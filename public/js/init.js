@@ -5,10 +5,12 @@
  */
 
 import { NavbarComponent } from './components/navbar.js';
+import { initSidebar } from './components/sidebar.js';
 
-// Auto-initialize navbar on all pages
+// Auto-initialize components on all pages
 document.addEventListener('DOMContentLoaded', () => {
   new NavbarComponent();
+  initSidebar();
 });
 
 console.log('✓ Global initialization loaded');

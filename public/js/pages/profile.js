@@ -49,6 +49,9 @@ class ProfilePage {
     if (this.avatarPreview) {
       this.avatarPreview.src = user.avatar || '/images/default-avatar.png';
     }
+
+    // Sync with Topbar immediately on load with fresh server data
+    window.dispatchEvent(new Event('user-profile-updated'));
   }
 
   async updateProfile() {
@@ -63,6 +66,9 @@ class ProfilePage {
     if (this.user) {
       localStorage.setItem('user', JSON.stringify(this.user));
       if (this.displayName) this.displayName.textContent = this.user.name || 'Người dùng';
+      
+      // Sync initial with Topbar via Event
+      window.dispatchEvent(new Event('user-profile-updated'));
     }
     alert('Cập nhật hồ sơ thành công');
   }
@@ -71,7 +77,7 @@ class ProfilePage {
     const file = this.avatarInput?.files?.[0];
     if (!file) return;
 
-    // Preview trước khi upload
+    // Preview trước khi upload (Fake local success)
     if (this.avatarPreview) {
       this.avatarPreview.src = URL.createObjectURL(file);
     }
@@ -79,14 +85,26 @@ class ProfilePage {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    const res = await apiPostFormData('/users/avatar', formData);
-    const user = res?.data?.user;
-    if (user) {
-      this.user = user;
-      localStorage.setItem('user', JSON.stringify(user));
-      if (this.avatarPreview) this.avatarPreview.src = user.avatar || this.avatarPreview.src;
+    try {
+        const res = await apiPostFormData('/users/avatar', formData);
+        const user = res?.data?.user;
+        if (user) {
+          this.user = user;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Update preview in profile header with cache busting
+          if (this.avatarPreview) {
+              this.avatarPreview.src = user.avatar ? `${user.avatar}?t=${Date.now()}` : this.avatarPreview.src;
+          }
+          
+          // Sync with Topbar avatar via Event
+          window.dispatchEvent(new Event('user-profile-updated'));
+        }
+        alert('Cập nhật thành công. URL Avatar Mới: ' + (user?.avatar || 'KHÔNG CÓ DATA SERVER'));
+    } catch (error) {
+        console.error('Avatar upload error:', error);
+        alert('Lỗi upload avatar: ' + (error.message || 'Xin vui lòng thử lại'));
     }
-    alert('Cập nhật avatar thành công');
   }
 
   async changePassword() {

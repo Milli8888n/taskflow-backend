@@ -111,32 +111,35 @@ export class CommentBox {
 
   createCommentElement(comment) {
     const div = document.createElement('div');
-    div.className = 'flex gap-4 pb-4 border-b border-outline-variant/10 last:border-0';
+    div.className = 'flex gap-4 group';
     div.dataset.commentId = comment._id;
 
     const author = comment.author || {};
     const timeago = this.getTimeAgo(new Date(comment.createdAt));
     const currentUserId = this.getCurrentUserId();
-    const canManage = author._id && currentUserId && author._id.toString() === currentUserId.toString();
+    const canManage = author._id && currentUserId && (author._id.toString() === currentUserId.toString() || author.id?.toString() === currentUserId.toString());
+    const initial = author.name ? author.name.charAt(0).toUpperCase() : 'U';
 
     div.innerHTML = `
-      <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-sm font-bold">
-        ${author.name ? author.name.charAt(0).toUpperCase() : 'U'}
+      <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary text-sm font-bold ring-2 ring-surface">
+        ${initial}
       </div>
-      <div class="flex-1">
-        <div class="flex items-start justify-between mb-1 gap-4">
-          <div>
-            <p class="text-sm font-semibold text-on-surface">${author.name || 'Anonymous'}</p>
-            <span class="text-xs text-on-surface-variant">${timeago}</span>
+      <div class="flex-1 space-y-1">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold text-on-surface">${author.name || 'Anonymous'}</span>
+            <span class="text-[10px] text-on-surface-variant font-medium">${timeago}</span>
           </div>
           ${canManage ? `
-            <div class="flex items-center gap-2">
-              <button type="button" class="text-xs text-primary hover:underline" data-action="edit" data-comment-id="${comment._id}">Chỉnh sửa</button>
-              <button type="button" class="text-xs text-error hover:underline" data-action="delete" data-comment-id="${comment._id}">Xoá</button>
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-3">
+              <button type="button" class="text-[10px] uppercase tracking-widest font-bold text-primary hover:brightness-120" data-action="edit" data-comment-id="${comment._id}">Sửa</button>
+              <button type="button" class="text-[10px] uppercase tracking-widest font-bold text-error hover:brightness-120" data-action="delete" data-comment-id="${comment._id}">Xoá</button>
             </div>
           ` : ''}
         </div>
-        <p class="text-sm text-on-surface-variant leading-relaxed whitespace-pre-line">${this.escapeHtml(comment.content)}</p>
+        <div class="bg-surface-container-high p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed text-on-surface/90 border border-outline-variant/5">
+          ${this.escapeHtml(comment.content)}
+        </div>
       </div>
     `;
 

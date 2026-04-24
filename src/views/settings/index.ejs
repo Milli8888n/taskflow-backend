@@ -2,258 +2,186 @@
 <%- include('../partials/_sidebar', { activePage: 'settings' }) %>
 <%- include('../partials/_topbar') %>
 
-<main class="md:ml-64 pt-16 min-h-screen bg-background">
-    <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-12">
+<main class="main-content-wrapper pt-16 min-h-screen bg-background transition-all duration-300">
+    <div class="px-6 py-8 lg:px-12 max-w-4xl mx-auto space-y-10">
 
         <!-- Header -->
-        <div class="space-y-1">
-            <h1 class="text-4xl font-extrabold tracking-tight font-headline text-on-surface">Cài đặt Dự án</h1>
-            <p class="text-on-surface-variant">Quản lý workspace, thành viên và bảo mật.</p>
-        </div>
+        <header class="border-b border-outline-variant/10 pb-8">
+            <h1 class="text-3xl font-black tracking-tight font-headline text-on-surface">Cài đặt Dự án</h1>
+            <p class="text-on-surface-variant text-sm font-medium mt-1 opacity-70">Quản lý thông tin, thành viên và thiết lập của <span class="font-black text-on-surface"><%= project.name %></span></p>
+        </header>
 
-        <!-- ===== Tab Navigation (Activity / Roles) ===== -->
-        <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl w-fit">
-            <button class="px-5 py-2 rounded-lg text-sm font-bold bg-surface-container-highest text-on-surface transition-colors" data-tab="activity">Cài đặt chung</button>
-            <button class="px-5 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors" data-tab="roles">Vai trò & Quyền</button>
+        <!-- Tab Navigation -->
+        <div class="flex items-center gap-1 glass-panel p-1.5 rounded-2xl w-fit">
+            <button class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-on-primary transition-all" data-tab="activity">Cài đặt chung</button>
+            <button class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-all" data-tab="roles">Thành viên (<%= project.members.length %>)</button>
         </div>
 
         <!-- General Settings -->
         <section id="section-activity" class="space-y-6">
-            <h3 class="text-xl font-bold font-headline text-on-surface">Cài đặt chung</h3>
-            <div class="bg-surface-container-low p-8 rounded-xl space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Tên dự án</label>
-                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors" type="text" value="Dự án mẫu" />
+            <div class="glass-panel rounded-3xl p-8 space-y-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="material-symbols-outlined text-primary">settings</span>
+                    <h3 class="text-sm font-black text-on-surface uppercase tracking-tight">Thông tin cơ bản</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Tên dự án</label>
+                        <input id="project-name-input" class="w-full bg-surface-container-high border border-outline-variant/15 rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all" type="text" value="<%= project.name %>" />
                     </div>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mã dự án (Project ID)</label>
-                        <input class="w-full bg-surface-container-low border-b-2 border-outline-variant/20 text-on-surface-variant/60 px-0 py-2 cursor-not-allowed" readonly type="text" value="PROJ-001" />
+                    <div class="space-y-1.5">
+                        <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Mã dự án (ID)</label>
+                        <input class="w-full bg-surface-container-high border border-outline-variant/5 rounded-xl px-4 py-3 text-sm text-on-surface-variant opacity-50 cursor-not-allowed" readonly type="text" value="<%= project._id %>" />
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mô tả</label>
-                    <textarea class="w-full bg-surface-container-low border-b-2 border-outline-variant text-on-surface px-0 py-2 focus:border-primary focus:ring-0 transition-colors resize-none" rows="3">Mô tả dự án tại đây.</textarea>
-                </div>
-                <div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
-                    <div>
-                        <h4 class="font-semibold text-on-surface">Chế độ Công khai</h4>
-                        <p class="text-sm text-on-surface-variant">Cho phép bất kỳ ai trong tổ chức xem và tham gia dự án này.</p>
-                    </div>
-                    <div class="relative inline-flex items-center cursor-pointer">
-                        <input checked="" class="sr-only peer" type="checkbox"/>
-                        <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                    </div>
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Mô tả</label>
+                    <textarea id="project-desc-input" class="w-full bg-surface-container-high border border-outline-variant/15 rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none" rows="3"><%= project.description %></textarea>
                 </div>
                 <div class="flex justify-end pt-2">
-                    <button onclick="alert('Thay đổi đã được lưu thành công!')" class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-2 rounded-lg text-sm font-semibold transition-all">Lưu thay đổi</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Recent Activity Section (Only visible in Activity Tab) -->
-        <section id="section-activity-logs" class="space-y-6">
-            <div class="flex items-center justify-between">
-                <h3 class="text-xl font-bold font-headline text-on-surface">Hoạt động gần đây</h3>
-                <button onclick="alert('Tính năng Xem tất cả lịch sử sẽ có ở phiên bản tới!')" class="text-primary text-sm font-semibold hover:underline">Xem tất cả lịch sử</button>
-            </div>
-            <div class="bg-surface-container-low p-8 rounded-xl">
-                <div class="relative space-y-8">
-                    <!-- Vertical Timeline Line -->
-                    <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-outline-variant/20"></div>
-                    <!-- Entry 1 -->
-                    <div class="relative flex gap-6 group">
-                        <div class="relative z-10 w-10 h-10 rounded-full border-2 border-surface-container-low bg-surface-container-highest overflow-hidden shrink-0">
-                            <span class="w-full h-full flex items-center justify-center font-bold text-sm bg-primary-container text-on-primary-container">AM</span>
-                        </div>
-                        <div class="flex-1 space-y-1">
-                            <div class="flex items-center justify-between">
-                                <p class="text-sm font-body text-on-surface">
-                                    <span class="font-bold text-primary">Alex Morgan</span> đã chuyển <span class="text-on-surface font-semibold">"Fluid Hero Mockups"</span> sang <span class="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider border border-tertiary/20">Hoàn thành</span>
-                                </p>
-                                <span class="text-xs text-on-surface-variant font-label">2 giờ trước</span>
-                            </div>
-                            <p class="text-xs text-on-surface-variant leading-relaxed">Hệ thống tự động lưu trạng thái thay đổi.</p>
-                        </div>
-                    </div>
-                    <!-- Entry 2 -->
-                    <div class="relative flex gap-6 group">
-                        <div class="relative z-10 w-10 h-10 rounded-full border-2 border-surface-container-low bg-surface-container-highest overflow-hidden shrink-0">
-                            <span class="w-full h-full flex items-center justify-center font-bold text-sm bg-secondary-container text-on-secondary-container">SC</span>
-                        </div>
-                        <div class="flex-1 space-y-1">
-                            <div class="flex items-center justify-between">
-                                <p class="text-sm font-body text-on-surface">
-                                    <span class="font-bold text-secondary">Sarah Chen</span> đã thêm bình luận vào <span class="text-on-surface font-semibold">"Security Audit Q3"</span>
-                                </p>
-                                <span class="text-xs text-on-surface-variant font-label">5 giờ trước</span>
-                            </div>
-                            <div class="bg-surface-container p-3 rounded-lg border border-outline-variant/10 italic text-xs text-on-surface-variant">
-                                "Tôi đã cập nhật danh sách kiểm tra tương thích. Vui lòng xem lại phần 2FA."
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Entry 3 -->
-                    <div class="relative flex gap-6 group">
-                        <div class="relative z-10 w-10 h-10 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-primary text-xl">person_add</span>
-                        </div>
-                        <div class="flex-1 space-y-1">
-                            <div class="flex items-center justify-between">
-                                <p class="text-sm font-body text-on-surface">
-                                    <span class="font-bold text-on-surface">Hệ thống</span> đã mời <span class="font-bold text-primary">Marcus Wright</span> làm <span class="text-on-surface font-semibold">Khách</span>
-                                </p>
-                                <span class="text-xs text-on-surface-variant font-label">Hôm qua</span>
-                            </div>
-                            <p class="text-xs text-on-surface-variant leading-relaxed">Lời mời đang chờ chấp nhận.</p>
-                        </div>
-                    </div>
+                    <button id="btn-save-project" class="bg-primary text-on-primary px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] transition-all">Lưu thay đổi</button>
                 </div>
             </div>
         </section>
 
         <!-- Team Access -->
         <section id="section-roles" class="space-y-6 hidden">
-            <div class="flex items-center justify-between">
-                <h3 class="text-xl font-bold font-headline text-on-surface">Quản lý thành viên</h3>
-                <button onclick="alert('Tính năng mời thành viên sẽ có trong Sprint sau!')" class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">
-                    <span class="material-symbols-outlined text-lg">person_add</span> Mời thành viên
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">group</span>
+                    <h3 class="text-sm font-black text-on-surface uppercase tracking-tight">Quản lý thành viên</h3>
+                </div>
+                <button onclick="alert('Tính năng mời thành viên sẽ có trong Sprint sau!')" class="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] transition-all">
+                    <span class="material-symbols-outlined text-sm">person_add</span> Mời
                 </button>
             </div>
 
-            <!-- Roles Overview Card (From settings_roles.html) -->
-            <div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-                <div class="space-y-3">
-                    <div class="flex items-center gap-2 text-primary">
-                        <span class="material-symbols-outlined">admin_panel_settings</span>
-                        <h4 class="font-bold font-headline">Chủ dự án (Owner)</h4>
-                    </div>
-                    <ul class="space-y-2 text-sm text-on-surface-variant">
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Toàn quyền quản trị cấu hình của dự án.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Khả năng chỉnh sửa chi tiết hoặc xóa vĩnh viễn dự án.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Quản lý tất cả định danh thành viên và phân quyền.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Quản lý toàn bộ thẻ công việc và các mốc thời gian.</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-2 text-secondary">
-                        <span class="material-symbols-outlined">group</span>
-                        <h4 class="font-bold font-headline">Thành viên (Member)</h4>
-                    </div>
-                    <ul class="space-y-2 text-sm text-on-surface-variant">
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Tạo, sửa, và xóa công việc cá nhân hoặc được giao.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Thêm bình luận và tham gia thảo luận công việc.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="material-symbols-outlined text-xs mt-1 text-tertiary">check_circle</span>
-                            <span>Xem thông tin những thành viên khác trong dự án.</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="bg-surface-container-low rounded-xl overflow-hidden">
+            <div class="glass-panel rounded-3xl overflow-hidden">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-surface-container-lowest/50">
-                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Thành viên</th>
-                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Vai trò</th>
-                            <th class="px-6 py-4 text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Ngày tham gia</th>
+                        <tr class="border-b border-outline-variant/10">
+                            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-variant/50">Thành viên</th>
+                            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-variant/50">Vai trò</th>
+                            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-variant/50">Email</th>
                             <th class="px-6 py-4"></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-outline-variant/10">
-                        <!-- Hàng mẫu -->
-                        <tr class="hover:bg-surface-container-high transition-colors">
+                    <tbody class="divide-y divide-outline-variant/5">
+                        <% project.members.forEach(member => { %>
+                        <tr class="hover:bg-surface-container-high/30 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-on-primary-container">A</div>
-                                    <div>
-                                        <div class="font-semibold text-on-surface">Quản trị viên (Admin)</div>
-                                        <div class="text-xs text-on-surface-variant">admin@taskflow.com</div>
+                                    <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center font-black text-on-primary-container text-xs">
+                                        <%= member.name.charAt(0).toUpperCase() %>
                                     </div>
+                                    <div class="text-sm font-bold text-on-surface"><%= member.name %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-tertiary-container/20 text-on-tertiary-container border border-tertiary-container/30">Owner</span>
+                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest <%= project.owner._id.toString() === member._id.toString() ? 'bg-primary/10 text-primary' : 'bg-surface-container-highest text-on-surface-variant' %>">
+                                    <%= project.owner._id.toString() === member._id.toString() ? 'Chủ dự án' : 'Thành viên' %>
+                                </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-on-surface-variant">01/01/2026</td>
+                            <td class="px-6 py-4 text-xs font-medium text-on-surface-variant/60"><%= member.email %></td>
                             <td class="px-6 py-4 text-right">
-                                <button class="p-2 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">more_vert</span></button>
+                                <button class="p-2 text-on-surface-variant/40 hover:text-on-surface rounded-lg hover:bg-surface-container-high transition-all"><span class="material-symbols-outlined text-lg">more_vert</span></button>
                             </td>
                         </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </div>
         </section>
 
         <!-- Danger Zone -->
-        <section class="space-y-6 pt-10">
+        <section class="space-y-6 pt-6">
             <div class="border-t border-error/20 pt-10">
-                <div class="flex items-center gap-3 text-error mb-4">
+                <div class="flex items-center gap-3 text-error mb-6">
                     <span class="material-symbols-outlined">warning</span>
-                    <h3 class="text-xl font-bold font-headline">Khu vực nguy hiểm</h3>
+                    <h3 class="text-sm font-black uppercase tracking-tight">Khu vực nguy hiểm</h3>
                 </div>
-                <div class="bg-error-container/5 border border-error/10 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="glass-panel border-error/20 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div class="space-y-1">
-                        <h4 class="font-bold text-on-surface">Xoá dự án này</h4>
-                        <p class="text-sm text-on-surface-variant max-w-lg">Thao tác này không thể hoàn tác. Toàn bộ dữ liệu sẽ bị xoá vĩnh viễn.</p>
+                        <h4 class="font-black text-on-surface text-sm">Xoá dự án <%= project.name %></h4>
+                        <p class="text-[11px] font-medium text-on-surface-variant/50 max-w-lg">Thao tác này không thể hoàn tác. Toàn bộ dữ liệu dự án sẽ bị xoá vĩnh viễn.</p>
                     </div>
-                    <button onclick="alert('Bạn không có quyền xoá dự án này!')" class="shrink-0 bg-error text-on-error px-6 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-error/10">
+                    <button id="btn-delete-project" class="shrink-0 bg-error text-on-error px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all">
                         Xoá Dự Án
                     </button>
                 </div>
             </div>
         </section>
 
-        <div class="h-20"></div>
+        <div class="h-12"></div>
     </div>
 </main>
 
-<script>
+<script type="module">
+    import { updateProject, deleteProject } from '/js/services/project.js';
+
     document.addEventListener('DOMContentLoaded', () => {
         const tabs = document.querySelectorAll('[data-tab]');
         const sectionActivity = document.getElementById('section-activity');
         const sectionRoles = document.getElementById('section-roles');
+        const btnSave = document.getElementById('btn-save-project');
+        const btnDelete = document.getElementById('btn-delete-project');
 
+        // Tab switching logic
         tabs.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetTab = e.currentTarget.getAttribute('data-tab');
+                tabs.forEach(b => b.className = "px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-all");
+                e.currentTarget.className = "px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-on-primary transition-all";
                 
-                // Trạng thái active/inactive cho các nút tab
-                tabs.forEach(b => {
-                    b.className = "px-5 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors";
-                });
-                e.currentTarget.className = "px-5 py-2 rounded-lg text-sm font-bold bg-surface-container-highest text-on-surface transition-colors";
-                
-                // Ẩn / hiện nội dung của tab
                 if (targetTab === 'activity') {
                     sectionActivity.classList.remove('hidden');
-                    document.getElementById('section-activity-logs').classList.remove('hidden');
                     sectionRoles.classList.add('hidden');
-                } else if (targetTab === 'roles') {
+                } else {
                     sectionActivity.classList.add('hidden');
-                    document.getElementById('section-activity-logs').classList.add('hidden');
                     sectionRoles.classList.remove('hidden');
                 }
             });
+        });
+
+        // Save Project logic
+        btnSave?.addEventListener('click', async () => {
+            const name = document.getElementById('project-name-input').value.trim();
+            const description = document.getElementById('project-desc-input').value.trim();
+            const projectId = '<%= project._id %>';
+
+            if (!name) return alert('Tên dự án không được để trống');
+
+            try {
+                btnSave.disabled = true;
+                btnSave.textContent = 'Đang lưu...';
+                await updateProject(projectId, { name, description });
+                alert('Đã cập nhật dự án thành công!');
+                window.location.reload();
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+                btnSave.disabled = false;
+                btnSave.textContent = 'Lưu thay đổi';
+            }
+        });
+
+        // Delete Project logic
+        btnDelete?.addEventListener('click', async () => {
+            const projectId = '<%= project._id %>';
+            const projectName = '<%= project.name %>';
+            
+            if (confirm(`Bạn có chắc chắn muốn xoá dự án "${projectName}"? Thao tác này KHÔNG THỂ hoàn tác.`)) {
+                try {
+                    btnDelete.disabled = true;
+                    btnDelete.textContent = 'Đang xoá...';
+                    await deleteProject(projectId);
+                    alert('Đã xoá dự án thành công!');
+                    window.location.href = '/projects';
+                } catch (err) {
+                    alert('Lỗi: ' + err.message);
+                    btnDelete.disabled = false;
+                    btnDelete.textContent = 'Xoá Dự Án';
+                }
+            }
         });
     });
 </script>

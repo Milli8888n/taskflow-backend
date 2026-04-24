@@ -18,37 +18,7 @@ export class NavbarComponent {
     this.setupLogoutButton();
     this.setupSidebarLogout();
     
-    // Update user avatar nếu có user
-    this.updateUserAvatar();
-    
     console.log('✓ Navbar component initialized');
-  }
-
-  /**
-   * Cập nhật avatar với user name
-   */
-  updateUserAvatar() {
-    if (!this.user) return;
-
-    const avatarElement = document.querySelector('a[href="/profile"]');
-    if (!avatarElement) return;
-
-    // Clear old content
-    avatarElement.innerHTML = '';
-
-    // Create avatar with user initial
-    const initial = this.user.name ? this.user.name.charAt(0).toUpperCase() : 'U';
-    const initial_span = document.createElement('span');
-    initial_span.className = 'text-xs font-bold text-primary';
-    initial_span.textContent = initial;
-
-    avatarElement.appendChild(initial_span);
-
-    // Add click event for profile
-    avatarElement.addEventListener('click', (e) => {
-      // Prevent  navigation if user wants to logout via context menu
-      // Just allow normal navigation to profile
-    });
   }
 
   /**

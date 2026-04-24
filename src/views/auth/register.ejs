@@ -6,92 +6,90 @@
     <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-primary-container/10 rounded-full blur-[120px]"></div>
 </div>
 
-<main class="min-h-screen flex items-center justify-center p-6 relative z-10">
-    <div class="w-full max-w-[1100px] grid lg:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden shadow-2xl shadow-black/60 border border-outline-variant/10">
+<main class="h-screen w-full flex items-center justify-center p-4 lg:p-8 relative z-10 overflow-hidden">
+    <div class="w-full max-w-[1000px] h-fit max-h-[95vh] lg:h-[650px] grid lg:grid-cols-2 bg-surface-container-low rounded-3xl overflow-hidden shadow-2xl shadow-black/80 border border-outline-variant/15">
 
-        <!-- Cột trái: Hero -->
-        <div class="relative hidden lg:flex flex-col justify-between p-12 bg-surface-container-low overflow-hidden">
-            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_50%,_#c3c0ff_0%,_transparent_70%)]"></div>
+        <!-- Left: Hero -->
+        <div class="relative hidden lg:flex flex-col justify-between p-12 bg-surface-container-lowest overflow-hidden border-r border-outline-variant/10">
+            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_50%,_#c3c0ff_0%,_transparent_70%)]"></div>
             <div class="relative z-20">
-                <div class="flex items-center gap-3 mb-16">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-lg flex items-center justify-center shadow-lg shadow-primary-container/20">
-                        <span class="material-symbols-outlined text-on-primary text-2xl">token</span>
+                <div class="flex items-center gap-3 mb-12">
+                    <div class="w-9 h-9 bg-primary text-on-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                        <span class="material-symbols-outlined text-xl font-black">token</span>
                     </div>
-                    <span class="text-2xl font-extrabold tracking-tight text-on-surface">TaskFlow</span>
+                    <span class="text-xl font-black tracking-tighter text-on-surface font-headline uppercase italic">TaskFlow</span>
                 </div>
-                <h1 class="text-5xl font-extrabold text-on-surface leading-[1.15] tracking-tight mb-6 font-headline">
-                    Start<br><span class="text-primary">building</span><br>today.
+                <h1 class="text-5xl font-black text-on-surface leading-[1.1] tracking-tighter mb-6 font-headline">
+                    Start<br><span class="text-primary-rgb" style="color: rgb(var(--primary-rgb))">building</span><br>today.
                 </h1>
-                <p class="text-on-surface-variant/80 text-lg leading-relaxed max-w-sm">
-                    Tạo tài khoản miễn phí và bắt đầu quản lý dự án ngay hôm nay.
+                <p class="text-on-surface-variant text-sm leading-relaxed max-w-[280px] font-medium opacity-70">
+                    Gia nhập cộng đồng quản lý dự án hiệu quả nhất thế giới.
                 </p>
             </div>
-            <p class="relative z-20 text-xs text-on-surface-variant/40 mt-auto pt-10">© 2026 TaskFlow. All rights reserved.</p>
+            
+            <div class="relative z-20">
+                <p class="text-[10px] uppercase font-black tracking-widest text-on-surface-variant/30">© 2026 TF-SYSTEMS INC.</p>
+            </div>
         </div>
 
-        <!-- Cột phải: Form -->
-        <div class="flex items-center justify-center p-10 md:p-16">
-            <div class="w-full max-w-sm">
-                <h2 class="text-3xl font-extrabold tracking-tight text-on-surface font-headline mb-2">Create account</h2>
-                <p class="text-on-surface-variant mb-10">Điền thông tin để tạo workspace mới.</p>
+        <!-- Right: Form Area -->
+        <div class="flex flex-col items-center justify-center p-8 lg:p-12 bg-surface-container-low relative overflow-hidden overflow-y-auto custom-scrollbar">
+            <!-- Subtle background texture -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
-                <form id="register-form" class="space-y-6">
+            <div class="w-full max-w-[340px] relative z-20 py-4">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black tracking-tight text-on-surface font-headline mb-2">Tạo tài khoản</h2>
+                    <p class="text-sm font-medium text-on-surface-variant opacity-50">Bắt đầu hành trình của bạn ngay.</p>
+                </div>
+
+                <form id="register-form" class="space-y-4">
                     <!-- Name -->
                     <div class="space-y-2">
-                        <label for="name" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Họ và tên</label>
-                        <div class="relative group">
-                            <input type="text" id="name" name="name" required
-                                placeholder="Nguyễn Văn A"
-                                class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all">
-                            <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">person</span>
-                        </div>
+                        <label for="name" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Họ và Tên</label>
+                        <input type="text" id="name" name="name" required
+                            placeholder="Nguyễn Văn A"
+                            class="w-full bg-surface-container-highest/50 border border-outline-variant/20 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 px-5 py-3.5 text-sm text-on-surface placeholder:text-outline/40 transition-all outline-none">
                     </div>
 
                     <!-- Email -->
                     <div class="space-y-2">
-                        <label for="email" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email</label>
-                        <div class="relative group">
-                            <input type="email" id="email" name="email" required
-                                placeholder="you@company.com"
-                                class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all">
-                            <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">mail</span>
-                        </div>
+                        <label for="email" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Địa chỉ Email</label>
+                        <input type="email" id="email" name="email" required
+                            placeholder="name@company.com"
+                            class="w-full bg-surface-container-highest/50 border border-outline-variant/20 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 px-5 py-3.5 text-sm text-on-surface placeholder:text-outline/40 transition-all outline-none">
                     </div>
 
                     <!-- Password -->
                     <div class="space-y-2">
-                        <label for="password" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Mật khẩu</label>
-                        <div class="relative group">
-                            <input type="password" id="password" name="password" required minlength="6"
-                                placeholder="Ít nhất 6 ký tự"
-                                class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all">
-                            <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">lock</span>
-                        </div>
+                        <label for="password" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Mật khẩu</label>
+                        <input type="password" id="password" name="password" required minlength="6"
+                            placeholder="••••••••"
+                            class="w-full bg-surface-container-highest/50 border border-outline-variant/20 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 px-5 py-3.5 text-sm text-on-surface placeholder:text-outline/40 transition-all outline-none">
                     </div>
 
                     <!-- Confirm Password -->
                     <div class="space-y-2">
-                        <label for="confirm-password" class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Xác nhận mật khẩu</label>
-                        <div class="relative group">
-                            <input type="password" id="confirm-password" name="confirm-password" required minlength="6"
-                                placeholder="Nhập lại mật khẩu"
-                                class="w-full bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 px-0 py-3 text-on-surface placeholder:text-outline/50 transition-all">
-                            <span class="absolute right-0 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline/30 group-focus-within:text-primary">check_circle</span>
-                        </div>
+                        <label for="confirm-password" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Xác nhận mật khẩu</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required minlength="6"
+                            placeholder="••••••••"
+                            class="w-full bg-surface-container-highest/50 border border-outline-variant/20 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 px-5 py-3.5 text-sm text-on-surface placeholder:text-outline/40 transition-all outline-none">
                     </div>
 
                     <!-- Error -->
-                    <div class="text-error text-sm hidden"></div>
+                    <div class="text-error text-xs font-bold bg-error/10 p-3.5 rounded-xl hidden" id="register-error"></div>
 
                     <!-- Submit -->
-                    <button type="submit"
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold tracking-tight text-center hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
-                        Tạo tài khoản
-                    </button>
+                    <div class="pt-4">
+                        <button type="submit"
+                            class="w-full py-4 rounded-2xl bg-primary text-on-primary font-black tracking-tight text-center shadow-xl shadow-primary/10 hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm uppercase">
+                            Tạo tài khoản mới
+                        </button>
+                    </div>
                 </form>
 
-                <p class="text-center mt-8 text-sm text-on-surface-variant">
-                    Đã có tài khoản? <a href="/login" class="font-bold text-primary hover:underline">Đăng nhập</a>
+                <p class="text-center mt-10 text-[11px] font-bold text-on-surface-variant/40">
+                    Đã có tài khoản? <a href="/login" class="text-primary hover:text-primary-container transition-colors ml-1">Đăng nhập ngay</a>
                 </p>
             </div>
         </div>

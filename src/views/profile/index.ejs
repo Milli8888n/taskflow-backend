@@ -2,64 +2,95 @@
 <%- include('../partials/_sidebar', { activePage: 'profile' }) %>
 <%- include('../partials/_topbar') %>
 
-<main class="md:ml-64 pt-16 min-h-screen bg-background">
-  <div class="p-6 lg:p-10 max-w-4xl mx-auto space-y-8">
-    <div class="flex flex-col items-center text-center space-y-3">
-      <img id="avatar-preview" src="" alt="avatar" class="w-24 h-24 rounded-full object-cover bg-surface-container-high border border-outline-variant/20" />
-      <div>
-        <h1 id="profile-display-name" class="text-3xl font-extrabold font-headline text-on-surface">
+<main class="main-content-wrapper pt-16 min-h-screen bg-background transition-all duration-300">
+  <div class="px-6 py-8 lg:px-12 max-w-5xl mx-auto space-y-12">
+    
+    <!-- Profile Header (Premium) -->
+    <header class="flex flex-col items-center text-center space-y-6 mb-12 relative">
+       <!-- Decorative Glow -->
+       <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div class="relative group">
+        <div class="absolute inset-0 bg-primary/30 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+        <div class="relative w-40 h-40 rounded-full p-2 bg-gradient-to-tr from-primary via-tertiary to-primary shadow-2xl z-10 transition-transform duration-500 group-hover:scale-105">
+             <img id="avatar-preview" src="" alt="avatar" class="w-full h-full rounded-full object-cover bg-surface-container-high border-4 border-background" />
+        </div>
+        <label for="avatar-input" class="absolute bottom-2 right-2 w-12 h-12 bg-primary text-on-primary rounded-2xl flex items-center justify-center cursor-pointer shadow-xl hover:scale-110 active:scale-95 transition-all z-20 hover:rotate-12">
+            <span class="material-symbols-outlined text-2xl">add_a_photo</span>
+        </label>
+      </div>
+      
+      <div class="relative z-10">
+        <h1 id="profile-display-name" class="text-4xl font-black text-on-surface font-headline tracking-tighter italic">
           <%= typeof user !== 'undefined' && user ? user.name : 'Người dùng' %>
         </h1>
-        <p id="profile-display-email" class="text-on-surface-variant">
-          <%= typeof user !== 'undefined' && user ? user.email : 'user@email.com' %>
-        </p>
+        <div class="flex items-center justify-center gap-2 mt-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-tertiary shadow-[0_0_10px_rgba(var(--tertiary-rgb),0.8)]"></span>
+            <p id="profile-display-email" class="text-[11px] font-black text-on-surface-variant uppercase tracking-[0.3em] opacity-40">
+                <%= typeof user !== 'undefined' && user ? user.email : 'user@email.com' %>
+            </p>
+        </div>
       </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Personal Info -->
+        <section class="glass-panel rounded-3xl p-8 space-y-6">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-primary">person</span>
+                <h2 class="text-sm font-black text-on-surface uppercase tracking-tight">Thông tin cá nhân</h2>
+            </div>
+            
+            <form id="profile-form" class="space-y-5">
+                <div class="space-y-1.5">
+                    <label for="profile-name" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Họ và tên</label>
+                    <input id="profile-name" name="name" class="w-full bg-surface-container-high border border-outline-variant/15 rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all" type="text" />
+                </div>
+
+                <div class="space-y-1.5">
+                    <label for="profile-email" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Email Address</label>
+                    <input id="profile-email" name="email" class="w-full bg-surface-container-high border border-outline-variant/5 rounded-xl px-4 py-3 text-sm text-on-surface-variant opacity-50 cursor-not-allowed" type="email" readonly />
+                </div>
+
+                <input id="avatar-input" name="avatar" type="file" accept="image/*" class="hidden" />
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-primary text-on-primary py-3.5 rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] transition-all">
+                        Cập nhật hồ sơ
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Security -->
+        <section class="glass-panel rounded-3xl p-8 space-y-6">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-error">lock</span>
+                <h2 class="text-sm font-black text-on-surface uppercase tracking-tight">Bảo mật</h2>
+            </div>
+            
+            <form id="password-form" class="space-y-5">
+                <div class="space-y-1.5">
+                    <label for="current-password" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Mật khẩu hiện tại</label>
+                    <input id="current-password" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border border-outline-variant/15 rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all" required />
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label for="new-password" class="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">Mật khẩu mới</label>
+                    <input id="new-password" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border border-outline-variant/15 rounded-xl px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all" required />
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-surface-container-high text-on-surface py-3.5 rounded-xl font-black text-xs uppercase tracking-widest border border-outline-variant/20 hover:bg-surface-container-highest transition-all">
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </form>
+        </section>
     </div>
 
-    <section class="bg-surface-container-low rounded-xl border border-outline-variant/10 p-6">
-      <h2 class="text-xl font-bold mb-4">Thông tin cá nhân</h2>
-      <form id="profile-form" class="space-y-4">
-        <div>
-          <label for="profile-name" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Họ và tên</label>
-          <input id="profile-name" name="name" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" type="text" />
-        </div>
-
-        <div>
-          <label for="profile-email" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Email</label>
-          <input id="profile-email" name="email" class="mt-2 w-full bg-surface-container-high border border-outline-variant/20 rounded-lg px-3 py-2 text-on-surface-variant cursor-not-allowed" type="email" readonly />
-        </div>
-
-        <div>
-          <label for="avatar-input" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Avatar</label>
-          <input id="avatar-input" name="avatar" type="file" accept="image/*" class="mt-2 block w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-container file:text-on-primary-container file:font-semibold hover:file:brightness-110" />
-        </div>
-
-        <div class="pt-2 flex justify-end">
-          <button type="submit" class="bg-primary-container text-on-primary-container px-5 py-2 rounded-lg font-semibold hover:brightness-110 transition-all">
-            Lưu thay đổi
-          </button>
-        </div>
-      </form>
-    </section>
-
-    <section class="bg-surface-container-low rounded-xl border border-outline-variant/10 p-6">
-      <h2 class="text-xl font-bold mb-4">Đổi mật khẩu</h2>
-      <form id="password-form" class="space-y-4">
-        <div>
-          <label for="current-password" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mật khẩu hiện tại</label>
-          <input id="current-password" type="password" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" required />
-        </div>
-        <div>
-          <label for="new-password" class="text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Mật khẩu mới</label>
-          <input id="new-password" type="password" class="mt-2 w-full bg-surface-container-high border border-outline-variant/30 rounded-lg px-3 py-2 text-on-surface focus:border-primary focus:ring-0" required />
-        </div>
-        <div class="pt-2 flex justify-end">
-          <button type="submit" class="bg-primary text-on-primary px-5 py-2 rounded-lg font-semibold hover:brightness-110 transition-all">
-            Cập nhật mật khẩu
-          </button>
-        </div>
-      </form>
-    </section>
+    <p id="profile-error" class="hidden text-error text-center text-xs font-black bg-error/10 p-4 rounded-xl"></p>
+    <p id="profile-success" class="hidden text-tertiary text-center text-xs font-black bg-tertiary/10 p-4 rounded-xl"></p>
   </div>
 </main>
 
