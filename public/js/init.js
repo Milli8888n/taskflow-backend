@@ -6,6 +6,7 @@
 
 import { NavbarComponent } from './components/navbar.js';
 import { initSidebar } from './components/sidebar.js';
+import './components/toastUI.js'; // Attach Toast to global window.__TF__
 
 // Auto-initialize components on all pages
 document.addEventListener('DOMContentLoaded', () => {
