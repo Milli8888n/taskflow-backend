@@ -13,7 +13,7 @@ import { sendInvitation } from '../services/invitation.js';
 import { KanbanBoard } from '../components/kanbanBoard.js';
 import { TaskModal } from  '../components/taskModal.js';
 import { TaskFilter } from '../components/taskFilter.js';
-import { RealtimeManager } from '../socket/realtime.js';
+import realtime from '../socket/realtime.js';
 
 class BoardPage {
   constructor(projectId) {
@@ -30,7 +30,7 @@ class BoardPage {
     this.kanban = new KanbanBoard(projectId);
     this.taskModal = new TaskModal(projectId);
     this.taskFilter = new TaskFilter();
-    this.realtime = new RealtimeManager();
+    this.realtime = realtime;
     
     this.currentFilters = {};
     this.init();
@@ -347,14 +347,10 @@ class BoardPage {
 
       const response = await createTask(this.projectId, data);
       const newTask = response.data?.task || response.task;
-
       if (newTask) {
-        // Add task to board inline
         this.kanban.addTask(newTask);
-      } else {
-        // Reload if task is missing from response
-        await this.loadTasks();
       }
+      
       this.closeCreateTaskModal();
       window.__TF__.Toast.success('Thêm công việc mới thành công');
     } catch (error) {

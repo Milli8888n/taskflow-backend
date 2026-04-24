@@ -301,6 +301,18 @@ export class KanbanBoard {
    * Add a new task card to the board
    */
   addTask(task) {
+    // Check if task already exists in local array
+    const existingIdx = this.tasks.findIndex(t => t._id === task._id);
+    
+    // Check if task element already exists in DOM
+    const existingEl = this.boardEl.querySelector(`[data-task-id="${task._id}"]`);
+
+    if (existingIdx !== -1 || existingEl) {
+      console.log(`[Kanban] Task ${task._id} already exists, updating instead of adding.`);
+      this.updateTask(task);
+      return;
+    }
+
     this.tasks.push(task);
     const taskEl = this.createTaskElement(task);
     const dropzone = this.boardEl.querySelector(`[data-dropzone="${task.status}"]`);

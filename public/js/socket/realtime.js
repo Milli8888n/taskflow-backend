@@ -11,6 +11,7 @@ export class RealtimeManager {
   constructor() {
     this.socket = null;
     this.isConnected = false;
+    this.listenersSet = false;
   }
 
   /**
@@ -48,7 +49,11 @@ export class RealtimeManager {
         console.log('✓ Joined project room:', window.__TF__.board.projectId);
       }
       
-      this.setupEventListeners();
+      // Only setup listeners once
+      if (!this.listenersSet) {
+        this.setupEventListeners();
+        this.listenersSet = true;
+      }
     });
 
     this.socket.on('disconnect', () => {
