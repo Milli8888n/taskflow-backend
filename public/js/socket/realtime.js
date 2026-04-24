@@ -43,12 +43,7 @@ export class RealtimeManager {
       this.isConnected = true;
       console.log('✓ Socket.io connected');
       
-      // Join project room if we have projectId from board page
-      if (window.__TF__ && window.__TF__.board && window.__TF__.board.projectId) {
-        this.socket.emit('joinProject', window.__TF__.board.projectId);
-        console.log('✓ Joined project room:', window.__TF__.board.projectId);
-      }
-      
+      // We will join the room explicitly via joinProject method when the page is ready
       // Only setup listeners once
       if (!this.listenersSet) {
         this.setupEventListeners();
@@ -68,6 +63,22 @@ export class RealtimeManager {
     this.socket.on('error', (error) => {
       console.error('✗ Socket.io error:', error);
     });
+  }
+
+  /**
+   * Tham gia vào room của dự án để nhận realtime events
+   */
+  joinProject(projectId) {
+    if (this.isConnected) {
+      this.socket.emit('joinProject', projectId);
+      console.log('✓ Explicitly joined project room:', projectId);
+    } else {
+      // Nếu chưa connect xong, đợt chút rồi gọi lại
+      this.socket.once('connect', () => {
+        this.socket.emit('joinProject', projectId);
+        console.log('✓ Explicitly joined project room (after connect delays):', projectId);
+      });
+    }
   }
 
   /**

@@ -48,8 +48,8 @@ class BoardPage {
       ]);
       this.setupGlobalFunctions();
       
-      // Initialize socket connection
-      this.realtime.connect();
+      // Explicitly tell socket to join this specific project room
+      this.realtime.joinProject(this.projectId);
       
       console.log('✓ Board page initialized');
     } catch (error) {
